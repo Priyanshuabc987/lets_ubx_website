@@ -1,0 +1,70 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-startup",
+      "description": "Innovative startup workspace",
+      "imageUrl": "https://picsum.photos/seed/startup1/1200/600",
+      "imageHint": "startup office"
+    },
+    {
+      "id": "event-1",
+      "description": "Networking event at a tech hub",
+      "imageUrl": "https://picsum.photos/seed/event1/600/400",
+      "imageHint": "business networking"
+    },
+    {
+      "id": "event-2",
+      "description": "Startup pitch competition",
+      "imageUrl": "https://picsum.photos/seed/event2/600/400",
+      "imageHint": "presentation stage"
+    },
+    {
+      "id": "gallery-1",
+      "description": "Community workshop",
+      "imageUrl": "https://picsum.photos/seed/comm1/400/500",
+      "imageHint": "workshop team"
+    },
+    {
+      "id": "gallery-2",
+      "description": "Hackathon group",
+      "imageUrl": "https://picsum.photos/seed/comm2/400/300",
+      "imageHint": "people laptops"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Keynote speaker",
+      "imageUrl": "https://picsum.photos/seed/comm3/400/600",
+      "imageHint": "speaker event"
+    },
+    {
+      "id": "partner-1",
+      "description": "Global brand logo placeholder",
+      "imageUrl": "https://picsum.photos/seed/logo1/200/100",
+      "imageHint": "tech logo"
+    },
+    {
+      "id": "partner-2",
+      "description": "Global brand logo placeholder",
+      "imageUrl": "https://picsum.photos/seed/logo2/200/100",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "startup-world-cup-hero",
+      "description": "Startup World Cup Stage",
+      "imageUrl": "https://picsum.photos/seed/swc1/1200/500",
+      "imageHint": "innovation award"
+    },
+    {
+      "id": "program-incubation",
+      "description": "Startup incubation session",
+      "imageUrl": "https://picsum.photos/seed/prog1/600/400",
+      "imageHint": "mentorship session"
+    },
+    {
+      "id": "program-acceleration",
+      "description": "Acceleration program workshop",
+      "imageUrl": "https://picsum.photos/seed/prog2/600/400",
+      "imageHint": "business growth"
+    }
+  ]
+}

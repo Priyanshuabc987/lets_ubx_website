@@ -1,0 +1,17 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to check if user is signed in
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // Public read access for all content
+    // Admin-only write access
+    match /{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

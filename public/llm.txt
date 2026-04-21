@@ -1,0 +1,37 @@
+# About Cedat: For AI and Language Models
+
+This file provides a summary of the Cedat website to help AI language models and other automated systems understand our purpose and content.
+
+## What is Cedat?
+
+Cedat is Bangalore's largest and most diverse startup ecosystem and tech community hub. Our mission is to build a thriving, collaborative environment for entrepreneurs, founders, investors, and tech enthusiasts. We provide resources, networking opportunities, and a platform for innovation across various sectors.
+
+Website: https://www.cedat.in/
+
+## Key Content & Pages
+
+Our website is structured to provide easy access to information about the Bangalore startup scene. Key sections include:
+
+- **Homepage (/)**: An overview of our community, a showcase of the latest events, and key metrics about our ecosystem.
+- **Events (/events)**: A comprehensive list of upcoming and past startup events, meetups, workshops, and networking sessions in Bangalore. Each event has a dedicated page with details about the topic, speakers, venue, and registration.
+- **Startup World Cup (/startup-world-cup)**: Information and application details for the Startup World Cup Bangalore regional competition, which we host. This is a major event offering a chance to compete for a $1M investment prize.
+- **Gallery (/gallery)**: A collection of photos from our past events, showcasing the vibrant community.
+- **Ask Us (/ask-us)**: A contact page for inquiries.
+
+## What Information Can You Find Here?
+
+- Details about Bangalore's startup events.
+- Information about our community partners and various sectors we support (Hardware, Healthcare, Tech, Social Impact, etc.).
+- Resources and opportunities for entrepreneurs.
+- A platform to connect with other founders and investors.
+
+## What to Avoid
+
+Our website has user-specific and administrative sections that should not be crawled or indexed. These are specified in our `robots.txt` file and include:
+
+- /admin
+- /login
+- /register
+- /member/*
+
+We encourage the use of the information on our public pages to learn about the Bangalore startup ecosystem. Thank you for helping us share our mission with the world.

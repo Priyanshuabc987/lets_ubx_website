@@ -1,0 +1,73 @@
+
+{
+  "entities": {
+    "Event": {
+      "title": "Event",
+      "type": "object",
+      "description": "A community event or meetup.",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "event_date": { "type": "string", "format": "date-time" },
+        "location": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "published", "cancelled"] },
+        "is_featured": { "type": "boolean" },
+        "category": { "type": "string" },
+        "theme": { "type": "string" },
+        "featured_image_url": { "type": "string" },
+        "external_registration_url": { "type": "string" }
+      },
+      "required": ["title", "event_date", "status"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "type": "object",
+      "description": "General site settings like headings.",
+      "properties": {
+        "value": { "type": "string" }
+      },
+      "required": ["value"]
+    },
+    "GalleryImage": {
+      "title": "GalleryImage",
+      "type": "object",
+      "properties": {
+        "image_url": { "type": "string" },
+        "display_order": { "type": "number" },
+        "caption": { "type": "string" }
+      },
+      "required": ["image_url", "display_order"]
+    },
+    "SocialPost": {
+      "title": "SocialPost",
+      "type": "object",
+      "properties": {
+        "post_url": { "type": "string" },
+        "platform": { "type": "string", "enum": ["instagram", "linkedin"] },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["post_url", "platform", "created_at"]
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/events/{eventId}": {
+      "schema": { "$ref": "#/entities/Event" },
+      "description": "Collection of community events."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Setting" },
+      "description": "Global UI settings (e.g., page headings)."
+    },
+    "/gallery/{imageId}": {
+      "schema": { "$ref": "#/entities/GalleryImage" },
+      "description": "Images for the community gallery."
+    },
+    "/socialPosts/{postId}": {
+      "schema": { "$ref": "#/entities/SocialPost" },
+      "description": "Links to social media posts for embedding."
+    }
+  }
+}
