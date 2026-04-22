@@ -91,13 +91,13 @@ export default async function Home() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl space-y-8">
             <h2 className="text-3xl sm:text-6xl font-black leading-tight">
-              Fouders & Investors Xplore (FIX) by CEDAT: <span className="text-accent italic">Pitch Your StartUp</span>
+              Founders & Investors Xplore (FIX) by CEDAT: <span className="text-accent italic">Pitch Your StartUp</span>
             </h2>
             <p className="text-lg md:text-xl text-white/80 leading-relaxed">
             FIX connects ambitious founders with top-tier investors and mentors. Whether you’re pitching on stage or networking from the floor, find the fuel for your startup journey here.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
-              <Link href="/fic">
+              <Link href="/fix">
                 <Button size="lg" className="rounded-full bg-accent hover:bg-accent/90 text-white font-black px-6 md:px-10 h-12 md:h-16 text-sm md:text-lg">
                   Apply Now 
                 </Button>

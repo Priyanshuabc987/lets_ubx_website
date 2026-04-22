@@ -34,6 +34,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/events", label: "Events" },
+    { href: "/fix", label: "Fix" },
     { href: "/gallery", label: "Gallery" },
     { href: "/startup-world-cup", label: "Startup World Cup" },
     { href: "/ask-us", label: "Ask Us" },

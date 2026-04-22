@@ -3,6 +3,7 @@ import { getGalleryPhotos, getGalleryVideos } from "@/lib/data/gallery";
 import { GalleryPageClient } from "@/components/gallery/GalleryPageClient";
 import { Metadata } from "next";
 import { BASE_URL, LOGO_URL } from "@/lib/constants";
+import { GalleryItem } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Event Gallery - Photos of Bengaluru's Startup and Tech Community",
@@ -38,6 +39,26 @@ export default async function GalleryPage() {
     getGalleryVideos(),
   ]);
 
+  const localPhotoPaths = [
+    { src: '/gallery/Midas - WTM.jpg', alt: 'Midas - WTM' },
+    { src: '/gallery/Nooo.jpg', alt: 'Nooo' },
+    { src: '/gallery/SIAN.jpg', alt: 'SIAN' },
+    { src: '/gallery/Zieers - Jan.jpg', alt: 'Zieers - Jan' },
+    { src: '/gallery/Zieers - Meetup.jpg', alt: 'Zieers - Meetup' },
+    { src: '/gallery/dinner.jpeg', alt: 'dinner' },
+    { src: '/gallery/pitch.jpeg', alt: 'pitch' },
+  ];
+
+  const localPhotos: GalleryItem[] = localPhotoPaths.map((photo, index) => ({
+    id: `local-${index + 1}`,
+    url: photo.src,
+    type: 'photo',
+    display_order: photos.length + index + 1,
+    caption: photo.alt,
+    createdAt: new Date(),
+  }));
+
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -64,7 +85,7 @@ export default async function GalleryPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <GalleryPageClient photos={photos} videos={videos}  />
+      <GalleryPageClient photos={[...photos, ...localPhotos]} videos={videos}  />
     </>
   );
 }

@@ -51,3 +51,10 @@ export async function revalidateGalleryVideos() {
 export async function revalidateHeroImages() {
   revalidateTag('hero');
 }
+
+/**
+ * Revalidates the cache for the FIX page registration link.
+ */
+export async function revalidateFixUrl() {
+  revalidateTag('fix-url');
+}

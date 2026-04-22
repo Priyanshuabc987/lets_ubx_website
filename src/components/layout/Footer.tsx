@@ -27,7 +27,7 @@ export function Footer() {
               <h4 className="text-white font-bold text-sm uppercase tracking-widest">Programs</h4>
               <ul className="space-y-2 text-sm text-zinc-400">
                 <li><Link href="/startup-world-cup" className="hover:text-white transition-colors">Startup World Cup</Link></li>
-                <li><Link href="/fic" className="hover:text-white transition-colors">FIX</Link></li>
+                <li><Link href="/fix" className="hover:text-white transition-colors">FIX</Link></li>
                 <li><Link href="/ask-us" className="hover:text-white transition-colors">Support</Link></li>
               </ul>
             </div>
