@@ -7,13 +7,14 @@ import { AdminLayout } from '@/components/layout/AdminLayout';
 import { EventManagement } from '@/components/admin/EventManagement';
 import { Card, CardContent } from '@/components/ui/card';
 import { generateSEO, seoConfigs } from '@/lib/seo';
-import { Calendar, Images, FileText, Link as LinkIcon } from 'lucide-react';
+import { Calendar, BarChart3,Images, FileText, Link as LinkIcon } from 'lucide-react';
 import { GalleryManagement } from '@/components/admin/GalleryManagement';
 import { HeroManagement } from '@/components/admin/HeroManagement';
 import { SocialPostManagement } from '@/components/admin/SocialPostManagement';
 import { FixManagement } from '@/components/admin/FixManagement';
 
 export const adminSections = [
+  // { id: 'overview', label: 'Overview', icon: BarChart3 },
   { id: 'events', label: 'Events', icon: Calendar },
   { id: 'hero', label: 'Hero Images', icon: Images },
   { id: 'gallery', label: 'Gallery Images', icon: Images },
@@ -36,7 +37,7 @@ export default function AdminDashboard() {
   }, [searchParams]);
 
   const onSectionChange = (s: string) => {
-    router.push(s === 'events' ? '/admin' : `/admin?section=${s}`);
+    router.push(s === 'overview' ? '/admin' : `/admin?section=${s}`);
   };
 
   const renderContent = () => {

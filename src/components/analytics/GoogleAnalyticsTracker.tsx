@@ -1,29 +1,42 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export function GoogleAnalyticsTracker({ gaId }: { gaId: string }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isFirstRender = useRef(true);
+  const lastTracked = useRef<string | null>(null);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    const search = window.location.search;
+    const url = search ? `${pathname}${search}` : pathname;
 
-    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void })
-      .gtag;
-    if (!gtag) return;
+    if (lastTracked.current === url) return;
+    lastTracked.current = url;
 
-    const search = searchParams?.toString();
-    const url = search ? `${pathname}?${search}` : pathname;
+    const w = window as unknown as {
+      dataLayer?: unknown[];
+      gtag?: (...args: unknown[]) => void;
+    };
 
-    gtag("config", gaId, { page_path: url });
-  }, [gaId, pathname, searchParams]);
+    // Create a stub so events are queued even if gtag.js hasn't loaded yet.
+    w.dataLayer = w.dataLayer || [];
+    w.gtag =
+      w.gtag ||
+      ((...args: unknown[]) => {
+        w.dataLayer?.push(args);
+      });
+
+    // Ensure config exists, but don't auto-send page_view from config.
+    w.gtag("config", gaId, { send_page_view: false });
+
+    // Explicit page view for App Router navigations (and initial mount).
+    w.gtag("event", "page_view", {
+      page_path: url,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
+  }, [gaId, pathname]);
 
   return null;
 }
-

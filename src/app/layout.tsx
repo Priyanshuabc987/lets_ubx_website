@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { Suspense } from "react"; 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "./providers";
@@ -107,7 +108,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          href="https://googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
         <script
@@ -121,7 +122,9 @@ export default function RootLayout({
           <main className="flex-grow">{children}</main>
           <Footer />
         </Providers>
+        
         <Analytics />
+
         {gaId ? (
           <>
             <Script
@@ -130,13 +133,17 @@ export default function RootLayout({
             />
             <Script id="google-analytics" strategy="afterInteractive">
               {`
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${gaId}');
-              `.trim()}
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                window.gtag = gtag;
+                gtag('js', new Date());
+                gtag('config', '${gaId}', { send_page_view: false });
+              `}
             </Script>
-            <GoogleAnalyticsTracker gaId={gaId} />
+            
+            <Suspense fallback={null}>
+              <GoogleAnalyticsTracker gaId={gaId} />
+            </Suspense>
           </>
         ) : null}
       </body>

@@ -201,7 +201,7 @@ export function EventManagement() {
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
-        <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingEvent ? 'Edit Event' : 'Create New Event'}</DialogTitle>
           </DialogHeader>
