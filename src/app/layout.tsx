@@ -1,11 +1,14 @@
 
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "./providers";
 import { BASE_URL, LOGO_URL } from "@/lib/constants";
 import { FaviconFixer } from "@/components/layout/FaviconFixer";
+import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalyticsTracker } from "@/components/analytics/GoogleAnalyticsTracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -44,6 +47,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -117,6 +121,24 @@ export default function RootLayout({
           <main className="flex-grow">{children}</main>
           <Footer />
         </Providers>
+        <Analytics />
+        {gaId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaId}');
+              `.trim()}
+            </Script>
+            <GoogleAnalyticsTracker gaId={gaId} />
+          </>
+        ) : null}
       </body>
     </html>
   );
