@@ -6,7 +6,7 @@ import { BASE_URL, LOGO_URL } from "@/lib/constants";
 import { GalleryItem } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Event Gallery - Photos of Bengaluru's Startup and Tech Community",
+  title: "Event Gallery - Photos & Videos of Bengaluru's Startup Ecosystem of Communities ",
   description: "Explore photos from Cedat's vibrant events. See the energy of our startup meetups, workshops, and networking sessions. A glimpse into the heart of Bengaluru's tech ecosystem.",
   openGraph: {
     title: "Event Gallery - Cedat",

@@ -13,9 +13,9 @@ import { GoogleAnalyticsTracker } from "@/components/analytics/GoogleAnalyticsTr
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
+  title: "Cedat: Bengaluru's Largest Startup Ecosystem of Communities",
   description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. We are community builders across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech, Social Impact, and more. Join us to connect, learn, and grow your startup.",
-  keywords: "startup ecosystem Bengaluru, startup community Bengaluru, tech community Bengaluru, entrepreneur network Bengaluru, startup events Bengaluru, tech meetups Bengaluru, founder events, startup funding Bengaluru, seed funding, angel investors Bengaluru, startup ideas, how to start a startup, hardware startups, healthcare startups, edtech, foodtech, social impact startups, fashion startups, import export business, sustainability, NGOs, Bengaluru, Karnataka",
+  keywords: "meetups, events, stratups event, events in banglore, upcoming event in banglore, startup , startup in banglore, startups meetups in bengaluru, startup events in Bengaluru, startup community of Bengaluru, startup ecosystem of bengaluru, entrepreneur network Bengaluru, startup events Bengaluru, tech meetups Bengaluru, founder events, startup funding Bengaluru, seed funding, angel investors Bengaluru, startup ideas, how to start a startup, hardware startups, healthcare startups, edtech, foodtech, social impact startups, fashion startups, import export business, sustainability, NGOs, Bengaluru, Karnataka",
   icons: {
     icon: LOGO_URL,
   },

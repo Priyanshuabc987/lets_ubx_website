@@ -59,6 +59,34 @@ async function _getEvents(options: {
   }
 }
 
+export type EventsPageResult = {
+  events: Event[];
+  nextCursorId: string | null;
+  hasMore: boolean;
+};
+
+async function _getEventsPage(options: {
+  status_filter?: string;
+  start_after_id?: string;
+  page_size?: number;
+} = {}): Promise<EventsPageResult> {
+  const pageSize = options.page_size ?? 6;
+  const events = await _getEvents({
+    ...options,
+    page_size: pageSize + 1,
+  });
+
+  const hasMore = events.length > pageSize;
+  const pageEvents = hasMore ? events.slice(0, pageSize) : events;
+  const nextCursorId = pageEvents[pageEvents.length - 1]?.id ?? null;
+
+  return {
+    events: pageEvents,
+    nextCursorId,
+    hasMore,
+  };
+}
+
 // NEW: Efficiently fetches a single document directly by its ID.
 async function _getEventById(id: string): Promise<Event | null> {
   try {
@@ -86,7 +114,14 @@ export const getEvents = unstable_cache(
   _getEvents,
   ['events', getTodayKey()],
   {
-    revalidate: 86400,
+    tags: ['events']
+  }
+);
+
+export const getEventsPage = unstable_cache(
+  _getEventsPage,
+  ['events-page', getTodayKey()],
+  {
     tags: ['events']
   }
 );

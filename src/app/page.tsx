@@ -15,8 +15,8 @@ import { Metrics } from "@/components/home/Metrics";
 import { MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
-  description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. We are community builders across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech, Social Impact, and more. Join us to connect, learn, and grow your startup.",
+  title: "Cedat: Bengaluru's Largest Startup Ecosystem of Communities ",
+  description: "Welcome to Cedat, Bengaluru's largest and dynamic startup ecosystem of communities for Founders, Enablers, Mentors, Learners & Investors We are ecosystem across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech & AI, Food & Agri, Fashion & lifestyle and Social Impact, and more. Join us to connect, learn, and grow your startup.",
   openGraph: {
     title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
     description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
@@ -47,7 +47,7 @@ export default async function Home() {
   const [latestEvents, socialPosts, heroImages] = await Promise.all([
     getEvents({
       status_filter: "published",
-      page_size: 3
+      page_size: 6
     }),
     getSocialPosts(),
     getHeroImages()
@@ -77,7 +77,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <EventListClient initialEvents={latestEvents} statusFilter="published" />
+        <EventListClient initialEvents={latestEvents} statusFilter="published" showLoadMore={false} />
         
       </section>
 
@@ -91,7 +91,7 @@ export default async function Home() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl space-y-8">
             <h2 className="text-3xl sm:text-6xl font-black leading-tight">
-              Founders & Investors Xplore (FIX) by CEDAT: <span className="text-accent italic">Pitch Your StartUp</span>
+              Founders & Investors Xplore (FIX) by CEDAT - <span className="text-accent italic">Pitch Your StartUp</span>
             </h2>
             <p className="text-lg md:text-xl text-white/80 leading-relaxed">
             FIX connects ambitious founders with top-tier investors and mentors. Whether you’re pitching on stage or networking from the floor, find the fuel for your startup journey here.

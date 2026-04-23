@@ -6,11 +6,12 @@ import { motion } from "framer-motion";
 import { SocialPost } from "@/lib/data/socialposts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { extractLinkedInID } from "@/lib/utils";
+import { ArrowRight } from 'lucide-react';
 import { ChevronRight } from "lucide-react";
 
 const LINKEDIN_EMBED_HEIGHT_DESKTOP = 610;
 const INSTAGRAM_EMBED_HEIGHT_DESKTOP = 610;
-const LINKEDIN_EMBED_HEIGHT_MOBILE = 510;
+const LINKEDIN_EMBED_HEIGHT_MOBILE = 560;
 const INSTAGRAM_EMBED_HEIGHT_MOBILE = 440;
 
 interface SocialFeedProps {
@@ -74,7 +75,7 @@ export function SocialFeed({ initialPosts }: SocialFeedProps) {
             platform="instagram"
           />
         )}
-        
+
         {youtubePosts.length > 0 && (
           <SocialRow
             title="YouTube Podcasts"
@@ -100,9 +101,9 @@ function SocialRow({
 
   const cardBgClass = platform === 'linkedin'
     ? 'bg-[#0A66C2]'
-    : platform === 'instagram' 
-    ? 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]'
-    : 'bg-[#FF0000]';
+    : platform === 'instagram'
+      ? 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]'
+      : 'bg-[#FF0000]';
 
   const embedHeight = platform === 'linkedin'
     ? (isMobile ? LINKEDIN_EMBED_HEIGHT_MOBILE : LINKEDIN_EMBED_HEIGHT_DESKTOP)
@@ -112,10 +113,20 @@ function SocialRow({
     <div className="mb-10 sm:mb-14 last:mb-0">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl sm:text-2xl font-display font-bold">{title}</h3>
-        <ChevronRight className="w-5 h-5" /> 
+
+
+        <div className="flex -space-x-5">
+          <ChevronRight className="w-8 h-8" strokeWidth={3} />
+          <ChevronRight className="w-8 h-8" strokeWidth={3} />
+          <ChevronRight className="w-8 h-8" strokeWidth={3} />
+        </div>
+
+
       </div>
 
-      <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-3 -mx-2 px-4 snap-x snap-mandatory [scrollbar-width:thin]">
+      <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-3 -mx-2 px-4 snap-x snap-mandatory 
+  scrollbar-hide [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+
         {posts.map((post, index) => {
           return (
             <motion.div
@@ -141,20 +152,21 @@ function SocialRow({
                     className="w-full border-none"
                   />
                 ) : platform === 'youtube' ? (
-                    <iframe 
-                        src={`https://www.youtube.com/embed/${getYouTubeID(post.post_url)}`}
-                        frameBorder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        title={`Embedded YouTube video: ${post.id}`}
-                        className="absolute top-0 left-0 w-full h-full"
-                    ></iframe>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${getYouTubeID(post.post_url)}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title={`Embedded YouTube video: ${post.id}`}
+                    className="absolute top-0 left-0 w-full h-full"
+                  ></iframe>
                 ) : (
                   <iframe
                     src={`https://www.linkedin.com/embed/feed/update/${extractLinkedInID(post.post_url)}?collapsed=1`}
                     height={embedHeight}
                     width="100%"
                     frameBorder="0"
+                    scrolling="no"
                     allowFullScreen
                     title={`LinkedIn post by CEDAT: ${post.id}`}
                     className="w-full border-none"
@@ -181,6 +193,6 @@ function getInstagramEmbedUrl(url: string): string {
 }
 
 function getYouTubeID(url: string): string {
-    const arr = url.split(/(vi\/|v%3D|v= |\/v\/|youtu\.be\/|\/embed\/)/);
-    return undefined !== arr[2] ? arr[2].split(/[^0-9a-z_\-]/i)[0] : arr[0];
+  const arr = url.split(/(vi\/|v%3D|v= |\/v\/|youtu\.be\/|\/embed\/)/);
+  return undefined !== arr[2] ? arr[2].split(/[^0-9a-z_\-]/i)[0] : arr[0];
 }
