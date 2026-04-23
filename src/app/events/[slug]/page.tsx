@@ -1,11 +1,11 @@
 
-import { getEventBySlug, getEvents } from "@/lib/data/events";
+import { getEventBySlug, getEvents, getEventsPage } from "@/lib/data/events";
 import { EventDetailView } from "@/components/events/EventDetailView";
 import { notFound } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { StaticEventList } from "@/components/events/StaticEventList";
+import { EventListClient } from "@/components/events/EventListClient";
 import type { Metadata } from 'next';
 import { BASE_URL, LOGO_URL } from "@/lib/constants";
 
@@ -68,12 +68,12 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
     notFound();
   }
 
-  const allPublishedEvents = await getEvents({
+  const relatedEventsPage = await getEventsPage({
     status_filter: 'published',
-    page_size: 6
+    page_size: 7
   });
 
-  const otherEvents = allPublishedEvents.filter(e => e.id !== event.id).slice(0, 6);
+  const otherEvents = relatedEventsPage.events.filter((e) => e.id !== event.id).slice(0, 6);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -152,7 +152,14 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-10">
                   Upcoming Meetups & Events in Bengaluru
                 </h2>
-                <StaticEventList events={otherEvents} />
+                <EventListClient
+                  initialEvents={relatedEventsPage.events}
+                  statusFilter="published"
+                  initialHasMore={relatedEventsPage.hasMore}
+                  initialCursorId={relatedEventsPage.nextCursorId ?? undefined}
+                  queryScope="event-detail-page"
+                  excludeEventIds={[event.id]}
+                />
               </div>
             )}
         </div>

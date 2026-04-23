@@ -14,6 +14,7 @@ interface EventListClientProps {
   initialCursorId?: string;
   showLoadMore?: boolean;
   queryScope?: string;
+  excludeEventIds?: string[];
 }
 
 // This component handles the client-side display and interaction for the event list.
@@ -24,6 +25,7 @@ export function EventListClient({
   initialCursorId,
   showLoadMore = true,
   queryScope = 'default',
+  excludeEventIds = [],
 }: EventListClientProps) {
   
   const { 
@@ -44,7 +46,9 @@ export function EventListClient({
     staleTime: Infinity,
   });
 
-  const sortedEvents = [...events].sort((a, b) => {
+  const visibleEvents = events.filter((event) => !excludeEventIds.includes(event.id));
+
+  const sortedEvents = [...visibleEvents].sort((a, b) => {
     // Basic guard against invalid dates
     if (!a.event_date || !b.event_date) return 0;
     try {
