@@ -1,5 +1,5 @@
 
-import { getEvents } from '@/lib/data/events';
+import { getEventsPage } from '@/lib/data/events';
 import { EventListClient } from "@/components/events/EventListClient";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -36,10 +36,9 @@ export const metadata: Metadata = {
 
 
 export default async function EventsPage() {
-  
-  const initialEvents = await getEvents({
+  const initialEventsPage = await getEventsPage({
     status_filter: 'published',
-    page_size: 6 
+    page_size: 6
   });
 
   const structuredData = {
@@ -76,7 +75,7 @@ export default async function EventsPage() {
             </Button>
           </Link>
 
-          <div className="max-w-6xl mb-8 md:mb-16 space-y-4">
+          <div className="max-w-7xl mb-8 md:mb-16 space-y-4">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-primary italic">
             Bengaluru's Startup Meetups & Events
             </h1>
@@ -85,7 +84,12 @@ export default async function EventsPage() {
             </p>
           </div>
 
-          <EventListClient initialEvents={initialEvents} statusFilter="published" />
+          <EventListClient
+            initialEvents={initialEventsPage.events}
+            statusFilter="published"
+            initialHasMore={initialEventsPage.hasMore}
+            initialCursorId={initialEventsPage.nextCursorId ?? undefined}
+          />
 
         </div>
       </main>

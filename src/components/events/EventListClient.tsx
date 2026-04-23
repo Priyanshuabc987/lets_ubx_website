@@ -10,10 +10,19 @@ import { parseISO } from 'date-fns';
 interface EventListClientProps {
   initialEvents: Event[];
   statusFilter: string;
+  initialHasMore?: boolean;
+  initialCursorId?: string;
+  showLoadMore?: boolean;
 }
 
 // This component handles the client-side display and interaction for the event list.
-export function EventListClient({ initialEvents, statusFilter }: EventListClientProps) {
+export function EventListClient({
+  initialEvents,
+  statusFilter,
+  initialHasMore = false,
+  initialCursorId,
+  showLoadMore = true,
+}: EventListClientProps) {
   
   const { 
     events, 
@@ -25,6 +34,8 @@ export function EventListClient({ initialEvents, statusFilter }: EventListClient
   } = useEvents({
     status_filter: statusFilter,
     initialData: initialEvents,
+    initialHasMore,
+    initialCursorId,
     pageSize: 6,
     // Prevent automatic re-fetching by making server data permanently fresh
     staleTime: Infinity,
@@ -58,7 +69,7 @@ export function EventListClient({ initialEvents, statusFilter }: EventListClient
         {sortedEvents.map((event) => <EventCard key={event.id} event={event} />)}
       </div>
 
-      {hasMore && (
+      {showLoadMore && hasMore && (
         <div className="flex justify-center">
           <Button variant="outline" size="lg" onClick={() => loadMore()} disabled={isLoadingMore} className="min-h-[44px] px-8 rounded-full">
             {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ChevronDown className="h-4 w-4 mr-2" />}

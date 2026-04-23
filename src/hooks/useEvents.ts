@@ -2,7 +2,7 @@
 "use client";
 
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, query, where, orderBy, doc, deleteDoc, updateDoc, addDoc, serverTimestamp, getDocs, limit, startAfter, QueryDocumentSnapshot, QueryConstraint } from 'firebase/firestore';
+import { collection, query, where, orderBy, doc, deleteDoc, updateDoc, addDoc, serverTimestamp, getDocs, getDoc, limit, startAfter, QueryDocumentSnapshot, QueryConstraint } from 'firebase/firestore';
 import { useMutation, useQueryClient, useInfiniteQuery, QueryFunctionContext } from '@tanstack/react-query';
 import { generateSlug } from '@/lib/utils';
 import { revalidateEventsList, revalidateEventDetail } from '@/lib/actions/revalidate';
@@ -27,36 +27,46 @@ const PAGE_SIZE = 9;
 
 type EventsPage = {
   events: Event[];
-  lastDoc: QueryDocumentSnapshot | null;
+  lastDoc: QueryDocumentSnapshot | string | null;
+  hasMore: boolean;
 };
 
 export function useEvents({ 
   status_filter, 
   pageSize = PAGE_SIZE, 
   initialData,
+  initialHasMore = false,
+  initialCursorId,
   staleTime, // Allow staleTime to be passed
 }: { 
   status_filter?: string, 
   pageSize?: number,
   initialData?: Event[],
+  initialHasMore?: boolean,
+  initialCursorId?: string,
   staleTime?: number,
 } = {}) {
   const db = useFirestore();
 
   const fetchEvents = async (context: QueryFunctionContext): Promise<EventsPage> => {
-    const pageParam = context.pageParam as QueryDocumentSnapshot | null;
-    const constraints: QueryConstraint[] = [orderBy('event_date', 'asc'), limit(pageSize)];
+    const pageParam = context.pageParam as QueryDocumentSnapshot | string | null;
+    const constraints: QueryConstraint[] = [orderBy('event_date', 'asc'), limit(pageSize + 1)];
     if (status_filter) {
       constraints.push(where('status', '==', status_filter));
     }
     if (pageParam) {
-      constraints.push(startAfter(pageParam));
+      const cursorDoc = typeof pageParam === 'string' ? await getDoc(doc(db, 'events', pageParam)) : pageParam;
+      if (cursorDoc.exists()) {
+        constraints.push(startAfter(cursorDoc));
+      }
     }
     const q = query(collection(db, 'events'), ...constraints);
     const snapshot = await getDocs(q);
-    const newEvents = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Event[];
-    const lastDoc = snapshot.docs[snapshot.docs.length - 1] || null;
-    return { events: newEvents, lastDoc };
+    const hasMore = snapshot.docs.length > pageSize;
+    const pageDocs = hasMore ? snapshot.docs.slice(0, pageSize) : snapshot.docs;
+    const newEvents = pageDocs.map(d => ({ id: d.id, ...d.data() })) as Event[];
+    const lastDoc = pageDocs[pageDocs.length - 1] || null;
+    return { events: newEvents, lastDoc, hasMore };
   };
 
   const { 
@@ -71,12 +81,12 @@ export function useEvents({
     queryFn: fetchEvents,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
-      if (lastPage.events.length < pageSize) return undefined; 
+      if (!lastPage.hasMore) return undefined;
       return lastPage.lastDoc;
     },
     initialData: initialData 
       ? {
-          pages: [{ events: initialData, lastDoc: null }],
+          pages: [{ events: initialData, lastDoc: initialCursorId || initialData[initialData.length - 1]?.id || null, hasMore: initialHasMore }],
           pageParams: [null],
         }
       : undefined,
