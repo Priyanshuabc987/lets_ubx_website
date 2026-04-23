@@ -13,6 +13,7 @@ interface EventListClientProps {
   initialHasMore?: boolean;
   initialCursorId?: string;
   showLoadMore?: boolean;
+  queryScope?: string;
 }
 
 // This component handles the client-side display and interaction for the event list.
@@ -22,6 +23,7 @@ export function EventListClient({
   initialHasMore = false,
   initialCursorId,
   showLoadMore = true,
+  queryScope = 'default',
 }: EventListClientProps) {
   
   const { 
@@ -37,6 +39,7 @@ export function EventListClient({
     initialHasMore,
     initialCursorId,
     pageSize: 6,
+    queryScope,
     // Prevent automatic re-fetching by making server data permanently fresh
     staleTime: Infinity,
   });

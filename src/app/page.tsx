@@ -77,7 +77,12 @@ export default async function Home() {
           </Link>
         </div>
 
-        <EventListClient initialEvents={latestEvents} statusFilter="published" showLoadMore={false} />
+        <EventListClient
+          initialEvents={latestEvents}
+          statusFilter="published"
+          showLoadMore={false}
+          queryScope="home-page"
+        />
         
       </section>
 

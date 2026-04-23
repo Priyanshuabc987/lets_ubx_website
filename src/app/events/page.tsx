@@ -89,6 +89,7 @@ export default async function EventsPage() {
             statusFilter="published"
             initialHasMore={initialEventsPage.hasMore}
             initialCursorId={initialEventsPage.nextCursorId ?? undefined}
+            queryScope="events-page"
           />
 
         </div>

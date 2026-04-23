@@ -38,6 +38,7 @@ export function useEvents({
   initialHasMore = false,
   initialCursorId,
   staleTime, // Allow staleTime to be passed
+  queryScope = 'default',
 }: { 
   status_filter?: string, 
   pageSize?: number,
@@ -45,6 +46,7 @@ export function useEvents({
   initialHasMore?: boolean,
   initialCursorId?: string,
   staleTime?: number,
+  queryScope?: string,
 } = {}) {
   const db = useFirestore();
 
@@ -77,7 +79,7 @@ export function useEvents({
     isFetchingNextPage, 
     error 
   } = useInfiniteQuery<EventsPage, Error>({
-    queryKey: ['events', { status_filter }],
+    queryKey: ['events', queryScope, { status_filter, pageSize }],
     queryFn: fetchEvents,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
