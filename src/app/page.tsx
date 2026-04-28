@@ -84,7 +84,7 @@ export default async function Home() {
           initialCursorId={latestEventsPage.nextCursorId ?? undefined}
           queryScope="home-page"
         />
-        
+
       </section>
 
       <SocialFeed initialPosts={socialPosts} />
@@ -100,18 +100,25 @@ export default async function Home() {
               Founders & Investors Xplore (FIX) by CEDAT - <span className="text-accent italic">Pitch Your StartUp</span>
             </h2>
             <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-            FIX connects ambitious founders with top-tier investors and mentors. Whether you’re pitching on stage or networking from the floor, find the fuel for your startup journey here.
+              FIX connects ambitious founders with top-tier investors and mentors. Whether you’re pitching on stage or networking from the floor, find the fuel for your startup journey here.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/fix">
                 <Button size="lg" className="rounded-full bg-accent hover:bg-accent/90 text-white font-black px-6 md:px-10 h-12 md:h-16 text-sm md:text-lg">
-                  Apply Now 
+                  Apply Now
                 </Button>
               </Link>
-              <Link href="https://wa.me/7406345305?text=I%20wanted%20to%20know%20more%20about%20FIX" target="_blank">
-                <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-black hover:bg-white/10 px-6 md:px-10 h-10 md:h-16 text-sm md:text-lg">
-                <MessageCircle className="w-5 h-5" />
-                  Contact Us 
+              <Link
+                href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20%28FIX%29%20by%20CEDAT%20on%20coming%20Saturday."
+                target="_blank"
+              >
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full border-2 border-white text-black hover:bg-white/10 px-6 md:px-10 h-10 md:h-16 text-sm md:text-lg"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Contact Us
                 </Button>
               </Link>
             </div>
