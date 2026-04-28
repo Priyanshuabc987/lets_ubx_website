@@ -71,7 +71,7 @@ export function EventListClient({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8 items-stretch">
         {sortedEvents.map((event) => <EventCard key={event.id} event={event} />)}
       </div>

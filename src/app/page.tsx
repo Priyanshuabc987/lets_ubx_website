@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Ecosystem } from "@/components/home/Ecosystem";
-import { getEvents } from "@/lib/data/events";
+import { getEventsPage } from "@/lib/data/events";
 import { getSocialPosts } from "@/lib/data/socialposts";
 import { getHeroImages } from "@/lib/data/hero";
 import { EventListClient } from "@/components/events/EventListClient";
@@ -44,10 +44,10 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const [latestEvents, socialPosts, heroImages] = await Promise.all([
-    getEvents({
+  const [latestEventsPage, socialPosts, heroImages] = await Promise.all([
+    getEventsPage({
       status_filter: "published",
-      page_size: 6
+      page_size: 6,
     }),
     getSocialPosts(),
     getHeroImages()
@@ -78,9 +78,10 @@ export default async function Home() {
         </div>
 
         <EventListClient
-          initialEvents={latestEvents}
+          initialEvents={latestEventsPage.events}
           statusFilter="published"
-          showLoadMore={false}
+          initialHasMore={latestEventsPage.hasMore}
+          initialCursorId={latestEventsPage.nextCursorId ?? undefined}
           queryScope="home-page"
         />
         

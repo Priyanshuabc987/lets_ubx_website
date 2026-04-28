@@ -9,10 +9,11 @@ export const dynamic = 'force-dynamic';
  * API route to get a user by their ID.
  * GET /api/user/[id]
  */
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-
-  const resolvedparams = await params;
-  const id = resolvedparams.id;
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   if (!id) {
     return NextResponse.json({ error: 'User ID is required' }, { status: 400 });

@@ -2,25 +2,8 @@
 import 'server-only';
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
-import admin from 'firebase-admin';
 import { adminDb } from '@/firebase/admin';
 import { User } from '@/lib/types'; // Corrected: Import User from the single source of truth
-
-/**
- * Converts Firestore Timestamps to ISO strings for serialization, which is necessary
- * for data passed from Server Components to Client Components or cached.
- * @param data - The object with Firestore Timestamps.
- * @returns A new object with Timestamps converted to ISO strings.
- */
-const convertTimestamps = (data: any) => {
-  const convertedData = { ...data };
-  for (const key in convertedData) {
-    if (convertedData[key] instanceof admin.firestore.Timestamp) {
-      convertedData[key] = convertedData[key].toDate().toISOString();
-    }
-  }
-  return convertedData;
-};
 
 /**
  * Private function to fetch a user by their ID from Firestore.
@@ -51,23 +34,20 @@ const _getUserById = async (id: string): Promise<User | null> => {
 
   } catch (error) {
     console.error(`Error fetching user ${id} from Firestore:`, error);
-    // Return null to prevent page crashes on database errors.
-    // The calling function should handle the null case.
-    return null;
+    throw error;
   }
 };
 
 /**
- * Public, cached function to get a user by ID.
- * This function is wrapped with both React's `cache` and Next.js's `unstable_cache`
- * to ensure that calls within the same request are deduplicated and the result
- * is cached across requests.
+ * Public function to get a user by ID.
+ * User role checks for auth should not be cross-request cached, otherwise stale
+ * "not found" results can survive after the Firestore document is fixed.
  */
 export const getUserById = (id: string) => unstable_cache(
   // Use React's cache to deduplicate requests within the same render pass
   cache(_getUserById),
   // Unique cache key for Next.js Data Cache
-  ['user', id],
+  ['user-v1', id],
   // Cache options
   {
     // A tag for on-demand revalidation. We can revalidate this if a user's role changes.

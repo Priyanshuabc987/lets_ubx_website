@@ -81,7 +81,7 @@ export function EventCard({ event }: EventCardProps) {
                 <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
                 <span className="truncate">{dateInfo.full}</span>
               </span>
-              <span className="hidden sm:inline text-muted-foreground/50">•</span>
+              <span className="hidden sm:inline text-muted-foreground/50">|</span>
               <span className="flex items-center gap-1.5 min-w-0">
                 <Clock className="w-3.5 h-3.5 flex-shrink-0" />
                 {/* 4. FIX: Time is now correctly formatted to AM/PM */}
@@ -91,7 +91,7 @@ export function EventCard({ event }: EventCardProps) {
               </span>
               {event.location && (
                 <>
-                  <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                  <span className="hidden sm:inline text-muted-foreground/50">|</span>
                   <span className="flex items-center gap-1.5 min-w-0">
                     <MapPin className="w-3.5 h-3.na5 flex-shrink-0" />
                     <span className="truncate">{event.location}</span>

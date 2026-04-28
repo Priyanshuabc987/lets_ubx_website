@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 export default async function EventsPage() {
   const initialEventsPage = await getEventsPage({
     status_filter: 'published',
-    page_size: 6
+    page_size: 9
   });
 
   const structuredData = {
@@ -80,7 +80,7 @@ export default async function EventsPage() {
             Bengaluru's Startup Meetups & Events
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Connecting startups, students, and innovators into one powerful network. 
+              Let’s Unite | Let's Build | Let’s Xplore - Dynamic Ecosystem of Nexus Communities
             </p>
           </div>
 

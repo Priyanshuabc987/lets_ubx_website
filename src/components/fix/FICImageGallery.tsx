@@ -1,9 +1,10 @@
 
 "use client";
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { X, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, X, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 
 const FIC_IMAGES = [
@@ -30,17 +31,48 @@ const FIC_IMAGES = [
 ];
 
 export function FICImageGallery() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const showPreviousImage = () => {
+        setCurrentIndex((prev) => (prev === 0 ? FIC_IMAGES.length - 1 : prev - 1));
+    };
+
+    const showNextImage = () => {
+        setCurrentIndex((prev) => (prev === FIC_IMAGES.length - 1 ? 0 : prev + 1));
+    };
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                showPreviousImage();
+            }
+
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                showNextImage();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen]);
+
     return (
-        <div className="flex flex-wrap justify-center gap-4">
-            {FIC_IMAGES.map((src, index) => (
-                <Dialog key={index}>
-                    <DialogTrigger asChild>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <div className="flex flex-wrap justify-center gap-4">
+                {FIC_IMAGES.map((src, index) => (
+                    <DialogTrigger key={src} asChild>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.03, duration: 0.3 }}
                             className="relative w-[calc(50%-0.5rem)] sm:w-[calc(33.33%-1rem)] md:w-[calc(25%-1rem)]  aspect-[4/3] rounded-xl overflow-hidden border border-border/50 group cursor-pointer shadow-md"
+                            onClick={() => setCurrentIndex(index)}
                         >
                             <Image
                                 src={src}
@@ -57,32 +89,49 @@ export function FICImageGallery() {
                             </div>
                         </motion.div>
                     </DialogTrigger>
+                ))}
+            </div>
 
-                    <DialogContent className="max-w-[95vw] w-full h-[90vh] bg-transparent border-none shadow-none p-0 flex items-center justify-center">
-                        <DialogTitle className="sr-only">Enlarged Event Image</DialogTitle>
-                        <DialogDescription className="sr-only">An enlarged view of image {index + 1}</DialogDescription>
+            <DialogContent className="max-w-[95vw] w-full h-[90vh] bg-transparent border-none shadow-none p-0 flex items-center justify-center">
+                <DialogTitle className="sr-only">Enlarged Event Image</DialogTitle>
+                <DialogDescription className="sr-only">
+                    An enlarged view of image {currentIndex + 1}
+                </DialogDescription>
 
-                        {/* This wrapper ensures the 'fill' image has a boundary to expand into */}
-                        <div className="relative w-full h-full">
-                            <Image
-                                src={src}
-                                alt={`Enlarged fix Event Image ${index + 1}`}
-                                fill
-                                priority // Use priority for the enlarged image for faster loading
-                                sizes="95vw"
-                                className="object-contain" // Keeps aspect ratio without cropping
-                            />
-                        </div>
+                <button
+                    type="button"
+                    onClick={showPreviousImage}
+                    className="absolute left-3 sm:left-6 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition hover:bg-black/70 focus:outline-none ring-1 ring-white/20"
+                    aria-label="Show previous image"
+                >
+                    <ArrowLeft className="h-5 w-5" />
+                </button>
 
-                        {/* Adjusted Close Button */}
-                        <DialogClose className="absolute top-4 right-4 z-50 text-white bg-black/40 backdrop-blur-md rounded-full p-2 hover:bg-black/70 transition-all focus:outline-none ring-1 ring-white/20">
-                            <X className="w-5 h-5" />
-                            <span className="sr-only">Close</span>
-                        </DialogClose>
-                    </DialogContent>
+                <div className="relative h-full w-full px-14 sm:px-20">
+                    <Image
+                        src={FIC_IMAGES[currentIndex]}
+                        alt={`Enlarged fix Event Image ${currentIndex + 1}`}
+                        fill
+                        priority
+                        sizes="95vw"
+                        className="object-contain"
+                    />
+                </div>
 
-                </Dialog>
-            ))}
-        </div>
+                <button
+                    type="button"
+                    onClick={showNextImage}
+                    className="absolute right-3 sm:right-6 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition hover:bg-black/70 focus:outline-none ring-1 ring-white/20"
+                    aria-label="Show next image"
+                >
+                    <ArrowRight className="h-5 w-5" />
+                </button>
+
+                <DialogClose className="absolute top-4 right-4 z-50 text-white bg-black/40 backdrop-blur-md rounded-full p-2 hover:bg-black/70 transition-all focus:outline-none ring-1 ring-white/20">
+                    <X className="w-5 h-5" />
+                    <span className="sr-only">Close</span>
+                </DialogClose>
+            </DialogContent>
+        </Dialog>
     );
 }

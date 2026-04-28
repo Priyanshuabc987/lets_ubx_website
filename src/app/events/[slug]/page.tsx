@@ -70,7 +70,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
   const relatedEventsPage = await getEventsPage({
     status_filter: 'published',
-    page_size: 7
+    page_size: 10
   });
 
   const otherEvents = relatedEventsPage.events.filter((e) => e.id !== event.id).slice(0, 6);

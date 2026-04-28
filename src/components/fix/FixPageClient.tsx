@@ -58,10 +58,10 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
               <div className="bg-muted/30 p-6 rounded-2xl border border-border sticky top-24">
                 <h3 className="text-xl font-bold mb-4">Event Highlights</h3>
                 <ul className="space-y-3 text-sm text-muted-foreground mb-6">
-                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Live pitching to a panel of active investors.</li>
+                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Live pitching to active investors & angels.</li>
                     <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Actionable feedback from industry veterans.</li>
                     <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />High-value networking with VCs & mentors.</li>
-                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Explore the CEDAT startup ecosystem.</li>
+                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Explore the CEDAT dynamic startup ecosystem.</li>
                 </ul>
                 <Button asChild size="lg" className="w-full font-bold text-lg">
                     <Link href={registrationLink} target="_blank">

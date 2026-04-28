@@ -1,13 +1,44 @@
 
 "use client";
 
-import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { GalleryItem } from "@/lib/types";
-import { Video as VideoIcon, X, ZoomIn } from "lucide-react";
+import { ArrowLeft, ArrowRight, Video as VideoIcon, X, ZoomIn } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const showPreviousItem = () => {
+    setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
+  };
+
+  const showNextItem = () => {
+    setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        showPreviousItem();
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        showNextItem();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, items.length]);
+
   if (!items || items.length === 0) {
     return (
       <div className="text-center py-20 ">
@@ -17,17 +48,20 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
     );
   }
 
+  const currentItem = items[currentIndex];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 space-y-6">
-      {items.map((item, index) => (
-        <Dialog key={item.id}>
-          <DialogTrigger asChild>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 space-y-6">
+        {items.map((item, index) => (
+          <DialogTrigger key={item.id} asChild>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.03, duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
               className="break-inside-avoid aspect-[4/3] relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg bg-muted"
+              onClick={() => setCurrentIndex(index)}
             >
               <ImageWithFallback
                 src={item.url}
@@ -45,32 +79,64 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
               </div>
             </motion.div>
           </DialogTrigger>
-          <DialogContent className="max-w-5xl max-h-[90vh] h-full w-full bg-transparent border-none p-0 shadow-none">
-            <DialogTitle className="sr-only">{item.caption || (item.type === 'photo' ? 'Enlarged image' : 'Video playback')}</DialogTitle>
-            <div className="relative aspect-video h-full w-full bg-black/90 rounded-lg overflow-hidden flex items-center justify-center">
-              {item.type === 'photo' ? (
-                <ImageWithFallback
-                  src={item.url}
-                  alt={item.caption || 'Enlarged gallery view'}
-                  fill
-                  className="object-contain rounded-md"
-                />
-              ) : (
-                <video
-                  src={item.url}
-                  controls
-                  autoPlay
-                  className="max-h-[90vh] w-auto object-contain rounded-md"
-                />
-              )}
+        ))}
+      </div>
+
+      <DialogContent className="max-w-[95vw] w-full h-[90vh] bg-transparent border-none shadow-none p-0 flex items-center justify-center">
+        <DialogTitle className="sr-only">
+          {currentItem?.caption || (currentItem?.type === "photo" ? "Enlarged image" : "Video playback")}
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          {currentItem ? `An enlarged view of item ${currentIndex + 1}` : "An enlarged gallery view"}
+        </DialogDescription>
+
+        {items.length > 1 && (
+          <button
+            type="button"
+            onClick={showPreviousItem}
+            className="absolute left-3 sm:left-6 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition hover:bg-black/70 focus:outline-none ring-1 ring-white/20"
+            aria-label="Show previous item"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        )}
+
+        <div className="relative h-full w-full px-14 sm:px-20">
+          {currentItem?.type === "photo" ? (
+            <ImageWithFallback
+              src={currentItem.url}
+              alt={currentItem.caption || "Enlarged gallery view"}
+              fill
+              className="object-contain"
+            />
+          ) : currentItem ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <video
+                src={currentItem.url}
+                controls
+                autoPlay
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
-            <DialogClose className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/75 transition-colors focus:outline-none focus:ring-2 focus:ring-white">
-              <X className="w-6 h-6" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
-      ))}
-    </div>
+          ) : null}
+        </div>
+
+        {items.length > 1 && (
+          <button
+            type="button"
+            onClick={showNextItem}
+            className="absolute right-3 sm:right-6 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition hover:bg-black/70 focus:outline-none ring-1 ring-white/20"
+            aria-label="Show next item"
+          >
+            <ArrowRight className="h-5 w-5" />
+          </button>
+        )}
+
+        <DialogClose className="absolute top-4 right-4 z-50 text-white bg-black/40 backdrop-blur-md rounded-full p-2 hover:bg-black/70 transition-all focus:outline-none ring-1 ring-white/20">
+          <X className="w-5 h-5" />
+          <span className="sr-only">Close</span>
+        </DialogClose>
+      </DialogContent>
+    </Dialog>
   );
 }

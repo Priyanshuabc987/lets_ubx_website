@@ -1,10 +1,10 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Image as ImageIcon, Video as VideoIcon, ZoomIn } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { ArrowLeft, ArrowRight, Image as ImageIcon, Video as VideoIcon, X, ZoomIn } from 'lucide-react';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { motion } from 'framer-motion';
 import { GalleryItem } from '@/lib/types'; // Assuming GalleryItem is defined in types
@@ -12,6 +12,8 @@ import { GalleryItem } from '@/lib/types'; // Assuming GalleryItem is defined in
 // The component now accepts items as a prop
 export function GalleryPhotos({ items }: { items: GalleryItem[] }) {
   const [activeTab, setActiveTab] = useState('all');
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const sortedItems = items?.slice().sort((a, b) => a.display_order - b.display_order);
 
@@ -19,6 +21,41 @@ export function GalleryPhotos({ items }: { items: GalleryItem[] }) {
     if (activeTab === 'all') return true;
     return item.type === activeTab;
   });
+
+  const showPreviousItem = () => {
+    if (!filteredItems?.length) return;
+    setCurrentIndex((prev) => (prev === 0 ? filteredItems.length - 1 : prev - 1));
+  };
+
+  const showNextItem = () => {
+    if (!filteredItems?.length) return;
+    setCurrentIndex((prev) => (prev === filteredItems.length - 1 ? 0 : prev + 1));
+  };
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showPreviousItem();
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showNextItem();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, filteredItems?.length]);
+
+  const currentItem = filteredItems?.[currentIndex];
 
   return (
     <div className="container mx-auto px-4 sm:px-6">
@@ -31,16 +68,17 @@ export function GalleryPhotos({ items }: { items: GalleryItem[] }) {
         </Tabs>
 
         {filteredItems && filteredItems.length > 0 ? (
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
              <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
                 {filteredItems.map((item, index) => (
-                    <Dialog key={item.id}>
-                        <DialogTrigger asChild>
+                        <DialogTrigger key={item.id} asChild>
                              <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.03, duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
                                 className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg bg-muted"
+                                onClick={() => setCurrentIndex(index)}
                             >
                                 <ImageWithFallback 
                                     src={item.url} 
@@ -55,27 +93,64 @@ export function GalleryPhotos({ items }: { items: GalleryItem[] }) {
                                 </div>
                             </motion.div>
                         </DialogTrigger>
-                        <DialogContent className="max-w-5xl bg-transparent border-none p-0 shadow-none">
-                             <div className="relative w-full bg-black/90 rounded-lg overflow-hidden flex items-center justify-center p-2">
-                                {item.type === 'photo' ? (
-                                    <ImageWithFallback 
-                                        src={item.url}
-                                        alt={item.caption || 'Enlarged gallery view'}
-                                        className="max-h-[90vh] w-auto object-contain rounded-md"
-                                    />
-                                ) : (
-                                    <video 
-                                        src={item.url} 
-                                        controls 
-                                        autoPlay 
-                                        className="max-h-[90vh] w-auto object-contain rounded-md"
-                                    />
-                                )}
-                            </div>
-                        </DialogContent>
-                    </Dialog>
                 ))}
             </div>
+            <DialogContent className="max-w-[95vw] w-full h-[90vh] bg-transparent border-none shadow-none p-0 flex items-center justify-center">
+                <DialogTitle className="sr-only">
+                    {currentItem?.caption || (currentItem?.type === 'photo' ? 'Enlarged image' : 'Video playback')}
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                    {currentItem ? `An enlarged view of item ${currentIndex + 1}` : 'An enlarged gallery view'}
+                </DialogDescription>
+
+                {filteredItems.length > 1 && (
+                    <button
+                        type="button"
+                        onClick={showPreviousItem}
+                        className="absolute left-3 sm:left-6 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition hover:bg-black/70 focus:outline-none ring-1 ring-white/20"
+                        aria-label="Show previous item"
+                    >
+                        <ArrowLeft className="h-5 w-5" />
+                    </button>
+                )}
+
+                <div className="relative h-full w-full px-14 sm:px-20">
+                    {currentItem?.type === 'photo' ? (
+                        <ImageWithFallback 
+                            src={currentItem.url}
+                            alt={currentItem.caption || 'Enlarged gallery view'}
+                            fill
+                            className="object-contain"
+                        />
+                    ) : currentItem ? (
+                        <div className="flex h-full w-full items-center justify-center">
+                            <video 
+                                src={currentItem.url} 
+                                controls 
+                                autoPlay 
+                                className="max-h-full max-w-full object-contain"
+                            />
+                        </div>
+                    ) : null}
+                </div>
+
+                {filteredItems.length > 1 && (
+                    <button
+                        type="button"
+                        onClick={showNextItem}
+                        className="absolute right-3 sm:right-6 top-1/2 z-50 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-md transition hover:bg-black/70 focus:outline-none ring-1 ring-white/20"
+                        aria-label="Show next item"
+                    >
+                        <ArrowRight className="h-5 w-5" />
+                    </button>
+                )}
+
+                <DialogClose className="absolute top-4 right-4 z-50 text-white bg-black/40 backdrop-blur-md rounded-full p-2 hover:bg-black/70 transition-all focus:outline-none ring-1 ring-white/20">
+                    <X className="w-5 h-5" />
+                    <span className="sr-only">Close</span>
+                </DialogClose>
+            </DialogContent>
+            </Dialog>
         ) : (
             <div className="text-center py-20 border-2 border-dashed rounded-lg">
                 <p className="text-lg font-semibold">No items to display</p>
