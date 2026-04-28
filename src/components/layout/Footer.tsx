@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { Linkedin, Instagram, Youtube, MessageCircle } from "lucide-react";
+import { Linkedin, Instagram,Twitter, Youtube, MessageCircle } from "lucide-react";
 
 export function Footer() {
   return (
@@ -10,7 +10,7 @@ export function Footer() {
           <div className="max-w-xs space-y-4">
             <h2 className="text-2xl font-black tracking-tighter text-white">CEDAT</h2>
             <p className="text-zinc-400 text-sm leading-relaxed">
-              Empowering the next generation of innovators through a dynamic ecosystem of nexus communities.
+              Dynamic Ecosystem of Nexus Communities for Founders, Enablers, Mentors, Learners, Investors, Freelancers & Professionals
             </p>
           </div>
 
@@ -37,17 +37,19 @@ export function Footer() {
                 <a href="https://www.linkedin.com/company/cedatnexus" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#0077B5] transition-colors">
                   <Linkedin className="w-5 h-5" />
                 </a>
+                <a href="https://x.com/CEDAT_NEXUS" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#1DA1F2] transition-colors">
+                  <Twitter className="w-5 h-5" />
+                </a>
                 <a href="https://www.youtube.com/channel/UCmY3PX-DZdvnaOOp8uSHheA" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#FF0000] transition-colors">
                   <Youtube className="w-5 h-5" />
                 </a>
-                <a href="https://www.instagram.com/c_e_d_a_t/" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#E4405F] transition-colors">
+                <a href="https://www.instagram.com/cedat.in" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#E4405F] transition-colors">
                   <Instagram className="w-5 h-5" />
                 </a>
                 <a href="https://wa.me/7406345305" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#25D366] transition-colors">
                   <MessageCircle className="w-5 h-5" />
                 </a>
               </div>
-
             </div>
           </nav>
         </div>
