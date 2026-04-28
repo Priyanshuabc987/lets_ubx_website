@@ -117,10 +117,10 @@ export default async function Home() {
                 </Button>
               </Link>
           
-              <Link
-                href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20%28FIX%29%20by%20CEDAT%20on%20coming%20Saturday."
-                target="_blank"
-              >
+               <Link 
+                  href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)" 
+                  target="_blank"
+                >
                 <Button
                   size="lg"
                   variant="outline"
