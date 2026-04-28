@@ -95,19 +95,28 @@ export default async function Home() {
       <section className="py-24 pb-10 bg-primary text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl space-y-8">
+         <div className="max-w-6xl space-y-8">
             <h2 className="text-3xl sm:text-6xl font-black leading-tight">
-              Founders & Investors Xplore (FIX) by CEDAT - <span className="text-accent italic">Pitch Your StartUp</span>
+              Founders & Investors Xplore (FIX) by CEDAT -{" "}
+              <span className="text-accent italic">Pitch Your Startup</span>
             </h2>
+          
             <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-              FIX connects ambitious founders with top-tier investors and mentors. Whether you’re pitching on stage or networking from the floor, find the fuel for your startup journey here.
+              FIX also features a live startup pitch session, where selected founders will get the chance to present their startups directly to investors and enablers of the ecosystem.
+              <br /><br />
+              Founders will get live feedback, valuable insights, and potential funding opportunities for their startup. Along with that, they can explore the startup ecosystem and communities through CEDAT for their startup journey.
             </p>
+          
             <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/fix">
-                <Button size="lg" className="rounded-full bg-accent hover:bg-accent/90 text-white font-black px-6 md:px-10 h-12 md:h-16 text-sm md:text-lg">
+                <Button
+                  size="lg"
+                  className="rounded-full bg-accent hover:bg-accent/90 text-white font-black px-6 md:px-10 h-10 md:h-16 text-sm md:text-lg"
+                >
                   Apply Now
                 </Button>
               </Link>
+          
               <Link
                 href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20%28FIX%29%20by%20CEDAT%20on%20coming%20Saturday."
                 target="_blank"
@@ -117,12 +126,12 @@ export default async function Home() {
                   variant="outline"
                   className="rounded-full border-2 border-white text-black hover:bg-white/10 px-6 md:px-10 h-10 md:h-16 text-sm md:text-lg"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-5 h-5 mr-2" />
                   Contact Us
                 </Button>
               </Link>
             </div>
-          </div>
+          </div>        
         </div>
       </section>
     </div>
