@@ -68,12 +68,15 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
                         Register Now
                     </Link>
                 </Button>
-                <Link href="https://wa.me/7406345305?text=I%20wanted%20to%20know%20more%20about%20FIX" target="_blank">
-                <Button  size="lg" className="w-full font-bold text-lg text-black bg-white mt-3">
-                <MessageCircle className="w-5 h-5" />
-                  Contact Us 
-                </Button>
-              </Link>
+                <Link 
+                  href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)" 
+                  target="_blank"
+                >
+                  <Button size="lg" className="w-full font-bold text-lg text-black bg-white mt-3">
+                    <MessageCircle className="w-5 h-5" />
+                    Contact Us 
+                  </Button>
+                </Link>
                 <p className="text-xs text-center text-muted-foreground pt-3">
                 Registration is required to pitch at FIX.
                 </p>
