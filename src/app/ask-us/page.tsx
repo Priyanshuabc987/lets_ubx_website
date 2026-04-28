@@ -4,7 +4,7 @@ import { BASE_URL, LOGO_URL } from '@/lib/constants';
 import { AskUsClient } from './AskUsClient';
 
 export const metadata: Metadata = {
-  title: "Ask the Cedat Community | Bengaluru Startup Help & Support",
+  title: "Ask the CEDAT Ecosystem | Bengaluru Startup Help & Support",
   description: "Have a question about the Bengaluru startup ecosystem? Need help with your startup idea? Ask the Cedat community. We're here to support you with resources, connections, and advice.",
   openGraph: {
     title: "Ask the Cedat Community | Bengaluru Startup Help & Support",
