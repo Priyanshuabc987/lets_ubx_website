@@ -20,11 +20,11 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
           {/* Top Image */}
           <div className="max-w-3xl mx-auto my-6 md:my-12">
             <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border-2 border-border shadow-lg">
-              <Image 
-                src="/fix/fix.jpeg" 
+              <Image
+                src="/fix/fix.jpeg"
                 alt="Founders & Investors Xplore Banner"
                 fill
-                className="object-cover" 
+                className="object-cover"
                 priority
               />
             </div>
@@ -55,30 +55,32 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
 
             {/* Right side (details & registration) */}
             <div className="md:col-span-2">
-              <div className="bg-muted/30 p-6 rounded-2xl border border-border sticky top-24">
+              <div className="bg-muted/30 p-6 px-3 md:px-6 rounded-2xl border border-border sticky top-24">
                 <h3 className="text-xl font-bold mb-4">Event Highlights</h3>
-                <ul className="space-y-3 text-sm text-muted-foreground mb-6">
-                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Live pitching to active investors & angels.</li>
-                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Actionable feedback from industry veterans.</li>
-                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />High-value networking with VCs & mentors.</li>
-                    <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Explore the CEDAT dynamic startup ecosystem.</li>
+                <ul className="space-y-3 text-[13.5px] md:text-base text-muted-foreground mb-6">
+                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Learn from industry experts & mentors</li>
+                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Build with Founders, investors & enablers</li>
+                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Explore partnerships, investments & grants</li>
+                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Access to startup demos, meetups & events</li>
+                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Unite with communities of startup ecosystem</li>
                 </ul>
+
                 <Button asChild size="lg" className="w-full font-bold text-lg">
-                    <Link href={registrationLink} target="_blank">
-                        Register Now
-                    </Link>
+                  <Link href={registrationLink} target="_blank">
+                    Register Now
+                  </Link>
                 </Button>
-                <Link 
-                  href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)" 
+                <Link
+                  href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)"
                   target="_blank"
                 >
                   <Button size="lg" className="w-full font-bold text-lg text-black bg-white mt-3">
                     <MessageCircle className="w-5 h-5" />
-                    Contact Us 
+                    Contact Us
                   </Button>
                 </Link>
                 <p className="text-xs text-center text-muted-foreground pt-3">
-                Registration is required to pitch at FIX.
+                  Registration is required to pitch at FIX.
                 </p>
               </div>
             </div>

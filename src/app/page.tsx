@@ -15,11 +15,11 @@ import { Metrics } from "@/components/home/Metrics";
 import { MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Cedat: Bengaluru's Largest Startup Ecosystem of Communities ",
-  description: "Welcome to Cedat, Bengaluru's largest and dynamic startup ecosystem of communities for Founders, Enablers, Mentors, Learners & Investors We are ecosystem across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech & AI, Food & Agri, Fashion & lifestyle and Social Impact, and more. Join us to connect, learn, and grow your startup.",
+  title: "CEDAT: Bengaluru's Largest Startup Ecosystem of Communities ",
+  description: "Welcome to CEDAT, Bengaluru's largest and dynamic startup ecosystem of communities for Founders, Enablers, Mentors, Learners & Investors We are ecosystem across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech & AI, Food & Agri, Fashion & lifestyle and Social Impact, and more. Join us to connect, learn, and grow your startup.",
   openGraph: {
-    title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
-    description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
+    title: "CEDAT: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
+    description: "Welcome to CEDAT, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
     url: BASE_URL,
     siteName: 'Cedat',
     images: [

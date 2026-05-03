@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Event } from "@/hooks/useEvents";
@@ -23,6 +24,7 @@ const useHydrated = () => {
 export function EventDetailCard({ event, className }: EventDetailCardProps) {
   const isHydrated = useHydrated();
   const [shareUrl, setShareUrl] = useState('');
+  const isPaidEvent = event.is_paid === true;
 
   const eventStatus = isHydrated ? getEventStatus(event.event_date, event.start_time, event.end_time) : { text: 'Loading...', variant: 'outline' as const };
   const startTimeFormatted = isHydrated ? formatTime(event.start_time) : '...';
@@ -31,17 +33,19 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
 
   useEffect(() => {
     if (isHydrated) {
+      const eventLocation = event.location?.trim() ? event.location : 'TBA';
+      const entryType = isPaidEvent ? 'Paid Entry' : 'Free Entry';
       const shareText = encodeURIComponent(
-        `Check out this event on Cedat:\n\n*${event.title}*\n\n📅 ${fullDate}\n\nFind out more and register:\n${window.location.href}`
+        `Check out this event on Cedat:\n\n*${event.title}*\n${entryType}\n\n🕒 Time: ${startTimeFormatted} - ${endTimeFormatted}\n📅 Date: ${fullDate}\n📍 Location: ${eventLocation}\n\nFind out more and register:\n${window.location.href}`
       );
       setShareUrl(`https://api.whatsapp.com/send?text=${shareText}`);
     }
-  }, [isHydrated, event.title, fullDate]);
+  }, [isHydrated, event.title, event.location, fullDate, isPaidEvent, startTimeFormatted, endTimeFormatted]);
 
   const canRegister = eventStatus.text !== 'Concluded' && !!event.external_registration_url;
 
   const registrationButton = (
-    <Button asChild size="lg" className="w-full min-h-[48px] text-base font-semibold" disabled={!canRegister}>
+    <Button asChild size="lg" className="w-full min-h-[48px] text-base font-extrabold tracking-[0.02em] shadow-md" disabled={!canRegister}>
       <a href={canRegister ? event.external_registration_url : undefined} target="_blank" rel="noopener noreferrer">
         {canRegister ? (
           <>
@@ -54,15 +58,16 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
 
   return (
     <Card className={`relative overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-card to-muted/30 shadow-2xl shadow-primary/10 ${className}`}>
-        <div className="absolute top-2 right-6 z-10 translate-x-1/5 translate-y-1/5">
-            <div className="flex h-12 w-28 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 via-yellow-500 to-amber-600 p-[2px] shadow-lg">
-                <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-gradient-to-br from-amber-400 to-yellow-600 px-3 py-1 shadow-inner">
-                <span className="text-sm font-black uppercase tracking-wider text-white drop-shadow-md">
-                    Free Entry
-                </span>
-                </div>
-            </div>
-        </div>
+      <div className="absolute right-4 top-4 z-10">
+        <Image
+          src={isPaidEvent ? '/fix/paid.png' : '/fix/free.png'}
+          alt={isPaidEvent ? 'Paid Entry' : 'Free Entry'}
+          width={92}
+          height={56}
+          className="h-auto w-[92px] object-contain"
+          priority
+        />
+      </div>
 
       <CardHeader className="border-b border-border/50 p-5 bg-gradient-to-b from-primary/10 to-transparent">
         <CardTitle>Event Details</CardTitle>
@@ -100,7 +105,10 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
         <div className="space-y-2">
             {registrationButton}
             {isHydrated && canRegister && (
-                <Button asChild variant="outline" className="w-full bg-green">
+                <Button
+                  asChild
+                  className="w-full border border-green-600 bg-green-600 text-white hover:bg-green-700 hover:border-green-700"
+                >
                     <a href={shareUrl} target="_blank" rel="noopener noreferrer">
                         <WhatsAppIcon className="mr-2 h-4 w-4" />
                         Share on WhatsApp

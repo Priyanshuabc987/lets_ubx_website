@@ -187,7 +187,11 @@ function SocialRow({
         {/* DESKTOP BUTTONS (UNCHANGED) */}
         <div className="hidden md:flex items-center gap-2 sm:gap-3">
           <button onClick={() => scrollByOneCard("prev")}>
-            <ChevronLeft />
+            <div className="flex -space-x-3 sm:-space-x-4">
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+            </div>
           </button>
           <button onClick={() => scrollByOneCard("next")}>
             <div className="flex -space-x-3 sm:-space-x-4">
@@ -202,7 +206,11 @@ function SocialRow({
         <div className="flex md:hidden items-center gap-2">
           {canScrollLeft && (
             <button onClick={() => scrollByOneCard("prev")}>
-              <ChevronLeft />
+              <div className="flex -space-x-3 sm:-space-x-4">
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+              </div>
             </button>
           )}
           {canScrollRight && (

@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { Linkedin, Instagram,Twitter, Youtube, MessageCircle } from "lucide-react";
+import { Phone,Mail, Linkedin, Instagram, Twitter, Youtube, MessageCircle } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 md:px-8 py-12">
         <div className="flex flex-col md:flex-row justify-between gap-12">
           <div className="max-w-xs space-y-4">
-            <h2 className="text-2xl font-black tracking-tighter text-white">CEDAT</h2>
+            <h2 className="text-2xl font-black tracking-wide text-white">CEDAT</h2>
             <p className="text-zinc-400 text-sm leading-relaxed">
               Dynamic Ecosystem of Nexus Communities for Founders, Enablers, Mentors, Learners, Investors, Freelancers & Professionals
             </p>
@@ -32,22 +32,37 @@ export function Footer() {
               </ul>
             </div>
             <div className="space-y-4">
-              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Connect</h4>
+              <div className="space-y-2">
+                <h4 className="text-white font-bold text-sm uppercase tracking-widest">Connect</h4>
+                <p className="text-zinc-400 text-xs">
+                  Have important questions? Contact us at
+                  <a href="tel:+917406345305" className="hover:text-white transition-colors ml-1">+91 74063 45305</a>
+                </p>
+              </div>
+
               <div className="flex gap-4 items-center">
-                <a href="https://www.linkedin.com/company/cedatnexus" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#0077B5] transition-colors">
-                  <Linkedin className="w-5 h-5" />
+                {/* Direct Call Icon */}
+                <a href="tel:+917406345305" className=" text-blue-400 transition-colors">
+                  <Phone className="w-5 h-5" />
                 </a>
-                <a href="https://x.com/CEDAT_NEXUS" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#1DA1F2] transition-colors">
-                  <Twitter className="w-5 h-5" />
+
+                <a href="https://wa.me/7406345305" target="_blank" rel="noopener noreferrer" className="text-[#25D366] transition-colors">
+                  <MessageCircle className="w-5 h-5" />
                 </a>
-                <a href="https://www.youtube.com/channel/UCmY3PX-DZdvnaOOp8uSHheA" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#FF0000] transition-colors">
-                  <Youtube className="w-5 h-5" />
-                </a>
-                <a href="https://www.instagram.com/cedat.in" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#E4405F] transition-colors">
+                <a href="https://www.instagram.com/cedat.in" target="_blank" rel="noopener noreferrer" className="text-[#E4405F] transition-colors">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="https://wa.me/7406345305" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-[#25D366] transition-colors">
-                  <MessageCircle className="w-5 h-5" />
+                <a href="https://www.linkedin.com/company/cedatnexus" target="_blank" rel="noopener noreferrer" className="text-[#0077B5] transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="https://www.youtube.com/channel/UCmY3PX-DZdvnaOOp8uSHheA" target="_blank" rel="noopener noreferrer" className="text-[#FF0000] transition-colors">
+                  <Youtube className="w-5 h-5" />
+                </a>
+                <a href="https://x.com/CEDAT_NEXUS" target="_blank" rel="noopener noreferrer" className="text-[#1DA1F2] transition-colors">
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a href="mailto:cedat.center@gmail.com" className="text-[#EA4335] transition-colors">
+                  <Mail className="w-5 h-5" />
                 </a>
               </div>
             </div>

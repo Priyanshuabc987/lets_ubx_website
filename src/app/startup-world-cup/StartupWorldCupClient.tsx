@@ -147,7 +147,7 @@ export function StartupWorldCupClient() {
               “This platform is for startups and startup ecosystems of the world.”
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="https://www.startupworldcup.io/Bengaluru-2026" target="_blank">
+              <Link href="https://www.startupworldcup.io/bangalore-2026" target="_blank">
                 <Button size="lg" className="rounded-full font-semibold px-8 py-6 text-base shadow-md">
                   Register to Pitch
                 </Button>

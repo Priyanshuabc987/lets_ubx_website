@@ -54,7 +54,7 @@ export function GalleryPageClient({ photos, videos }: GalleryPageClientProps) {
           <Skeleton className="h-12 w-32 rounded-full" />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {[...Array(8)].map((_, i) => (
           <Skeleton key={i} className="h-64 w-full rounded-2xl break-inside-avoid" />
         ))}

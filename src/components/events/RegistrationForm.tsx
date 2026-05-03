@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Loader2, CheckCircle, QrCode, X, RefreshCw, Calendar, Clock, MapPin, Sparkles } from 'lucide-react';
+import { Loader2, CheckCircle, QrCode, X, RefreshCw, Calendar, Clock, MapPin, IndianRupee, Ticket } from 'lucide-react';
 import { registrationsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
@@ -15,6 +15,7 @@ interface RegistrationFormProps {
     title: string;
     event_date: string;
     location?: string;
+    is_paid?: boolean;
     calculated_state?: string;
     external_registration_url?: string;
   };
@@ -62,6 +63,7 @@ export function RegistrationForm({
   };
 
   const showRegenerate = Boolean(registrationData?.id && onRegenerateSuccess);
+  const isPaidEvent = event.is_paid === true;
 
   // Check if registration is allowed based on calculated state
   const canRegister = event.calculated_state === 'registration_open' && !isRegistered;
@@ -306,12 +308,24 @@ export function RegistrationForm({
       <CardHeader className="relative space-y-0 border-b border-border/50 bg-gradient-to-b from-accent/[0.09] to-transparent px-5 pb-4 pt-5 sm:px-6 sm:pb-5 sm:pt-6">
         <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent/10 blur-2xl" aria-hidden />
         <div className="relative flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent shadow-sm ring-1 ring-accent/20">
-            <Sparkles className="h-5 w-5" aria-hidden />
+          <div
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl shadow-sm ring-1 ${
+              isPaidEvent
+                ? 'bg-amber-100 text-amber-700 ring-amber-200'
+                : 'bg-emerald-100 text-emerald-700 ring-emerald-200'
+            }`}
+          >
+            {isPaidEvent ? <IndianRupee className="h-5 w-5" aria-hidden /> : <Ticket className="h-5 w-5" aria-hidden />}
           </div>
-<CardTitle className="inline-block font-display text-lg font-semibold tracking-tight text-green-600 bg-green-100 px-2 py-0.5 rounded-md sm:text-xl">
-  Free Entry
-</CardTitle>
+          <CardTitle
+            className={`inline-flex items-center rounded-full border px-3 py-1 text-base font-semibold tracking-tight sm:text-lg ${
+              isPaidEvent
+                ? 'border-amber-200 bg-amber-50 text-amber-700'
+                : 'border-emerald-200 bg-emerald-50 text-emerald-700'
+            }`}
+          >
+            {isPaidEvent ? 'Paid Entry' : 'Free Entry'}
+          </CardTitle>
         </div>
       </CardHeader>
       <CardContent className="space-y-5 px-5 py-6 sm:px-6 sm:py-7">

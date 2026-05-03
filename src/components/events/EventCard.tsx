@@ -4,11 +4,10 @@
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Clock } from 'lucide-react';
+import { Calendar, MapPin, Clock, IndianRupee, Ticket } from 'lucide-react';
 import { Event } from '@/hooks/useEvents';
 import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { useState, useEffect } from 'react';
-// 1. IMPORT new utility functions
 import { getEventStatus, formatTime } from '@/lib/utils';
 
 interface EventCardProps {
@@ -24,14 +23,13 @@ const useHydrated = () => {
 
 export function EventCard({ event }: EventCardProps) {
   const isHydrated = useHydrated();
+  const isPaidEvent = event.is_paid === true;
 
-  // 2. USE the new, centralized utility functions
   const eventStatus = isHydrated 
     ? getEventStatus(event.event_date, event.start_time, event.end_time) 
-    : { text: 'Loading...', variant: 'outline' as const }; // Use 'as const' for type safety
+    : { text: 'Loading...', variant: 'outline' as const };
   
   const startTimeFormatted = formatTime(event.start_time);
-  const endTimeFormatted = formatTime(event.end_time);
 
   const dateInfo = {
     day: new Date(event.event_date).toLocaleDateString('en-US', { day: 'numeric' }),
@@ -64,7 +62,6 @@ export function EventCard({ event }: EventCardProps) {
             )}
 
             <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20">
-              {/* 3. FIX: The variant is now type-safe and correct */}
               <Badge variant={eventStatus.variant} className="text-[10px] sm:text-xs whitespace-nowrap w-fit shadow-md border-none">
                 {eventStatus.text}
               </Badge>
@@ -72,6 +69,19 @@ export function EventCard({ event }: EventCardProps) {
 
             <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-20 bg-background/90 backdrop-blur text-foreground px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold whitespace-nowrap">
               {dateInfo.month} {dateInfo.day}
+            </div>
+
+            <div className="absolute bottom-2 left-2 z-20 sm:bottom-4 sm:left-4">
+              <div
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] shadow-sm sm:text-xs ${
+                  isPaidEvent
+                    ? 'border-amber-300/80 bg-amber-50/95 text-amber-700'
+                    : 'border-emerald-300/80 bg-emerald-50/95 text-emerald-700'
+                }`}
+              >
+                {isPaidEvent ? <IndianRupee className="h-3 w-3" /> : <Ticket className="h-3 w-3" />}
+                <span>{isPaidEvent ? 'Paid Entry' : 'Free Entry'}</span>
+              </div>
             </div>
           </div>
 
@@ -84,7 +94,6 @@ export function EventCard({ event }: EventCardProps) {
               <span className="text-muted-foreground/50">|</span>
               <span className="flex items-center gap-1.5 min-w-0">
                 <Clock className="w-3.5 h-3.5 flex-shrink-0" />
-                {/* 4. FIX: Time is now correctly formatted to AM/PM */}
                 <span className="truncate">
                   {isHydrated ? `${startTimeFormatted}` : <span>&nbsp;</span>}
                 </span>
@@ -93,7 +102,7 @@ export function EventCard({ event }: EventCardProps) {
                 <>
                   <span className="text-muted-foreground/50">|</span>
                   <span className="flex items-center gap-1.5 min-w-0">
-                    <MapPin className="w-3.5 h-3.na5 flex-shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                     <span className="truncate">{event.location}</span>
                   </span>
                 </>
@@ -112,7 +121,7 @@ export function EventCard({ event }: EventCardProps) {
 
             <div className="mt-auto pt-4 text-right">
                <p 
-                className={`inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-full border-2 transition-all 
+                className={`inline-flex items-center justify-center px-4 py-2 text-sm font-bold rounded-full border-2 transition-all 
                   ${!canRegister 
                     ? 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed opacity-70' 
                     : 'bg-black border-slate-200 text-white group-hover:bg-primary group-hover:border-primary group-hover:underline'                  

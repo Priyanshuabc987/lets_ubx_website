@@ -8,6 +8,16 @@ import { generateSlug } from '@/lib/utils';
 import { revalidateEventsList, revalidateEventDetail } from '@/lib/actions/revalidate';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
+const EVENTS_TIME_ZONE = 'Asia/Kolkata';
+
+const getEventsTodayKey = () =>
+  new Intl.DateTimeFormat('en-CA', {
+    timeZone: EVENTS_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+
 export interface Event {
   id: string;
   title: string;
@@ -17,6 +27,7 @@ export interface Event {
   start_time: string;
   end_time: string;
   location?: string;
+  is_paid?: boolean;
   status: 'draft' | 'published' | 'cancelled';
   category?: string;
   featured_image_url?: string;
@@ -24,6 +35,7 @@ export interface Event {
 }
 
 const PAGE_SIZE = 9;
+export type EventTimeFilter = 'upcoming' | 'past' | 'all';
 
 type EventsPage = {
   events: Event[];
@@ -33,6 +45,7 @@ type EventsPage = {
 
 export function useEvents({ 
   status_filter, 
+  time_filter = 'upcoming',
   pageSize = PAGE_SIZE, 
   initialData,
   initialHasMore = false,
@@ -41,6 +54,7 @@ export function useEvents({
   queryScope = 'default',
 }: { 
   status_filter?: string, 
+  time_filter?: EventTimeFilter,
   pageSize?: number,
   initialData?: Event[],
   initialHasMore?: boolean,
@@ -52,7 +66,19 @@ export function useEvents({
 
   const fetchEvents = async (context: QueryFunctionContext): Promise<EventsPage> => {
     const pageParam = context.pageParam as QueryDocumentSnapshot | string | null;
-    const constraints: QueryConstraint[] = [orderBy('event_date', 'asc'), limit(pageSize + 1)];
+    const todayKey = getEventsTodayKey();
+    const constraints: QueryConstraint[] = [];
+
+    if (time_filter === 'upcoming') {
+      constraints.push(where('event_date', '>=', todayKey), orderBy('event_date', 'asc'));
+    } else if (time_filter === 'past') {
+      constraints.push(where('event_date', '<', todayKey), orderBy('event_date', 'desc'));
+    } else {
+      constraints.push(orderBy('event_date', 'asc'));
+    }
+
+    constraints.push(limit(pageSize + 1));
+
     if (status_filter) {
       constraints.push(where('status', '==', status_filter));
     }
@@ -79,7 +105,7 @@ export function useEvents({
     isFetchingNextPage, 
     error 
   } = useInfiniteQuery<EventsPage, Error>({
-    queryKey: ['events', queryScope, { status_filter, pageSize }],
+    queryKey: ['events', queryScope, { status_filter, time_filter, pageSize }],
     queryFn: fetchEvents,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
@@ -121,7 +147,7 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: async ({ eventData, imageFile }: { eventData: Partial<Event>, imageFile: File | null }) => {
         const { featured_image_url, ...restEventData } = eventData;
-        const eventDocRef = await addDoc(collection(db, 'events'), { ...restEventData, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        const eventDocRef = await addDoc(collection(db, 'events'), { ...restEventData, is_paid: eventData.is_paid ?? false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
         const slug = generateSlug(eventData.title!, eventData.event_date!, eventDocRef.id);
         const updatePayload: { [key: string]: any } = { slug };
         

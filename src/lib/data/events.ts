@@ -6,6 +6,16 @@ import { Event } from '@/hooks/useEvents';
 import { unstable_cache } from 'next/cache';
 import { extractIdFromSlug } from '@/lib/utils';
 
+const EVENTS_TIME_ZONE = 'Asia/Kolkata';
+
+const getEventsTodayKey = () =>
+  new Intl.DateTimeFormat('en-CA', {
+    timeZone: EVENTS_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+
 // Helper to convert Timestamps
 const convertTimestamps = (data: any) => {
   const convertedData = { ...data };
@@ -29,7 +39,7 @@ async function _getEvents(options: {
       query = query.where('status', '==', options.status_filter);
     }
 
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getEventsTodayKey();
 
     query = query
       .where('event_date', '>=', todayStr)
@@ -105,8 +115,7 @@ async function _getEventById(id: string): Promise<Event | null> {
 }
 
 function getTodayKey() {
-  const d = new Date();
-  return d.toISOString().split('T')[0]; // "2026-04-18"
+  return getEventsTodayKey();
 }
 
 export const getEvents = unstable_cache(

@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, Plus, Edit, Trash2, Upload, Link as LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Event, useEvents, useCreateEvent, useUpdateEvent, useDeleteEvent } from '@/hooks/useEvents';
@@ -27,6 +28,7 @@ export const eventSchema = z.object({
   start_time: z.string().min(1, 'Start time is required'),
   end_time: z.string().min(1, 'End time is required'),
   location: z.string().optional(),
+  is_paid: z.boolean().optional(),
   category: z.string().optional(),
   status: z.enum(['draft', 'published', 'cancelled']),
   featured_image_url: z.string().url().optional().or(z.literal('')),
@@ -40,9 +42,14 @@ export function EventManagement() {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageInputType, setImageInputType] = useState<'upload' | 'url'>('upload');
+  const [timeFilter, setTimeFilter] = useState<'upcoming' | 'past' | 'all'>('upcoming');
   const { toast } = useToast();
 
-  const { events, isLoading, loadMore, hasMore, isLoadingMore } = useEvents({ pageSize: 25 });
+  const { events, isLoading, loadMore, hasMore, isLoadingMore } = useEvents({
+    pageSize: 25,
+    time_filter: timeFilter,
+    queryScope: `admin-${timeFilter}`,
+  });
   
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
@@ -57,7 +64,7 @@ export function EventManagement() {
     formState: { errors },
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
-    defaultValues: { status: 'draft' },
+    defaultValues: { status: 'draft', is_paid: false },
   });
 
   useEffect(() => {
@@ -116,7 +123,7 @@ export function EventManagement() {
   };
 
   const openForCreate = () => {
-    reset({ status: 'draft', title: '', featured_image_url: '', start_time: '18:00', end_time: '20:00' });
+    reset({ status: 'draft', is_paid: false, title: '', featured_image_url: '', start_time: '18:00', end_time: '20:00' });
     setEditingEvent(null);
     setImageFile(null);
     setImageInputType('upload');
@@ -158,6 +165,20 @@ export function EventManagement() {
       <Card>
         <CardHeader><CardTitle>All Events</CardTitle></CardHeader>
         <CardContent>
+          <div className="mb-6 max-w-xs">
+            <Label htmlFor="event-time-filter" className="mb-2 block">Show Events</Label>
+            <Select value={timeFilter} onValueChange={(value) => setTimeFilter(value as 'upcoming' | 'past' | 'all')}>
+              <SelectTrigger id="event-time-filter">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="upcoming">Upcoming Events</SelectItem>
+                <SelectItem value="past">Past Events</SelectItem>
+                <SelectItem value="all">All Events</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {(isLoading && events.length === 0) ? (
             <div className="flex justify-center py-8"><Loader2 className="h-8 w-8 animate-spin" /></div>
           ) : (
@@ -168,6 +189,7 @@ export function EventManagement() {
                     <TableHead>Title</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Location</TableHead>
+                    <TableHead>Entry</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -178,6 +200,11 @@ export function EventManagement() {
                       <TableCell className="font-medium">{event.title}</TableCell>
                       <TableCell>{format(parseISO(event.event_date), 'PPP')}</TableCell>
                       <TableCell>{event.location || 'N/A'}</TableCell>
+                      <TableCell>
+                        <Badge variant={event.is_paid ? 'secondary' : 'default'}>
+                          {event.is_paid ? 'Paid' : 'Free'}
+                        </Badge>
+                      </TableCell>
                       <TableCell><Badge variant={getStatusBadgeVariant(event.status)}>{event.status}</Badge></TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm" onClick={() => openForEdit(event)}><Edit className="w-4 h-4" /></Button>
@@ -271,6 +298,20 @@ export function EventForm({ onSubmit, onCancel, register, setValue, watch, error
         <div className="space-y-2">
           <Label htmlFor="status">Status</Label>
           <Select value={watch('status')} onValueChange={(value) => setValue('status', value as any)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="draft">Draft</SelectItem><SelectItem value="published">Published</SelectItem><SelectItem value="cancelled">Cancelled</SelectItem></SelectContent></Select>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
+        <Checkbox
+          id="is_paid"
+          checked={watch('is_paid') || false}
+          onCheckedChange={(checked) => setValue('is_paid', checked === true, { shouldDirty: true })}
+        />
+        <div className="space-y-1">
+          <Label htmlFor="is_paid" className="cursor-pointer">Paid Event</Label>
+          <p className="text-sm text-muted-foreground">
+            Leave this unchecked to keep the event as Free Entry by default.
+          </p>
         </div>
       </div>
 

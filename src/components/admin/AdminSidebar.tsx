@@ -22,7 +22,7 @@ export function AdminSidebar({ sections, activeSection, onSectionChange }: Admin
       <div className="p-4 sm:p-6">
         <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 break-words">Admin Panel</h2>
 
-        <nav className="space-y-2 flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible pb-16 lg:pb-0 -mx-2 lg:mx-0 px-2 lg:px-0">
+        <nav className="space-y-2 flex flex-row lg:flex-col items-center overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 -mx-2 lg:mx-0 px-2 lg:px-0">
           {sections.map((section) => {
             const Icon = section.icon;
             const isActive = activeSection === section.id;
@@ -32,7 +32,7 @@ export function AdminSidebar({ sections, activeSection, onSectionChange }: Admin
                 key={section.id}
                 variant={isActive ? "secondary" : "ghost"}
                 className={cn(
-                  "w-auto lg:w-full justify-start min-h-[44px] flex-shrink-0 lg:flex-shrink",
+                  "w-auto lg:w-full justify-start min-h-[40px] flex-shrink-0 lg:flex-shrink",
                   isActive && "bg-accent text-accent-foreground"
                 )}
                 onClick={() => onSectionChange(section.id)}
