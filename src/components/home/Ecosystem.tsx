@@ -18,9 +18,9 @@ import {
 const communities = [
   { name: "Hardware", icon: Cpu, color: "from-sky-100 to-blue-100" },
   { name: "Healthcare", icon: HeartPulse, color: "from-red-100 to-pink-100" },
-  { name: "AI & Technology", icon: Sparkles, color: "from-purple-100 to-indigo-100" },
+  { name: "Tech & AI ", icon: Sparkles, color: "from-purple-100 to-indigo-100" },
   { name: "Import & Export", icon: Globe, color: "from-teal-100 to-cyan-100" },
-  { name: "Food & Agriculture", icon: Leaf, color: "from-green-100 to-lime-100" },
+  { name: "Food & Agri", icon: Leaf, color: "from-green-100 to-lime-100" },
   { name: "Fashion & Lifestyle", icon: Shirt, color: "from-rose-100 to-fuchsia-100" },
   { name: "Sustainability & SDGs", icon: Sprout, color: "from-emerald-100 to-green-100" },
   { name: "Social Impact & NGOs", icon: UsersRound, color: "from-yellow-100 to-amber-100" },

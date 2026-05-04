@@ -5,17 +5,18 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { EventManagement } from '@/components/admin/EventManagement';
-import { Card, CardContent } from '@/components/ui/card';
 import { generateSEO, seoConfigs } from '@/lib/seo';
-import { Calendar, BarChart3,Images, FileText, Link as LinkIcon } from 'lucide-react';
+import { Calendar, Images, FileText, Link as LinkIcon } from 'lucide-react';
 import { GalleryManagement } from '@/components/admin/GalleryManagement';
 import { HeroManagement } from '@/components/admin/HeroManagement';
 import { SocialPostManagement } from '@/components/admin/SocialPostManagement';
 import { FixManagement } from '@/components/admin/FixManagement';
+import { ContentManagement } from '@/components/admin/ContentManagement';
 
 export const adminSections = [
   // { id: 'overview', label: 'Overview', icon: BarChart3 },
   { id: 'events', label: 'Events', icon: Calendar },
+  { id: 'content', label: 'Content', icon: FileText },
   { id: 'hero', label: 'Hero Images', icon: Images },
   { id: 'gallery', label: 'Gallery Images', icon: Images },
   { id: 'social', label: 'Social Media', icon: FileText },
@@ -44,6 +45,8 @@ export default function AdminDashboard() {
     switch (activeSection) {
       case 'events':
         return <EventManagement />;
+      case 'content':
+        return <ContentManagement />;
       case 'hero':
         return <HeroManagement />;
       case 'gallery':

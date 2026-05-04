@@ -3,123 +3,113 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { useAdminEventsHeading, useAdminEventsSubheading, useUpdateEventsHeading, useUpdateEventsSubheading } from '@/hooks/useContentSettings';
+import {
+  useHomeContentSettings,
+  useUpdateHomeContentSettings,
+} from '@/hooks/useContentSettings';
+import {
+  DEFAULT_HOME_DESCRIPTION,
+  DEFAULT_HOME_TITLE,
+} from '@/lib/home-content';
 
 export function ContentManagement() {
   const { toast } = useToast();
-  const { data: headingData, isLoading: isHeadingLoading } = useAdminEventsHeading(true);
-  const { data: subheadingData, isLoading: isSubheadingLoading } = useAdminEventsSubheading(true);
-  const updateHeadingMutation = useUpdateEventsHeading();
-  const updateSubheadingMutation = useUpdateEventsSubheading();
+  const { data: homeContent, isLoading } = useHomeContentSettings();
+  const updateHomeContentMutation = useUpdateHomeContentSettings();
   const [headingValue, setHeadingValue] = useState('');
   const [subheadingValue, setSubheadingValue] = useState('');
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   useEffect(() => {
-    if (typeof headingData === 'string') {
-      setHeadingValue(headingData);
-    }
-    if (typeof subheadingData === 'string') {
-      setSubheadingValue(subheadingData);
-    }
-  }, [headingData, subheadingData]);
+    if (hasInitialized) return;
+    setHeadingValue(homeContent.title);
+    setSubheadingValue(homeContent.description);
+    setHasInitialized(true);
+  }, [hasInitialized, homeContent.description, homeContent.title]);
 
   return (
     <div className="space-y-6">
       <div className="text-left">
         <h1 className="text-2xl sm:text-3xl font-display font-bold mb-2 break-words">Page Content</h1>
         <p className="text-sm sm:text-base text-muted-foreground break-words">
-          Update page-specific text from admin. Changes here affect only the Events page heading and subheading.
+          Update the home page events section title and description. These values are saved in the `settings/home` document.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Events Page Heading &amp; Subheading</CardTitle>
+          <CardTitle className="text-lg">Home Page Events Section</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground" htmlFor="events-heading">
-              Events Page Heading
+            <label className="text-sm font-medium text-foreground" htmlFor="home-title">
+              Section Title
             </label>
             <Textarea
-              id="events-heading"
+              id="home-title"
               value={headingValue}
               onChange={(e) => setHeadingValue(e.target.value)}
               rows={2}
               maxLength={300}
-              placeholder="Startup Ecosystem Meetups & Events"
-              disabled={isHeadingLoading || updateHeadingMutation.isPending}
+              placeholder={DEFAULT_HOME_TITLE}
+              disabled={isLoading || updateHomeContentMutation.isPending}
             />
             <div className="text-xs text-muted-foreground">{headingValue.length}/300</div>
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={async () => {
-                  const trimmed = headingValue.trim();
-                  if (!trimmed) {
-                    toast({ title: 'Heading is required', variant: 'destructive' });
-                    return;
-                  }
-                  try {
-                    await updateHeadingMutation.mutateAsync(trimmed);
-                    toast({ title: 'Events heading updated' });
-                  } catch (e: unknown) {
-                    const msg = e instanceof Error ? e.message : 'Update failed';
-                    toast({ title: 'Update failed', description: msg, variant: 'destructive' });
-                  }
-                }}
-                disabled={isHeadingLoading || updateHeadingMutation.isPending}
-              >
-                {updateHeadingMutation.isPending ? 'Saving...' : 'Save Heading'}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setHeadingValue(headingData || 'Startup Ecosystem Meetups & Events')}
-                disabled={isHeadingLoading || updateHeadingMutation.isPending}
-              >
-                Reset
-              </Button>
-            </div>
           </div>
 
           <div className="space-y-2 pt-4 border-t border-border/60">
-            <label className="text-sm font-medium text-foreground" htmlFor="events-subheading">
-              Events Page Subheading
+            <label className="text-sm font-medium text-foreground" htmlFor="home-description">
+              Section Description
             </label>
             <Textarea
-              id="events-subheading"
+              id="home-description"
               value={subheadingValue}
               onChange={(e) => setSubheadingValue(e.target.value)}
               rows={3}
               maxLength={300}
-              placeholder="Dynamic Ecosystem of Nexus Communities"
-              disabled={isSubheadingLoading || updateSubheadingMutation.isPending}
+              placeholder={DEFAULT_HOME_DESCRIPTION}
+              disabled={isLoading || updateHomeContentMutation.isPending}
             />
             <div className="text-xs text-muted-foreground">{subheadingValue.length}/300</div>
 
             <div className="flex items-center gap-3">
               <Button
                 onClick={async () => {
-                  const trimmed = subheadingValue.trim();
-                  if (!trimmed) {
-                    toast({ title: 'Subheading is required', variant: 'destructive' });
+                  const trimmedTitle = headingValue.trim();
+                  const trimmedDescription = subheadingValue.trim();
+
+                  if (!trimmedTitle) {
+                    toast({ title: 'Title is required', variant: 'destructive' });
                     return;
                   }
+
+                  if (!trimmedDescription) {
+                    toast({ title: 'Description is required', variant: 'destructive' });
+                    return;
+                  }
+
                   try {
-                    await updateSubheadingMutation.mutateAsync(trimmed);
-                    toast({ title: 'Events subheading updated' });
+                    await updateHomeContentMutation.mutateAsync({
+                      title: trimmedTitle,
+                      description: trimmedDescription,
+                    });
+                    toast({ title: 'Home page content updated' });
                   } catch (e: unknown) {
                     const msg = e instanceof Error ? e.message : 'Update failed';
                     toast({ title: 'Update failed', description: msg, variant: 'destructive' });
                   }
                 }}
-                disabled={isSubheadingLoading || updateSubheadingMutation.isPending}
+                disabled={isLoading || updateHomeContentMutation.isPending}
               >
-                {updateSubheadingMutation.isPending ? 'Saving...' : 'Save Subheading'}
+                {updateHomeContentMutation.isPending ? 'Saving...' : 'Save Content'}
               </Button>
               <Button
                 variant="outline"
-                onClick={() => setSubheadingValue(subheadingData || 'Dynamic Ecosystem of Nexus Communities')}
-                disabled={isSubheadingLoading || updateSubheadingMutation.isPending}
+                onClick={() => {
+                  setHeadingValue(homeContent.title || DEFAULT_HOME_TITLE);
+                  setSubheadingValue(homeContent.description || DEFAULT_HOME_DESCRIPTION);
+                }}
+                disabled={isLoading || updateHomeContentMutation.isPending}
               >
                 Reset
               </Button>

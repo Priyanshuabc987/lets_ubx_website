@@ -8,6 +8,7 @@ import { Ecosystem } from "@/components/home/Ecosystem";
 import { getEventsPage } from "@/lib/data/events";
 import { getSocialPosts } from "@/lib/data/socialposts";
 import { getHeroImages } from "@/lib/data/hero";
+import { getHomeSettings } from "@/lib/data/settings";
 import { EventListClient } from "@/components/events/EventListClient";
 import { Metadata } from 'next';
 import { BASE_URL, LOGO_URL } from '@/lib/constants';
@@ -44,13 +45,14 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const [latestEventsPage, socialPosts, heroImages] = await Promise.all([
+  const [latestEventsPage, socialPosts, heroImages, homeSettings] = await Promise.all([
     getEventsPage({
       status_filter: "published",
       page_size: 6,
     }),
     getSocialPosts(),
-    getHeroImages()
+    getHeroImages(),
+    getHomeSettings(),
   ]);
 
   return (
@@ -64,14 +66,14 @@ export default async function Home() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-6">
           <div className="space-y-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-primary italic">
-              Startup Ecosystem Meetups & Events
+              {homeSettings.title}
             </h2>
-            <p className="text-muted-foreground text-base md:text-lg ">
-              Explore exclusive meetups and networking sessions. Cedat is your gateway to the heart of the Bengaluru startup ecosystem.
+            <p className="text-muted-foreground text-base md:text-lg whitespace-pre-wrap">
+              {homeSettings.description}
             </p>
           </div>
           <Link href="/events">
-            <Button size="lg" className="rounded-full group">
+            <Button size="lg" className="rounded-full group text-black">
               View All Events <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -92,7 +94,7 @@ export default async function Home() {
       <Ecosystem />
 
       {/* Programs Teaser */}
-      <section className="py-24 pb-10 bg-primary text-white overflow-hidden relative">
+      <section className="py-24 pb-10 bg-black text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="container mx-auto px-4 relative z-10">
          <div className="max-w-6xl space-y-8">
@@ -111,7 +113,7 @@ export default async function Home() {
               <Link href="/fix">
                 <Button
                   size="lg"
-                  className="rounded-full bg-accent hover:bg-accent/90 text-white font-black px-6 md:px-10 h-10 md:h-16 text-sm md:text-lg"
+                  className="rounded-full bg-accent hover:bg-accent/90 text-black font-black font-bold px-3 md:px-4 h-9 md:h-12 text-xl md:text-2xl"
                 >
                   Apply Now
                 </Button>
@@ -124,9 +126,8 @@ export default async function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full border-2 border-white text-black hover:bg-white/10 px-6 md:px-10 h-10 md:h-16 text-sm md:text-lg"
+                  className="rounded-full border-2 border-white text-black font-bold hover:bg-white/10 px-3 md:px-5 h-9 md:h-12 text-xl md:text-2xl"
                 >
-                  <MessageCircle className="w-5 h-5 mr-2" />
                   Contact Us
                 </Button>
               </Link>

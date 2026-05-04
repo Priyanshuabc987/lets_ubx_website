@@ -1,19 +1,60 @@
-
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper to check if user is signed in
-    function isAdmin() {
+
+    // --- HELPER FUNCTIONS ---
+    function isSignedIn() {
       return request.auth != null;
     }
 
-    // Public read access for all content
-    // Admin-only write access
-    match /{document=**} {
+    // Securely checks if the user has an 'admin' role in their 'roles' array
+    function isAdmin() {
+      return isSignedIn() && 'admin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles;
+    }
+
+    // --- SECURITY RULES ---
+    // Rule for the 'users' collection
+    match /users/{userId} {
+      allow read, update: if request.auth.uid == userId || isAdmin();
+      allow create, delete: if isAdmin();
+    }
+
+    // Rule for the 'events' collection
+    match /events/{eventsId} {
+      allow read: if true; // Allow public read access
+      allow write: if isAdmin(); // Only admins can write
+    }
+
+    // Rule for the 'gallery' collection
+    match /gallery/{galleryId} {
       allow read: if true;
       allow write: if isAdmin();
     }
+    
+    // Rule for the 'hero' collection
+    match /hero/{heroId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+     // Rule for the 'social post' collection
+    match /social_posts/{social_postsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /settings/{settingsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // fix registration
+    match /fix_registrations/{fix_registrationsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }  
+    
+
   }
 }
-
-

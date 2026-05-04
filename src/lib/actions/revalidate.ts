@@ -58,3 +58,10 @@ export async function revalidateHeroImages() {
 export async function revalidateFixUrl() {
   revalidateTag('fix-url');
 }
+
+/**
+ * Revalidates the cached content for the home page settings.
+ */
+export async function revalidateHomeContent() {
+  revalidateTag('home-content');
+}
