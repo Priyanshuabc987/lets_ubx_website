@@ -11,8 +11,6 @@ export async function POST(req: Request) {
     const normalized = (body.startup_name || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
     const ref = await adminFirestore.collection('fix_registrations_private').add({
       ...body,
-      // keep legacy key and add a clearer field name
-      startups_normalise: normalized,
       startup_normalised: normalized,
       status: 'pending',
       createdAt: now,

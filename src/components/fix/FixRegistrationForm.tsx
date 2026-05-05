@@ -144,13 +144,16 @@ export function FixRegistrationForm() {
   const onSubmit = async (data: FixRegistrationFormData) => {
     try {
       await createFixRegistration.mutateAsync(data);
-      // write optimistic local cache immediately so status page shows pending
+      // write optimistic local cache with normalized key so FixStatusViewer can read it
       try {
-        const key = `fix_status_cache:${data.startup_name}:${data.phone}`;
+        const normalizedName = data.startup_name.trim().toLowerCase().replace(/\s+/g, ' ');
+        const key = `fix_status_cache:${normalizedName}:${data.phone.trim()}`;
         const cached = {
           id: null,
           name: data.name || '',
           startup_name: data.startup_name || '',
+          startup_normalised: normalizedName,
+          phone: data.phone.trim(),
           status: 'pending',
           allocated_date: null,
           savedAt: Date.now(),
@@ -160,9 +163,7 @@ export function FixRegistrationForm() {
 
       // navigate immediately to status page (user sees pending cached state)
       router.push(`/fix/status?startup_name=${encodeURIComponent(data.startup_name)}&phone=${encodeURIComponent(data.phone)}`);
-
-      // fire submission in background
-      createFixRegistration.mutate(data);
+      // Note: mutateAsync above already submitted — do NOT call mutate() again here
 
       setSubmitted(true);
       reset({

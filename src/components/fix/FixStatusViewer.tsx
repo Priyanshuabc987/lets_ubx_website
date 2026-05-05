@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, CheckCircle2, Clock3, XCircle } from 'lucide-react';
+import { Loader2, CheckCircle2, Clock3, XCircle, RefreshCw, Search } from 'lucide-react';
 import { useFixRegistrationLookup } from '@/hooks/useFixRegistrations';
 
 const statusCopy: Record<string, { title: string; description: string; icon: any }> = {
@@ -23,6 +23,12 @@ const statusCopy: Record<string, { title: string; description: string; icon: any
         description: 'Your FIX application is not moving forward at this stage.',
         icon: XCircle,
     },
+};
+
+const badgeVariant = (status: string) => {
+    if (status === 'approved') return 'default' as const;
+    if (status === 'rejected') return 'destructive' as const;
+    return 'secondary' as const;
 };
 
 export default function FixStatusViewer() {
@@ -67,26 +73,46 @@ export default function FixStatusViewer() {
     const StatusIcon = statusMeta?.icon;
 
     return (
-        <div className="mx-auto max-w-3xl">
-            {!registration && !isLoading && (
+        <div className="mx-auto max-w-3xl space-y-4">
+            {isLoading && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Checking your application…
+                </div>
+            )}
+
+            {!s && !isLoading && (
                 <div className="rounded-sm border border-border/60 bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
-                    No cached application found for the provided startup and phone. Use the checker to look up a
-                    submission.
+                    No application details provided.
                     <div className="mt-2">
-                        <Button variant="link" onClick={() => router.push('/fix/check')}>Check application</Button>
+                        <Button variant="link" className="p-0 h-auto" onClick={() => router.push('/fix/check')}>
+                            <Search className="mr-1 h-3 w-3" /> Check application status
+                        </Button>
                     </div>
                 </div>
             )}
 
-            {isLoading && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Checking your application...
+            {s && !registration && !isLoading && (
+                <div className="rounded-sm border border-border/60 bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
+                    No application found for the provided startup and phone number. Please check your details.
+                    <div className="mt-2">
+                        <Button variant="link" className="p-0 h-auto" onClick={() => router.push('/fix/check')}>
+                            <Search className="mr-1 h-3 w-3" /> Try checking again
+                        </Button>
+                    </div>
                 </div>
             )}
 
             {registration && statusMeta && StatusIcon && (
                 <div className="space-y-4">
+                    {/* If this is an optimistic cached submission (id === null) show a thank-you message */}
+                    {registration.id === null && registration.status === 'pending' && (
+                        <div className="rounded-sm border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+                            <p className="font-semibold">Thank you — your application was received.</p>
+                            <p className="text-sm">We've recorded your submission and it's now pending review.</p>
+                        </div>
+                    )}
+
                     <div className="rounded-sm border border-border/60 bg-muted/30 px-4 py-4">
                         <div className="flex items-center gap-3">
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background ring-1 ring-border/60">
@@ -95,13 +121,13 @@ export default function FixStatusViewer() {
                             <div className="min-w-0">
                                 <div className="flex items-center gap-2">
                                     <p className="font-semibold text-foreground">{statusMeta.title}</p>
-                                    <Badge>{registration.status}</Badge>
+                                    <Badge variant={badgeVariant(registration.status)}>{registration.status}</Badge>
                                 </div>
                                 <p className="text-sm text-muted-foreground">{statusMeta.description}</p>
+                                {/* Only show safe public fields: name, startup_name, status */}
                                 <div className="mt-3 text-sm">
                                     <div><span className="font-semibold">Name:</span> {registration.name}</div>
                                     <div><span className="font-semibold">Startup:</span> {registration.startup_name}</div>
-                                    {/* <div><span className="font-semibold">Date Allotted:</span> {registration.allocated_date ? new Date(registration.allocated_date.seconds ? registration.allocated_date.seconds * 1000 : registration.allocated_date).toLocaleDateString() : '—'}</div> */}
                                 </div>
                             </div>
                         </div>
@@ -110,27 +136,28 @@ export default function FixStatusViewer() {
                     <div className="rounded-sm border border-border/60 bg-white px-4 py-4">
                         <div className="grid gap-3 md:grid-cols-2">
                             <div>
-                                <label className="block text-sm font-medium">Prove you're human</label>
+                                <label className="block text-sm font-medium">Prove you're human to refresh</label>
                                 <div className="flex items-center gap-2 mt-2">
-                                    <div className="rounded border border-border/60 bg-muted/10 px-3 py-2">
+                                    <div className="rounded border border-border/60 bg-muted/10 px-3 py-2 text-sm">
                                         {captchaA} + {captchaB} =
                                     </div>
                                     <input
                                         value={captchaAnswer}
                                         onChange={(e) => setCaptchaAnswer(e.target.value)}
-                                        className="input border border-black bg-background rounded px-3 py-2"
+                                        className="input border border-black bg-background rounded px-3 py-2 w-20"
+                                        placeholder="?"
                                     />
                                 </div>
                             </div>
 
                             <div className="flex items-end gap-2">
-                                <Button onClick={handleRefresh} disabled={!isCaptchaCorrect}>
-                                    Refresh
+                                <Button onClick={handleRefresh} disabled={!isCaptchaCorrect} variant="outline">
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    Refresh Status
                                 </Button>
                             </div>
                         </div>
 
-                        {/* Small message at the bottom */}
                         <div className="mt-4 text-xs text-muted-foreground">
                             <p>To get the latest status of your application, fill the answer and click refresh.</p>
                             <p className="mt-1 font-medium text-red-500">This is required to secure your application.</p>
@@ -139,11 +166,13 @@ export default function FixStatusViewer() {
 
                     <div className="flex justify-center pt-2">
                         <Button
+                            id="fix-check-another-btn"
                             variant="default"
                             className="bg-black"
                             onClick={() => router.push('/fix/check')}
                         >
-                            Check another status
+                            <Search className="mr-2 h-4 w-4" />
+                            Check Another Application
                         </Button>
                     </div>
                 </div>

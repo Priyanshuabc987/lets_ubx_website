@@ -81,20 +81,19 @@ export function useCreateFixRegistration() {
         support_needed: registration.support_needed.trim(),
         additional_info: registration.additional_info.trim(),
         pitch_deck_link: registration.pitch_deck_link.trim(),
-        // normalized startup name for case-insensitive lookups (keep both fields)
-        startups_normalise: normalized,
+        // normalized startup name for case-insensitive lookups
         startup_normalised: normalized,
       };
 
       // Optimistically cache the submission locally so the user can see their application
       // even if the server call fails or times out. Use startup_name + phone as the cache key.
       try {
-        const key = `fix_status_cache:${payload.startup_name}:${payload.phone}`;
+        // Use the same normalized key format that FixStatusViewer reads from
+        const key = `fix_status_cache:${normalized}:${payload.phone}`;
         const cached = {
           id: null,
           name: payload.name || '',
           startup_name: payload.startup_name || '',
-          startups_normalise: normalized,
           startup_normalised: normalized,
           status: 'pending',
           allocated_date: null,
@@ -122,7 +121,6 @@ export function useCreateFixRegistration() {
           id: data?.id || null,
           name: (variables as any).name || '',
           startup_name: (variables as any).startup_name || '',
-          startups_normalise: normalized,
           startup_normalised: normalized,
           status: 'pending',
           allocated_date: null,
@@ -142,7 +140,6 @@ export function useCreateFixRegistration() {
           id: null,
           name: (variables as any).name || '',
           startup_name: (variables as any).startup_name || '',
-          startups_normalise: normalized,
           startup_normalised: normalized,
           status: 'pending',
           allocated_date: null,
@@ -156,14 +153,13 @@ export function useCreateFixRegistration() {
     },
   });
 }
-export function useFixRegistrationLookup(startup_name?: string, phone?: string, captchaToken?: string) {
+export function useFixRegistrationLookup(startup_name?: string, phone?: string, captchaToken?: string, skipCache = false) {
   const [registration, setRegistration] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const CACHE_TTL_MS = 1000 * 60 * 60; // 1 hour
 
-  // helper to fetch from server and update cache
-  const fetchFromServer = async (forceCacheKey?: string) => {
+  // helper: fetch from server and write result to localStorage cache
+  const fetchFromServer = async () => {
     if (!startup_name) return null;
     setIsLoading(true);
     setError(null);
@@ -176,30 +172,38 @@ export function useFixRegistrationLookup(startup_name?: string, phone?: string, 
         body: JSON.stringify({ startup_name, phone, captchaToken }),
       });
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data?.registration) {
+        // Server found the registration — use real data
         const cached = {
-          id: data?.registration?.id || null,
-          name: data?.registration?.name || '',
-          startup_name: data?.registration?.startup_name || startup_name,
-          startups_normalise: normalizedStartup,
+          id: data.registration.id || null,
+          name: data.registration.name || '',
+          startup_name: data.registration.startup_name || startup_name,
           startup_normalised: normalizedStartup,
-          status: data?.registration?.status || 'pending',
-          allocated_date: data?.registration?.allocated_date || null,
+          status: data.registration.status || 'pending',
+          allocated_date: data.registration.allocated_date || null,
           savedAt: Date.now(),
         };
-        try {
-          localStorage.setItem(cacheKey, JSON.stringify(cached));
-        } catch (e) {}
+        try { localStorage.setItem(cacheKey, JSON.stringify(cached)); } catch (e) {}
         setRegistration(cached);
         return cached;
+      } else if (res.ok && !data?.registration) {
+        // Server returned ok but no registration found.
+        // Preserve an optimistic pending record if one exists (race condition: doc
+        // may not be in Firestore yet right after form submission).
+        setRegistration((prev: any) => {
+          if (prev && prev.id === null && prev.status === 'pending') {
+            return prev; // keep showing the optimistic pending state
+          }
+          return null; // genuinely not found
+        });
+        return null;
       } else {
+        // HTTP error
         setError(data?.error || 'Lookup failed');
-        setRegistration(null);
         return null;
       }
     } catch (e: any) {
       setError(e?.message || 'Lookup error');
-      setRegistration(null);
       return null;
     } finally {
       setIsLoading(false);
@@ -214,32 +218,25 @@ export function useFixRegistrationLookup(startup_name?: string, phone?: string, 
     const cacheKey = `fix_status_cache:${normalizedStartup}:${phone || ''}`;
 
     const doLookup = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      // check local cache first
-      try {
-        const raw = localStorage.getItem(cacheKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && parsed.savedAt && Date.now() - parsed.savedAt < CACHE_TTL_MS) {
-            setRegistration(parsed);
-            setIsLoading(false);
-            return;
+      if (!skipCache) {
+        // fix/status: show cached data immediately while fetching fresh data in background
+        try {
+          const raw = localStorage.getItem(cacheKey);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed?.startup_name && mounted) {
+              setRegistration(parsed); // show instantly, will be overwritten by server result
+            }
           }
-        }
-      } catch (e) {
-        // ignore localStorage errors
+        } catch (e) { /* ignore */ }
       }
-
-      // if local cache was fresh, we already returned earlier. Otherwise fetch from server
-      await fetchFromServer(cacheKey);
+      // Always fetch from server to get latest DB status
+      if (mounted) await fetchFromServer();
     };
 
     doLookup();
-
     return () => { mounted = false; };
-  }, [startup_name, phone, captchaToken]);
+  }, [startup_name, phone, captchaToken, skipCache]);
 
   return { registration, isLoading, error, refresh: fetchFromServer };
 }

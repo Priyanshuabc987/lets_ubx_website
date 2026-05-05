@@ -3,7 +3,7 @@ import admin, { adminFirestore } from '@/lib/adminFirebase';
 
 // Simple in-memory rate limiter (per-process). Works for single-instance deployments.
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_MAX = 20;
 const rateLimits = new Map<string, { count: number; resetAt: number }>();
 
 async function verifyRecaptcha(token?: string) {
@@ -62,26 +62,43 @@ export async function POST(req: Request) {
       if (!ok) return NextResponse.json({ error: 'Captcha verification failed' }, { status: 400 });
     }
 
-    // perform lookup in private collection via Admin SDK using normalized field
     const normalized = startup_name.trim().toLowerCase().replace(/\s+/g, ' ');
-    let q: any = adminFirestore.collection('fix_registrations_private')
-      .where('startups_normalise', '==', normalized)
-      .limit(1);
+    console.log(`[FIX Lookup] Searching for: "${normalized}"`);
 
-    if (phone && typeof phone === 'string' && phone.trim()) {
-      // narrow by phone if provided
-      q = q.where('phone', '==', phone.trim());
-    }
+    const snap = await adminFirestore
+      .collection('fix_registrations_private')
+      .where('startup_normalised', '==', normalized)
+      .limit(50)
+      .get();
 
-    const snap = await q.get();
     state.count += 1;
     rateLimits.set(ip, state);
 
     if (snap.empty) {
+      console.log(`[FIX Lookup] No documents found for "${normalized}"`);
       return NextResponse.json({ registration: null });
     }
 
-    const doc = snap.docs[0];
+    console.log(`[FIX Lookup] Found ${snap.size} potential matches. Filtering by phone...`);
+
+    // Filter by phone in code (avoids composite index requirement).
+    // Normalize both to digits-only for maximum reliability.
+    const inputPhoneDigits = (phone || '').toString().replace(/\D/g, '');
+    let doc = snap.docs[0]; 
+    if (inputPhoneDigits) {
+      const phoneMatch = snap.docs.find(d => {
+        const dbPhoneDigits = (d.data().phone || '').toString().replace(/\D/g, '');
+        return dbPhoneDigits === inputPhoneDigits;
+      });
+      if (phoneMatch) {
+        doc = phoneMatch;
+        console.log(`[FIX Lookup] Match found for phone: ${inputPhoneDigits}`);
+      } else {
+        console.log(`[FIX Lookup] Startup found but phone mismatch. Provided: ${inputPhoneDigits}`);
+        return NextResponse.json({ registration: null }); 
+      }
+    }
+
     const data = doc.data() || {};
 
     // return only minimal fields
