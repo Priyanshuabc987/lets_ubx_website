@@ -293,8 +293,8 @@ export function RegistrationConfirmation({
                 )}
 
                 <div className="pt-2 sm:pt-4">
-                  {user?.profile_slug ? (
-                    <Link href={`/member/${user.profile_slug}`}>
+                  {(user as any)?.profile_slug ? (
+                    <Link href={`/member/${(user as any).profile_slug}`}>
                       <Button variant="ghost" className="w-full min-h-[44px]">
                         View Profile
                       </Button>

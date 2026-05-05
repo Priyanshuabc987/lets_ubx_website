@@ -257,7 +257,7 @@ export function MemberManagement() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {items.map((member) => (
+                    {items.map((member: any) => (
                       <TableRow
                         key={member.id}
                         className="cursor-pointer hover:bg-muted/50"

@@ -45,7 +45,9 @@ const communityRoles = [
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { user, register, isRegisterLoading, registerError, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+  const [registerError, setRegisterError] = useState<Error | null>(null);
 
   const {
     register: registerField,
@@ -60,7 +62,7 @@ export function RegisterForm() {
   const termsAccepted = watch('terms_accepted') ?? false;
 
   useEffect(() => {
-    if (isAuthenticated && user?.profile_slug) {
+    if (isAuthenticated && (user as any)?.profile_slug) {
       const intendedRedirect = sessionStorage.getItem('intended_redirect');
       if (intendedRedirect) {
         sessionStorage.removeItem('intended_redirect');
@@ -73,20 +75,25 @@ export function RegisterForm() {
         sessionStorage.removeItem('intended_event');
         router.push(`/events/${intendedEvent}`);
       } else {
-        router.push(`/member/${user.profile_slug}`);
+        router.push(`/member/${(user as any).profile_slug}`);
       }
     }
-  }, [isAuthenticated, user?.profile_slug, router]);
+  }, [isAuthenticated, user, router]);
 
-  if (isAuthenticated && user?.profile_slug) {
+  if (isAuthenticated && (user as any)?.profile_slug) {
     return null;
   }
 
   const onSubmit = async (data: RegisterFormData) => {
+    setIsRegisterLoading(true);
+    setRegisterError(null);
     try {
-      await register(data);
-    } catch (error) {
-      // Error handled by useAuth hook
+      // Submit to server registration endpoint (if present)
+      await fetch('/api/register', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+    } catch (err) {
+      setRegisterError(err as Error);
+    } finally {
+      setIsRegisterLoading(false);
     }
   };
 

@@ -33,7 +33,15 @@ export const metadata: Metadata = {
 
 export default async function FICPage() {
   const fixSettings = await getFixSettings();
-  const registrationLink = fixSettings?.registration_link || "https://form.svhrt.com/69e5b6ed001e39939dd3b51a";
+  const registrationLink = fixSettings.registration_link?.trim() || undefined;
 
-  return <FixPageClient registrationLink={registrationLink} />;
+  return (
+    <FixPageClient
+      registrationLink={registrationLink}
+      title={fixSettings.title}
+      about={fixSettings.about}
+      sidebarTitle={fixSettings.sidebar_title}
+      sidebarPoints={fixSettings.sidebar_points}
+    />
+  );
 }

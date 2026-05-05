@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EventForm, eventSchema, type EventFormData } from '@/components/admin/EventManagement';
-import { useFICEvent, useCreateEvent, useUpdateEvent, useDeleteEvent, useUploadEventImage } from '@/hooks/useEvents';
+import { useFICEvent, useCreateEvent, useUpdateEvent, useDeleteEvent } from '@/hooks/useEvents';
 import { useAdminEventRegistrations } from '@/hooks/useAdmin';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Plus, Edit, Trash2 } from 'lucide-react';
@@ -23,7 +23,6 @@ export function FICManagement() {
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
   const deleteEvent = useDeleteEvent();
-  const uploadImage = useUploadEventImage();
   const [imageInputType, setImageInputType] = useState<'upload' | 'url'>('upload');
   const [pendingImages, setPendingImages] = useState<File[]>([]);
 
@@ -38,9 +37,8 @@ export function FICManagement() {
     resolver: zodResolver(eventSchema),
     defaultValues: {
       status: 'draft',
-      is_featured: true,
+      is_paid: false,
       category: 'FIC',
-      theme: '',
     },
   });
 
@@ -52,9 +50,8 @@ export function FICManagement() {
         description: ficEvent.description || '',
         event_date: ficEvent.event_date?.slice(0, 16) || '',
         location: ficEvent.location || '',
-        is_featured: ficEvent.is_featured ?? true,
         category: ficEvent.category || 'FIC',
-        theme: ficEvent.theme || '',
+        // theme/is_featured not used in Event type
         status: (ficEvent.status as 'draft' | 'published' | 'cancelled') ?? 'draft',
         featured_image_url: ficEvent.featured_image_url || '',
         external_registration_url: ficEvent.external_registration_url || '',
@@ -66,9 +63,8 @@ export function FICManagement() {
         description: '',
         event_date: '',
         location: '',
-        is_featured: true,
         category: 'FIC',
-        theme: '',
+        // theme/is_featured not used in Event type
         status: 'draft',
         featured_image_url: '',
         external_registration_url: '',
@@ -94,9 +90,8 @@ export function FICManagement() {
       description: data.description || undefined,
       event_date: data.event_date,
       location: data.location || undefined,
-      is_featured: data.is_featured ?? true,
       category: 'FIC',
-      theme: data.theme || undefined,
+      // theme/is_featured omitted to match Event type
       status: data.status,
       external_registration_url:
         data.external_registration_url && data.external_registration_url.trim()
@@ -116,26 +111,20 @@ export function FICManagement() {
       let targetEventId: string;
 
       if (ficEvent && isEditing) {
-        const updated = await updateEvent.mutateAsync({ eventId: ficEvent.id, eventData: payload });
-        targetEventId = updated.id ?? ficEvent.id;
+        const updated = await updateEvent.mutateAsync({ eventId: ficEvent.id, eventData: payload, imageFile: null });
+        targetEventId = ficEvent.id;
         toast({ title: 'FIC event updated' });
       } else {
-        const created = await createEvent.mutateAsync(payload);
-        targetEventId = created.id;
+        const created = await createEvent.mutateAsync({ eventData: payload, imageFile: null });
+        targetEventId = (created as any)?.id;
         toast({ title: 'FIC event created' });
       }
 
       // Handle file uploads when in upload mode
       if (imageInputType === 'upload' && pendingImages.length > 0 && targetEventId) {
-        let firstImageUrl: string | null = null;
-        for (let i = 0; i < pendingImages.length; i++) {
-          const res = await uploadImage.mutateAsync({ eventId: targetEventId, file: pendingImages[i] });
-          if (i === 0) firstImageUrl = res.image_url;
-        }
-        // If no featured image URL was set, use first uploaded image as featured
-        if (!payload.featured_image_url && firstImageUrl) {
-          await updateEvent.mutateAsync({ eventId: targetEventId, eventData: { featured_image_url: firstImageUrl } });
-        }
+        // Use updateEvent to upload the first image as featured image
+        const res = await updateEvent.mutateAsync({ eventId: targetEventId, eventData: { featured_image_url: undefined }, imageFile: pendingImages[0] });
+        // updateEvent will set featured_image_url when imageFile provided
       }
       setIsDialogOpen(false);
       setIsEditing(false);
@@ -192,9 +181,9 @@ export function FICManagement() {
               watch={watch}
               errors={errors}
               isSubmitting={createEvent.isPending || updateEvent.isPending}
-              showImageUpload
-              pendingImages={pendingImages}
-              onPendingImagesChange={setPendingImages}
+              imageFile={pendingImages[0] ?? null}
+              onImageFileChange={(file) => setPendingImages(file ? [file] : [])}
+              existingImageUrl={ficEvent?.featured_image_url}
               imageInputType={imageInputType}
               onImageInputTypeChange={setImageInputType}
             />

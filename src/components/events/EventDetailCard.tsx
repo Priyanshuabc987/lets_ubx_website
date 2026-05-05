@@ -45,16 +45,17 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
   const canRegister = eventStatus.text !== 'Concluded' && !!event.external_registration_url;
 
   const registrationButton = (
-    <Button asChild size="lg" className="w-full min-h-[48px] text-base font-extrabold tracking-[0.02em] shadow-md" disabled={!canRegister}>
-      <a href={canRegister ? event.external_registration_url : undefined} target="_blank" rel="noopener noreferrer">
-        {canRegister ? (
-          <>
-            Register Now <ExternalLink className="w-4 h-4 ml-2" />
-          </>
-        ) : 'Registration Closed'}
-      </a>
-    </Button>
-  );
+  <Button
+    asChild
+    size="lg"
+    className="flex-1 bg-black text-base font-extrabold tracking-[0.02em] shadow-md h-12"
+    disabled={!canRegister}
+  >
+    <a href={canRegister ? event.external_registration_url : undefined} target="_blank" rel="noopener noreferrer">
+      {canRegister ? 'Register Now' : 'Closed'}
+    </a>
+  </Button>
+);
 
   return (
     <Card className={`relative overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-card to-muted/30 shadow-2xl shadow-primary/10 ${className}`}>
@@ -102,19 +103,19 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="flex gap-3 w-full">
             {registrationButton}
             {isHydrated && canRegister && (
-                <Button
-                  asChild
-                  className="w-full border border-green-600 bg-green-600 text-white hover:bg-green-700 hover:border-green-700"
-                >
-                    <a href={shareUrl} target="_blank" rel="noopener noreferrer">
-                        <WhatsAppIcon className="mr-2 h-4 w-4" />
-                        Share on WhatsApp
-                    </a>
-                </Button>
-            )}
+  <Button
+    asChild
+    size="lg"
+    className="flex-1 text-white bg-primary h-12"
+  >
+    <a href={shareUrl} target="_blank" rel="noopener noreferrer">
+      Share on WhatsApp
+    </a>
+  </Button>
+)}
         </div>
         
         {canRegister && <p className='text-xs text-muted-foreground text-center'>You will be redirected to an external site.</p>}

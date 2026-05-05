@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { EventManagement } from '@/components/admin/EventManagement';
 import { generateSEO, seoConfigs } from '@/lib/seo';
-import { Calendar, Images, FileText, Link as LinkIcon } from 'lucide-react';
+import { Calendar, Images, FileText, Link as LinkIcon, ClipboardList } from 'lucide-react';
 import { GalleryManagement } from '@/components/admin/GalleryManagement';
 import { HeroManagement } from '@/components/admin/HeroManagement';
 import { SocialPostManagement } from '@/components/admin/SocialPostManagement';
@@ -21,6 +21,7 @@ export const adminSections = [
   { id: 'gallery', label: 'Gallery Images', icon: Images },
   { id: 'social', label: 'Social Media', icon: FileText },
   { id: 'fix', label: 'FIX Page', icon: LinkIcon },
+  { id: 'fix-applications', label: 'FIX Applications', icon: ClipboardList },
 ];
 
 export default function AdminDashboard() {
@@ -54,7 +55,9 @@ export default function AdminDashboard() {
       case 'social':
         return <SocialPostManagement />;
       case 'fix':
-        return <FixManagement />;
+        return <FixManagement mode="content" />;
+      case 'fix-applications':
+        return <FixManagement mode="applications" />;
       default:
         return <EventManagement />;
     }

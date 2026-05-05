@@ -12,6 +12,8 @@ service cloud.firestore {
     function isAdmin() {
       return isSignedIn() && 'admin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles;
     }
+    // (Simplified) Only admins are allowed to perform writes for FIX registrations.
+    // Public collection is readable by anyone; private collection is accessible only to admins.
 
     // --- SECURITY RULES ---
     // Rule for the 'users' collection
@@ -49,11 +51,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
-    // fix registration
-    match /fix_registrations/{fix_registrationsId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }  
+    // Fix registrations split into public and private collections
+    // We keep all sensitive information in `fix_registrations_private` and disallow any client
+    // read/write. All server interactions must use the Admin SDK.
+    match /fix_registrations_public/{docId} {
+      // Public collection usage is deprecated for privacy; disallow client access.
+      allow read, write: if false;
+    }
+
+    // Private: only accessible by Admin SDK. Deny all client reads/writes.
+    match /fix_registrations_private/{docId} {
+      allow read, write: if false;
+    }
     
 
   }

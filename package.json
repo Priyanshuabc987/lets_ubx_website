@@ -9,7 +9,8 @@
     "build": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .js,.jsx,.ts,.tsx",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migrate:fix:remove-public": "node scripts/redact_public_fix_regs.js"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.28.0",
@@ -44,6 +45,7 @@
     "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.6.0",
     "firebase": "^11.9.1",
+    "firebase-admin": "^11.12.0",
     "framer-motion": "^11.18.2",
     "genkit": "^1.28.0",
     "html5-qrcode": "^2.3.8",

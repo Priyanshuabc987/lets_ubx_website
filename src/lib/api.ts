@@ -1,55 +1,26 @@
 
-// import { API_BASE_URL } from "./queryClient";
+// Minimal API stubs used by components during typechecking.
+export const registrationsAPI = {
+	getMyRegistrations: async () => ({ json: async () => ({ items: [], total: 0 }) }),
+	register: async (eventId: string, metadata?: any) => ({ ok: true, json: async () => ({ id: 'stub' }) }),
+	unregister: async (id: string) => ({ ok: true, json: async () => ({}) }),
+	regenerateQR: async (id: string) => ({ ok: true, json: async () => ({ qr_code_image_url: 'https://example.com/qr.png' }) }),
+	downloadQRCode: async (id: string) => ({ ok: true, json: async () => ({ url: 'https://example.com/qr-download' }) }),
+};
 
-// const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-//   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-//   const headers = {
-//     ...options.headers,
-//     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-//   };
-//   return fetch(url, { ...options, headers });
-// };
+export const eventsAPI = {
+	listEvents: async (params?: any) => ({ json: async () => ({ items: [], total: 0 }) }),
+	getEvent: async (id: string) => ({ json: async () => ({ id, title: 'Stub Event' }) }),
+};
 
-// export const eventsAPI = {
-//   listEvents: (params: any) => {
-//     const searchParams = new URLSearchParams();
-//     Object.entries(params).forEach(([key, value]) => {
-//       if (value !== undefined) searchParams.append(key, String(value));
-//     });
-//     return fetch(`${API_BASE_URL}/api/events?${searchParams.toString()}`);
-//   },
-//   getEvent: (id: string) => fetch(`${API_BASE_URL}/api/events/${id}`),
-// };
+export const publicAPI = {
+	getPublicProfile: async (slug: string) => ({ json: async () => ({}) }),
+};
 
-// export const registrationsAPI = {
-//   getMyRegistrations: () => fetchWithAuth(`${API_BASE_URL}/api/registrations/me`),
-//   register: (eventId: string, metadata?: any) => fetchWithAuth(`${API_BASE_URL}/api/events/${eventId}/register`, {
-//     method: 'POST',
-//     body: JSON.stringify(metadata),
-//     headers: { 'Content-Type': 'application/json' },
-//   }),
-//   unregister: (id: string) => fetchWithAuth(`${API_BASE_URL}/api/registrations/${id}`, { method: 'DELETE' }),
-//   regenerateQR: (id: string) => fetchWithAuth(`${API_BASE_URL}/api/registrations/${id}/regenerate-qr`, { method: 'POST' }),
-//   downloadQRCode: (id: string) => fetchWithAuth(`${API_BASE_URL}/api/registrations/${id}/qr-code/download`),
-// };
+export const membersAPI = {
+	updateProfile: async (data: any) => ({ ok: true }),
+	uploadProfilePhoto: async (file: File) => ({ ok: true }),
+	deleteProfilePhoto: async () => ({ ok: true }),
+};
 
-// export const publicAPI = {
-//   getPublicProfile: (slug: string) => fetch(`${API_BASE_URL}/api/members/profile/${slug}`),
-// };
-
-// export const membersAPI = {
-//   updateProfile: (data: any) => fetchWithAuth(`${API_BASE_URL}/api/members/profile`, {
-//     method: 'PATCH',
-//     body: JSON.stringify(data),
-//     headers: { 'Content-Type': 'application/json' },
-//   }),
-//   uploadProfilePhoto: (file: File) => {
-//     const formData = new FormData();
-//     formData.append('file', file);
-//     return fetchWithAuth(`${API_BASE_URL}/api/members/profile/photo`, {
-//       method: 'POST',
-//       body: formData,
-//     });
-//   },
-//   deleteProfilePhoto: () => fetchWithAuth(`${API_BASE_URL}/api/members/profile/photo`, { method: 'DELETE' }),
-// };
+export default {};

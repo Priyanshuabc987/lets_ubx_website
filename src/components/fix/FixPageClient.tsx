@@ -8,10 +8,22 @@ import { CheckCircle, MessageCircle } from 'lucide-react';
 import { FICImageGallery } from '@/components/fix/FICImageGallery';
 
 interface FixPageClientProps {
-  registrationLink: string;
+  registrationLink?: string;
+  title: string;
+  about: string;
+  sidebarTitle: string;
+  sidebarPoints: string[];
 }
 
-export function FixPageClient({ registrationLink }: FixPageClientProps) {
+export function FixPageClient({
+  registrationLink,
+  title,
+  about,
+  sidebarTitle,
+  sidebarPoints,
+}: FixPageClientProps) {
+  const hasExternalRegistrationLink = Boolean(registrationLink);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="pt-20 pb-20">
@@ -21,7 +33,7 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
           <div className="max-w-3xl mx-auto my-6 md:my-12">
             <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border-2 border-border shadow-lg">
               <Image
-                src="/fix/fix.jpeg"
+                src="/fix/DSC01989.jpg.jpeg"
                 alt="Founders & Investors Xplore Banner"
                 fill
                 className="object-cover"
@@ -33,43 +45,38 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16">
             {/* Left side (description) */}
             <div className="md:col-span-3 space-y-6">
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-primary italic">Founders & Investors Xplore (FIX)</h1>
-              <div className="prose prose-invert max-w-none text-muted-foreground leading-relaxed">
-                <p>
-                  Founders & Investors Xplore (FIX) by CEDAT is an exclusive event that brings together founders, investors, mentors, startup ecosystem enablers & leaders.
-                </p>
-                <p>
-                  FIX also features a live startup pitch session, where selected founders will get the chance to present their startups directly to investors and enablers of the ecosystem.
-                </p>
-                <p>
-                  Founders will get live feedback, valuable insights and potential funding opportunities for their startup. Along with that, they can explore the startup ecosystem and communities through CEDAT for their startup journey.
-                </p>
-                <p>
-                  We will share a link to submit your pitch deck. Only shortlisted startups will be invited to present their pitch deck on the event day.
-                </p>
-                <p>
-                  Other registered founders & participants can attend the event as visitors, network with mentors, enablers, investors and gain valuable insights.
-                </p>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-primary italic">{title}</h1>
+              <div className="prose prose-invert max-w-none text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {about}
               </div>
             </div>
 
             {/* Right side (details & registration) */}
             <div className="md:col-span-2">
               <div className="bg-muted/30 p-6 px-3 md:px-6 rounded-2xl border border-border sticky top-24">
-                <h3 className="text-xl font-bold mb-4">Event Highlights</h3>
+                <h3 className="text-xl font-bold mb-4">{sidebarTitle}</h3>
                 <ul className="space-y-3 text-[13.5px] md:text-base text-muted-foreground mb-6">
-                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Learn from industry experts & mentors</li>
-                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Build with Founders, investors & enablers</li>
-                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Explore partnerships, investments & grants</li>
-                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Access to startup demos, meetups & events</li>
-                  <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />Unite with communities of startup ecosystem</li>
+                  {sidebarPoints.map((point) => (
+                    <li key={point} className="flex items-start">
+                      <CheckCircle className="w-4 h-4 mr-3 mt-1 text-primary flex-shrink-0" />
+                      {point}
+                    </li>
+                  ))}
                 </ul>
 
-                <Button asChild size="lg" className="w-full font-bold text-lg">
-                  <Link href={registrationLink} target="_blank">
-                    Register Now
-                  </Link>
-                </Button>
+                {hasExternalRegistrationLink ? (
+                  <Button asChild size="lg" className="w-full font-bold text-lg">
+                    <Link href={registrationLink!} target="_blank">
+                      Register Now
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button asChild size="lg" className="w-full font-bold text-lg">
+                    <Link href="/fix/register">
+                      Register Now
+                    </Link>
+                  </Button>
+                )}
                 <Link
                   href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)"
                   target="_blank"
@@ -80,7 +87,9 @@ export function FixPageClient({ registrationLink }: FixPageClientProps) {
                   </Button>
                 </Link>
                 <p className="text-xs text-center text-muted-foreground pt-3">
-                  Registration is required to pitch at FIX.
+                  {hasExternalRegistrationLink
+                    ? 'Registration is required to pitch at FIX.'
+                    : 'You will be redirected to the CEDAT FIX registration page.'}
                 </p>
               </div>
             </div>

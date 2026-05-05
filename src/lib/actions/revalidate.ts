@@ -60,6 +60,14 @@ export async function revalidateFixUrl() {
 }
 
 /**
+ * Revalidates the cache for FIX page settings and content.
+ */
+export async function revalidateFixSettings() {
+  revalidateTag('fix-settings');
+  revalidateTag('fix-url');
+}
+
+/**
  * Revalidates the cached content for the home page settings.
  */
 export async function revalidateHomeContent() {

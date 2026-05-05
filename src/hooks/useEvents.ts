@@ -140,6 +140,12 @@ export function useEvent(id: string) {
   return useDoc<Event>(eventRef);
 }
 
+// Return the single FIC event (category='FIC') if present.
+export function useFICEvent() {
+  const { events, isLoading, error } = useEvents({ pageSize: 1, queryScope: 'fic' });
+  return { data: events?.[0] ?? null, isLoading, error };
+}
+
 export function useCreateEvent() {
   const queryClient = useQueryClient();
   const db = useFirestore();
