@@ -68,6 +68,8 @@ export function useCreateFixRegistration() {
   // private collection via the Admin SDK. This prevents direct client writes to private data.
   return useMutation({
     mutationFn: async (registration: Omit<FixRegistration, 'id' | 'status' | 'createdAt' | 'updatedAt'>) => {
+      const normalized = registration.startup_name.trim().toLowerCase().replace(/\s+/g, ' ');
+
       const payload = {
         ...registration,
         email: registration.email.trim().toLowerCase(),
@@ -79,8 +81,9 @@ export function useCreateFixRegistration() {
         support_needed: registration.support_needed.trim(),
         additional_info: registration.additional_info.trim(),
         pitch_deck_link: registration.pitch_deck_link.trim(),
-        // normalized startup name for case-insensitive lookups
-        startups_normalise: registration.startup_name.trim().toLowerCase().replace(/\s+/g, ' '),
+        // normalized startup name for case-insensitive lookups (keep both fields)
+        startups_normalise: normalized,
+        startup_normalised: normalized,
       };
 
       // Optimistically cache the submission locally so the user can see their application
@@ -91,6 +94,8 @@ export function useCreateFixRegistration() {
           id: null,
           name: payload.name || '',
           startup_name: payload.startup_name || '',
+          startups_normalise: normalized,
+          startup_normalised: normalized,
           status: 'pending',
           allocated_date: null,
           savedAt: Date.now(),
@@ -118,6 +123,7 @@ export function useCreateFixRegistration() {
           name: (variables as any).name || '',
           startup_name: (variables as any).startup_name || '',
           startups_normalise: normalized,
+          startup_normalised: normalized,
           status: 'pending',
           allocated_date: null,
           savedAt: Date.now(),
@@ -137,6 +143,7 @@ export function useCreateFixRegistration() {
           name: (variables as any).name || '',
           startup_name: (variables as any).startup_name || '',
           startups_normalise: normalized,
+          startup_normalised: normalized,
           status: 'pending',
           allocated_date: null,
           savedAt: Date.now(),
@@ -175,6 +182,7 @@ export function useFixRegistrationLookup(startup_name?: string, phone?: string, 
           name: data?.registration?.name || '',
           startup_name: data?.registration?.startup_name || startup_name,
           startups_normalise: normalizedStartup,
+          startup_normalised: normalizedStartup,
           status: data?.registration?.status || 'pending',
           allocated_date: data?.registration?.allocated_date || null,
           savedAt: Date.now(),

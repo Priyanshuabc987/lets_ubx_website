@@ -2,23 +2,23 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import FixStatusViewer from '@/components/fix/FixStatusViewer';
-import { BASE_URL } from '@/lib/constants';
+import { FixStatusLookup } from '@/components/fix/FixStatusLookup';
 import { Suspense } from 'react';
+import { BASE_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'FIX Application Status - CEDAT',
+  title: 'FIX Application - Check Status',
   description: 'Check the status of your Founders & Investors Xplore (FIX) application.',
   openGraph: {
-    title: 'FIX Application Status - CEDAT',
+    title: 'FIX Application - Check Status',
     description: 'Check the status of your Founders & Investors Xplore (FIX) application.',
-    url: `${BASE_URL}/fix/status`,
+    url: `${BASE_URL}/fix/check`,
     siteName: 'CEDAT',
     type: 'website',
   },
 };
 
-export default function FixStatusPage() {
+export default function FixCheckPage() {
   return (
     <div className="min-h-screen ">
       <main className="pt-20 pb-20 md:pt-28">
@@ -31,8 +31,8 @@ export default function FixStatusPage() {
           </Link>
 
           <div className="mx-auto max-w-3xl">
-            <Suspense fallback={<div>Loading status…</div>}>
-              <FixStatusViewer />
+            <Suspense fallback={<div>Loading checker…</div>}>
+              <FixStatusLookup />
             </Suspense>
           </div>
         </div>

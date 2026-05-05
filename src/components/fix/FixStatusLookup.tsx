@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,6 +50,7 @@ export function FixStatusLookup() {
   };
 
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   // Auto-run lookup when URL params present
   useEffect(() => {
@@ -84,63 +86,109 @@ export function FixStatusLookup() {
 
   return (
     <Card className="overflow-hidden rounded-sm border-0 bg-white shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
-        <CardHeader className="bg-black px-6 py-4 text-white">
+      <CardHeader className="bg-black px-6 py-4 text-white">
         <CardTitle className="text-[1.05rem] font-bold text-white">Check Your Application Status</CardTitle>
         <CardDescription className="text-white/90">
           No login needed. Enter your phone number to look up your application status.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 px-6 py-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="fix-status-startup">Startup Name</Label>
-            <Input
-              id="fix-status-startup"
-              value={startupInput}
-              onChange={(event) => setStartupInput(event.target.value)}
-              placeholder="Startup or company name"
-            />
+        {/* Show lookup form only when there's no cached/returned registration */}
+        {!registration && (
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="fix-status-startup">Startup Name <span className="ml-1 text-red-400">*</span></Label>
+              <Input
+                id="fix-status-startup"
+                value={startupInput}
+                onChange={(event) => setStartupInput(event.target.value)}
+                placeholder="Startup or company name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="fix-status-phone">Phone Number <span className="ml-1 text-red-400">*</span></Label>
+              <Input
+                id="fix-status-phone"
+                value={phoneInput}
+                onChange={(event) => setPhoneInput(event.target.value)}
+                placeholder="Your phone number"
+              />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="fix-status-phone">Phone Number (optional)</Label>
-            <Input
-              id="fix-status-phone"
-              value={phoneInput}
-              onChange={(event) => setPhoneInput(event.target.value)}
-              placeholder="Your phone number"
-            />
-          </div>
-        </div>
+        )}
 
         <div className="mt-2 flex items-center gap-2">
           <div className="flex-1">
             <Label>Prove you're human</Label>
             <div className="flex items-center gap-2">
-              <div className="rounded border border-border/60 bg-muted/10 px-3 py-2">{a !== null && b !== null ? `${a} + ${b} =` : '...'}</div>
-              <Input value={mathAnswer} onChange={(e) => setMathAnswer(e.target.value)} placeholder="Answer" />
+              <div className="rounded border border-border/60 bg-muted/10 px-3 py-2 whitespace-nowrap">
+                {a !== null && b !== null ? `${a} + ${b} =` : '...'}
+              </div>
+              <Input
+                className="border-black bg-background"
+                value={mathAnswer}
+                onChange={(e) => setMathAnswer(e.target.value)}
+                placeholder="Answer"
+              />
             </div>
+
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-  <Button 
-    type="button" 
-    onClick={handleSearch} 
-    disabled={!startupInput.trim() || !isMathCorrect} 
-    className="bg-[#000000] text-[#FFFFFF] hover:bg-[#000000] hover:text-[#FFFFFF]"
-  >
-    <Search className="mr-2 h-4 w-4" />
-    Check Status
-  </Button>
-  <Button 
-    type="button" 
-    onClick={async () => { if (!startupInput.trim()) return; await refresh?.(); }} 
-    variant="ghost" 
-    className="ml-2"
-  >
-    Refresh
-  </Button>
-</div>
+          {!registration ? (
+            <>
+              <Button
+                type="button"
+                onClick={handleSearch}
+                disabled={!startupInput.trim() || !phoneInput.trim() || !isMathCorrect}
+                className="bg-[#000000] text-[#FFFFFF] hover:bg-[#000000] hover:text-[#FFFFFF]"
+              >
+                <Search className="mr-2 h-4 w-4" />
+                Check Status
+              </Button>
+              <Button
+                type="button"
+                onClick={async () => {
+                  if (!startupInput.trim()) return;
+                  await refresh?.();
+                }}
+                variant="ghost"
+                className="ml-2"
+              >
+                Refresh
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                type="button"
+                onClick={async () => {
+                  await refresh?.();
+                }}
+                className="bg-[#000000] text-[#FFFFFF] hover:bg-[#000000] hover:text-[#FFFFFF]"
+              >
+                Refresh
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                className="ml-2"
+                onClick={() => {
+                  // clear inputs and criteria to allow checking another status
+                  setStartupInput('');
+                  setPhoneInput('');
+                  setCriteria(null);
+                  // clear URL params
+                  router.push('/fix/check');
+                }}
+              >
+                Check another status
+              </Button>
+            </>
+          )}
+        </div>
 
 
         {isLoading && (
@@ -152,12 +200,22 @@ export function FixStatusLookup() {
 
         {criteria && !isLoading && !registration && (
           <div className="rounded-sm border border-border/60 bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
-            No FIX application was found with that email and phone number combination.
+            No FIX application was found with that startup name and phone number combination.
+            <div className="mt-2 text-sm">
+              You can try again or <a href="/fix/register" className="underline">register for FIX</a>.
+            </div>
           </div>
         )}
 
         {registration && statusMeta && StatusIcon && (
           <div className="rounded-sm border border-border/60 bg-muted/30 px-4 py-4">
+            {/* If this is an optimistic cached submission (id === null) show a thank-you message */}
+            {registration.id === null && registration.status === 'pending' && (
+              <div className="mb-4 rounded-sm border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+                <p className="font-semibold">Thank you — your application was received.</p>
+                <p className="text-sm">We've recorded your submission and it's now pending review.</p>
+              </div>
+            )}
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background ring-1 ring-border/60">
                 <StatusIcon className="h-5 w-5 text-primary" />
@@ -171,7 +229,7 @@ export function FixStatusLookup() {
                 <div className="mt-3 text-sm">
                   <div><span className="font-semibold">Name:</span> {registration.name}</div>
                   <div><span className="font-semibold">Startup:</span> {registration.startup_name}</div>
-                  <div><span className="font-semibold">Date Allotted:</span> {registration.allocated_date ? new Date(registration.allocated_date.seconds ? registration.allocated_date.seconds * 1000 : registration.allocated_date).toLocaleDateString() : '—'}</div>
+                  {/* <div><span className="font-semibold">Date Allotted:</span> {registration.allocated_date ? new Date(registration.allocated_date.seconds ? registration.allocated_date.seconds * 1000 : registration.allocated_date).toLocaleDateString() : '—'}</div> */}
                 </div>
               </div>
             </div>

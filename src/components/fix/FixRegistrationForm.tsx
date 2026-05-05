@@ -85,6 +85,28 @@ export function FixRegistrationForm() {
   const answeredBarAnchorRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
+
+  // If a cached submission exists locally, redirect user to the status page.
+  useEffect(() => {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        if (key.startsWith('fix_status_cache:')) {
+          const raw = localStorage.getItem(key);
+          if (!raw) continue;
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.startup_name) {
+            const phone = parsed.phone || '';
+            router.push(`/fix/status?startup_name=${encodeURIComponent(parsed.startup_name)}&phone=${encodeURIComponent(phone)}`);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      // ignore localStorage access errors
+    }
+  }, [router]);
   const {
     register,
     handleSubmit,
