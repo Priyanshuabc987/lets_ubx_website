@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FixStatusLookup } from '@/components/fix/FixStatusLookup';
 import { BASE_URL } from '@/lib/constants';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'FIX Application Status - CEDAT',
@@ -30,7 +31,9 @@ export default function FixStatusPage() {
           </Link>
 
           <div className="mx-auto max-w-3xl">
-            <FixStatusLookup />
+            <Suspense fallback={<div>Loading status lookup…</div>}>
+              <FixStatusLookup />
+            </Suspense>
           </div>
         </div>
       </main>
