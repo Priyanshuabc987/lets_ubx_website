@@ -33,10 +33,13 @@ export const metadata: Metadata = {
 };
 
 
+import { getHomeSettings } from "@/lib/data/settings";
+
 export default async function GalleryPage() {
-  const [photos, videos] = await Promise.all([
+  const [photos, videos, homeSettings] = await Promise.all([
     getGalleryPhotos(),
     getGalleryVideos(),
+    getHomeSettings(),
   ]);
 
   const localPhotoPaths = [
@@ -85,7 +88,12 @@ export default async function GalleryPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <GalleryPageClient photos={[...photos, ...localPhotos]} videos={videos}  />
+      <GalleryPageClient 
+        photos={[...photos, ...localPhotos]} 
+        videos={videos} 
+        title={homeSettings.galleryTitle}
+        description={homeSettings.galleryDescription}
+      />
     </>
   );
 }

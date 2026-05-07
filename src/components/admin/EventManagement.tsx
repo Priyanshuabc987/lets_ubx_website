@@ -50,7 +50,7 @@ export function EventManagement() {
     time_filter: timeFilter,
     queryScope: `admin-${timeFilter}`,
   });
-  
+
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
   const deleteEvent = useDeleteEvent();
@@ -150,14 +150,14 @@ export function EventManagement() {
     setImageFile(null);
     reset();
   };
-  
+
   const getStatusBadgeVariant = (status: string) => {
     return status === 'published' ? 'default' : status === 'cancelled' ? 'destructive' : 'secondary';
   };
 
   return (
     <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Event Management</h2>
         <Button onClick={openForCreate}><Plus className="w-4 h-4 mr-2" /> Create Event</Button>
       </div>
@@ -228,7 +228,7 @@ export function EventManagement() {
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingEvent ? 'Edit Event' : 'Create New Event'}</DialogTitle>
           </DialogHeader>
@@ -268,7 +268,7 @@ interface EventFormProps {
 }
 
 export function EventForm({ onSubmit, onCancel, register, setValue, watch, errors, isSubmitting, imageFile, onImageFileChange, existingImageUrl, imageInputType, onImageInputTypeChange }: EventFormProps) {
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageTypeChange = (type: 'upload' | 'url') => {
@@ -281,7 +281,7 @@ export function EventForm({ onSubmit, onCancel, register, setValue, watch, error
     handleImageTypeChange('upload');
     setTimeout(() => fileInputRef.current?.click(), 0);
   };
-  
+
   return (
     <form onSubmit={onSubmit} className="space-y-4 pt-4">
       <div className="space-y-2">
@@ -317,19 +317,19 @@ export function EventForm({ onSubmit, onCancel, register, setValue, watch, error
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
-            <Label htmlFor="event_date">Event Date *</Label>
-            <Input id="event_date" type="date" {...register('event_date')} />
-            {errors.event_date && <p className="text-sm text-destructive">{errors.event_date.message}</p>}
+          <Label htmlFor="event_date">Event Date *</Label>
+          <Input id="event_date" type="date" {...register('event_date')} />
+          {errors.event_date && <p className="text-sm text-destructive">{errors.event_date.message}</p>}
         </div>
         <div className="space-y-2">
-            <Label htmlFor="start_time">Start Time *</Label>
-            <Input id="start_time" type="time" {...register('start_time')} />
-            {errors.start_time && <p className="text-sm text-destructive">{errors.start_time.message}</p>}
+          <Label htmlFor="start_time">Start Time *</Label>
+          <Input id="start_time" type="time" {...register('start_time')} />
+          {errors.start_time && <p className="text-sm text-destructive">{errors.start_time.message}</p>}
         </div>
         <div className="space-y-2">
-            <Label htmlFor="end_time">End Time *</Label>
-            <Input id="end_time" type="time" {...register('end_time')} />
-            {errors.end_time && <p className="text-sm text-destructive">{errors.end_time.message}</p>}
+          <Label htmlFor="end_time">End Time *</Label>
+          <Input id="end_time" type="time" {...register('end_time')} />
+          {errors.end_time && <p className="text-sm text-destructive">{errors.end_time.message}</p>}
         </div>
       </div>
 
@@ -339,8 +339,8 @@ export function EventForm({ onSubmit, onCancel, register, setValue, watch, error
       <div className="space-y-3">
         <Label>Featured Image</Label>
         <div className="flex gap-2">
-          <Button type="button" variant={imageInputType === 'upload' ? 'default' : 'outline'} size="sm" onClick={handleUploadButtonClick}><Upload className="w-4 h-4 mr-2"/>Upload</Button>
-          <Button type="button" variant={imageInputType === 'url' ? 'default' : 'outline'} size="sm" onClick={() => handleImageTypeChange('url')}><LinkIcon className="w-4 h-4 mr-2"/>URL</Button>
+          <Button type="button" variant={imageInputType === 'upload' ? 'default' : 'outline'} size="sm" onClick={handleUploadButtonClick}><Upload className="w-4 h-4 mr-2" />Upload</Button>
+          <Button type="button" variant={imageInputType === 'url' ? 'default' : 'outline'} size="sm" onClick={() => handleImageTypeChange('url')}><LinkIcon className="w-4 h-4 mr-2" />URL</Button>
         </div>
         {imageInputType === 'upload' ? (
           <div className="space-y-2">
@@ -355,7 +355,7 @@ export function EventForm({ onSubmit, onCancel, register, setValue, watch, error
           </div>
         )}
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="external_registration_url">External Registration URL</Label>
         <Input id="external_registration_url" type="url" {...register('external_registration_url')} placeholder="https://your.event.link" />

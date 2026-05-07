@@ -30,7 +30,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AskUsPage() {
+import { getHomeSettings } from '@/lib/data/settings';
+
+export default async function AskUsPage() {
+  const homeSettings = await getHomeSettings();
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -56,7 +60,13 @@ export default function AskUsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <AskUsClient />
+      <AskUsClient 
+        title={homeSettings.askUsTitle}
+        description={homeSettings.askUsDescription}
+        cardTitle={homeSettings.askUsCardTitle}
+        cardDescription={homeSettings.askUsCardDescription}
+        buttonLabel={homeSettings.askUsButtonLabel}
+      />
     </>
   );
 }

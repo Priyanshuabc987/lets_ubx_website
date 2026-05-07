@@ -28,9 +28,16 @@ function isLinkedInVideo(url: string): boolean {
 
 interface SocialFeedProps {
   initialPosts: SocialPost[];
+  settings?: {
+    socialTitle: string;
+    socialSubtitle: string;
+    linkedinLabel: string;
+    instagramLabel: string;
+    youtubeLabel: string;
+  };
 }
 
-export function SocialFeed({ initialPosts }: SocialFeedProps) {
+export function SocialFeed({ initialPosts, settings }: SocialFeedProps) {
   const posts = initialPosts || [];
   const linkedinPosts = posts.filter((post) => post.platform === "linkedin");
   const instagramPosts = posts.filter((post) => post.platform === "instagram");
@@ -65,16 +72,16 @@ export function SocialFeed({ initialPosts }: SocialFeedProps) {
           className="mb-8 sm:mb-10 text-center"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground">
-            Follow Our Journey
+            {settings?.socialTitle || "Follow Our Journey"}
           </h2>
           <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto mt-2 md:mt-4">
-            Stay updated with the latest from CEDAT on social media.
+            {settings?.socialSubtitle || "Stay updated with the latest from CEDAT on social media."}
           </p>
         </motion.div>
 
         {linkedinPosts.length > 0 && (
           <SocialRow
-            title="LinkedIn Updates"
+            title={settings?.linkedinLabel || "LinkedIn Updates"}
             posts={linkedinPosts}
             platform="linkedin"
           />
@@ -82,7 +89,7 @@ export function SocialFeed({ initialPosts }: SocialFeedProps) {
 
         {instagramPosts.length > 0 && (
           <SocialRow
-            title="Instagram Highlights"
+            title={settings?.instagramLabel || "Instagram Highlights"}
             posts={instagramPosts}
             platform="instagram"
           />
@@ -90,7 +97,7 @@ export function SocialFeed({ initialPosts }: SocialFeedProps) {
 
         {youtubePosts.length > 0 && (
           <SocialRow
-            title="YouTube Podcasts"
+            title={settings?.youtubeLabel || "YouTube Podcasts"}
             posts={youtubePosts}
             platform="youtube"
           />

@@ -33,7 +33,7 @@ export function FixPageClient({
           <div className="max-w-3xl mx-auto my-6 md:my-12">
             <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border-2 border-border shadow-lg">
               <Image
-                src="/fix/DSC01989.jpg.jpeg"
+                src="/fix/fix.jpeg"
                 alt="Founders & Investors Xplore Banner"
                 fill
                 className="object-cover"

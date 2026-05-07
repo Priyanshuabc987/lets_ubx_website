@@ -21,15 +21,23 @@ interface EventDetailPageProps {
 }
 
 export async function generateMetadata({ params }: EventDetailPageProps): Promise<Metadata> {
-  const resolvedparmas = await params;
-  const event = await getEventBySlug(resolvedparmas.slug);
+  const resolvedParams = await params;
+  const event = await getEventBySlug(resolvedParams.slug);
   if (!event) {
     return { title: "Event Not Found" };
   }
 
   const pageTitle = `${event.title} - Cedat: Bengaluru Startup Event`;
   const pageDescription = `Join us for ${event.title}, a premier event for the Bengaluru startup ecosystem. ${event.description?.substring(0, 120)}...`;
-  const imageUrl = event.featured_image_url || LOGO_URL;
+  
+  let imageUrl = event.featured_image_url || LOGO_URL;
+  // Ensure image URL is absolute for social crawlers
+  if (imageUrl.startsWith('//')) {
+    imageUrl = `https:${imageUrl}`;
+  } else if (imageUrl.startsWith('/')) {
+    imageUrl = `${BASE_URL}${imageUrl}`;
+  }
+  
   const pageUrl = `${BASE_URL}/events/${event.slug}`;
 
   return {
@@ -42,6 +50,7 @@ export async function generateMetadata({ params }: EventDetailPageProps): Promis
       images: [
         {
           url: imageUrl,
+          secureUrl: imageUrl,
           width: 1200,
           height: 630,
           alt: event.title,
@@ -61,8 +70,8 @@ export async function generateMetadata({ params }: EventDetailPageProps): Promis
 }
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
-  const resolvedparmas = await params;
-  const event = await getEventBySlug(resolvedparmas.slug);
+  const resolvedParams = await params;
+  const event = await getEventBySlug(resolvedParams.slug);
 
   if (!event) {
     notFound();

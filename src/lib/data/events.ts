@@ -27,19 +27,20 @@ const convertTimestamps = (data: any) => {
   return convertedData;
 };
 
-async function _getEvents(options: {
-  status_filter?: string;
-  start_after_id?: string;
-  page_size?: number;
-} = {}) {
+async function _getEvents(
+  options: {
+    status_filter?: string;
+    start_after_id?: string;
+    page_size?: number;
+  },
+  todayStr: string
+) {
 
   try {
     let query: admin.firestore.Query = adminDb.collection('events');
     if (options.status_filter) {
       query = query.where('status', '==', options.status_filter);
     }
-
-    const todayStr = getEventsTodayKey();
 
     query = query
       .where('event_date', '>=', todayStr)
@@ -75,16 +76,22 @@ export type EventsPageResult = {
   hasMore: boolean;
 };
 
-async function _getEventsPage(options: {
-  status_filter?: string;
-  start_after_id?: string;
-  page_size?: number;
-} = {}): Promise<EventsPageResult> {
+async function _getEventsPage(
+  options: {
+    status_filter?: string;
+    start_after_id?: string;
+    page_size?: number;
+  },
+  todayStr: string
+): Promise<EventsPageResult> {
   const pageSize = options.page_size ?? 6;
-  const events = await _getEvents({
-    ...options,
-    page_size: pageSize + 1,
-  });
+  const events = await _getEvents(
+    {
+      ...options,
+      page_size: pageSize + 1,
+    },
+    todayStr
+  );
 
   const hasMore = events.length > pageSize;
   const pageEvents = hasMore ? events.slice(0, pageSize) : events;
@@ -114,26 +121,29 @@ async function _getEventById(id: string): Promise<Event | null> {
   }
 }
 
-function getTodayKey() {
-  return getEventsTodayKey();
-}
-
-export const getEvents = unstable_cache(
-
+const cachedGetEvents = unstable_cache(
   _getEvents,
-  ['events', getTodayKey()],
+  ['events'],
   {
     tags: ['events']
   }
 );
 
-export const getEventsPage = unstable_cache(
+export const getEvents = (options: any = {}) => {
+  return cachedGetEvents(options, getEventsTodayKey());
+};
+
+const cachedGetEventsPage = unstable_cache(
   _getEventsPage,
-  ['events-page', getTodayKey()],
+  ['events-page'],
   {
     tags: ['events']
   }
 );
+
+export const getEventsPage = (options: any = {}) => {
+  return cachedGetEventsPage(options, getEventsTodayKey());
+};
 
 // REFACTORED: Now uses the robust Firebase ID for fetching and caching.
 export const getEventBySlug = async (slug: string): Promise<Event | null> => {

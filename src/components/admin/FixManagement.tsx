@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, ArrowUpRight, ExternalLink } from 'lucide-react';
+import { Loader2, ArrowUpRight, ExternalLink, Linkedin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFixSettings, useUpdateFixSettings } from '@/hooks/useFixSettings';
 import { FixRegistrationStatus, useFixRegistrations, useUpdateFixRegistrationStatus, useUpdateFixRegistration } from '@/hooks/useFixRegistrations';
@@ -156,7 +156,7 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-4">
       {showContentSection && (
         <>
           {/* <Card>
@@ -206,13 +206,13 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
           </Card> */}
 
           <Card>
-            <CardHeader>
+            <CardHeader className="p-4 sm:p-6">
               <CardTitle>FIX Page Content</CardTitle>
               <CardDescription>
                 Manage the left-side title/about section and the right-side title and bullet points.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="registration_link">External Registration Link</Label>
@@ -280,16 +280,16 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
 
       {showApplicationsSection && (
         <Card>
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <CardTitle>FIX Applications</CardTitle>
             <CardDescription>Review internal FIX submissions and mark them as pending, approved, or rejected.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
 
 
-            <div className="flex gap-4 items-end">
-              <div className="w-44">
-                <Label htmlFor="fix-status-filter" className="mb-2 block">Show Applications</Label>
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="w-full sm:w-44">
+                <Label htmlFor="fix-status-filter" className="mb-2 block">Status</Label>
                 <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as FixRegistrationStatus | 'all')}>
                   <SelectTrigger id="fix-status-filter">
                     <SelectValue />
@@ -302,8 +302,8 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="w-32">
-                <Label htmlFor="fix-stage-filter" className="mb-2 block">Base Startup Stage</Label>
+              <div className="w-full sm:w-40">
+                <Label htmlFor="fix-stage-filter" className="mb-2 block">Startup Stage</Label>
                 <Select value={stageFilter} onValueChange={(value) => setStageFilter(value as string | 'all')}>
                   <SelectTrigger id="fix-stage-filter">
                     <SelectValue />
@@ -317,7 +317,7 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                 </Select>
               </div>
 
-              <div className="w-32">
+              <div className="w-[calc(50%-0.5rem)] sm:w-32">
                 <Label htmlFor="fix-month-filter" className="mb-2 block">Month</Label>
                 <Select value={monthFilter} onValueChange={(value) => setMonthFilter(value as string | 'all')}>
                   <SelectTrigger id="fix-month-filter">
@@ -325,23 +325,23 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Months</SelectItem>
-                    <SelectItem value="01">January</SelectItem>
-                    <SelectItem value="02">February</SelectItem>
-                    <SelectItem value="03">March</SelectItem>
-                    <SelectItem value="04">April</SelectItem>
+                    <SelectItem value="01">Jan</SelectItem>
+                    <SelectItem value="02">Feb</SelectItem>
+                    <SelectItem value="03">Mar</SelectItem>
+                    <SelectItem value="04">Apr</SelectItem>
                     <SelectItem value="05">May</SelectItem>
-                    <SelectItem value="06">June</SelectItem>
-                    <SelectItem value="07">July</SelectItem>
-                    <SelectItem value="08">August</SelectItem>
-                    <SelectItem value="09">September</SelectItem>
-                    <SelectItem value="10">October</SelectItem>
-                    <SelectItem value="11">November</SelectItem>
-                    <SelectItem value="12">December</SelectItem>
+                    <SelectItem value="06">Jun</SelectItem>
+                    <SelectItem value="07">Jul</SelectItem>
+                    <SelectItem value="08">Aug</SelectItem>
+                    <SelectItem value="09">Sep</SelectItem>
+                    <SelectItem value="10">Oct</SelectItem>
+                    <SelectItem value="11">Nov</SelectItem>
+                    <SelectItem value="12">Dec</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="w-28">
+              <div className="w-[calc(50%-0.5rem)] sm:w-28">
                 <Label htmlFor="fix-year-filter" className="mb-2 block">Year</Label>
                 <Select value={String(yearFilter)} onValueChange={(value) => setYearFilter(Number(value))}>
                   <SelectTrigger id="fix-year-filter">
@@ -356,9 +356,10 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
                 <Button
-                  variant="secondary"
+                  variant="outline"
+                  className="flex-1 sm:flex-none"
                   onClick={() => {
                     // Reset filters to defaults and apply immediately
                     setStatusFilter('all');
@@ -371,6 +372,7 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                   Reset
                 </Button>
                 <Button
+                  className="flex-1 sm:flex-none"
                   onClick={() => setAppliedFilters({ status: statusFilter, stage: stageFilter, month: monthFilter, year: yearFilter })}
                   disabled={!(statusFilter !== 'all' || stageFilter !== 'all' || monthFilter !== 'all' || yearFilter !== DEFAULT_YEAR)}
                 >
@@ -390,15 +392,16 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Startup</TableHead>
-                    <TableHead>Email ID</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Stage</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Link</TableHead>
-                    <TableHead>Details</TableHead>
+                    <TableHead className="text-center">Name</TableHead>
+                    <TableHead className="text-center">Startup</TableHead>
+                    <TableHead className="text-center">Email ID</TableHead>
+                    <TableHead className="text-center">LinkedIn</TableHead>
+                    <TableHead className="text-center">Contact</TableHead>
+                    <TableHead className="text-center">Stage</TableHead>
+                    <TableHead className="text-center">Date</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Link</TableHead>
+                    <TableHead className="text-center">Details</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -456,30 +459,48 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                     })
                     .map((registration: any) => (
                       <TableRow key={registration.id}>
-                        <TableCell className="font-medium">{registration.name}</TableCell>
-                        <TableCell>{registration.startup_name}</TableCell>
-                        <TableCell className="break-words">{registration.email}</TableCell>
-                        <TableCell className="break-words">{registration.phone ?? '—'}</TableCell>
-                        <TableCell className="break-words">{registration.startup_stage ?? '—'}</TableCell>
-                        <TableCell className="break-words">{registration.allocated_date ? new Date(registration.allocated_date.seconds ? registration.allocated_date.seconds * 1000 : registration.allocated_date).toLocaleDateString() : '—'}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
+                        <TableCell className="font-medium text-center">{registration.name}</TableCell>
+                        <TableCell className="text-center">{registration.startup_name}</TableCell>
+                        <TableCell className="break-words text-center">{registration.email}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center">
+                            {registration.founder_linkedin ? (
+                              <a
+                                href={registration.founder_linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:text-primary/80 transition-colors"
+                              >
+                                <Linkedin className="h-4 w-4" />
+                              </a>
+                            ) : (
+                              <Linkedin className="h-4 w-4 text-muted-foreground/30" />
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="break-words text-center">{registration.phone ?? '—'}</TableCell>
+                        <TableCell className="break-words text-center">{registration.startup_stage ?? '—'}</TableCell>
+                        <TableCell className="break-words text-center">{registration.allocated_date ? new Date(registration.allocated_date.seconds ? registration.allocated_date.seconds * 1000 : registration.allocated_date).toLocaleDateString() : '—'}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center">
                             <Badge variant={statusBadgeVariant(registration.status)}>
                               {registration.status}
                             </Badge>
                           </div>
                         </TableCell>
-                        <TableCell className="w-[72px]">
+                        <TableCell className="text-center">
                           {registration.pitch_deck_link ? (
-                            <a href={registration.pitch_deck_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 text-primary hover:bg-muted rounded">
-                              <ArrowUpRight className="h-4 w-4" />
-                              <span className="sr-only">Open link</span>
-                            </a>
+                            <div className="flex justify-center">
+                              <a href={registration.pitch_deck_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 text-primary hover:bg-muted rounded">
+                                <ArrowUpRight className="h-4 w-4" />
+                                <span className="sr-only">Open link</span>
+                              </a>
+                            </div>
                           ) : (
                             '—'
                           )}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button variant="outline" size="sm">View</Button>
@@ -585,14 +606,14 @@ function RegistrationDialogContent({ registration }: { registration: any }) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="text-sm font-semibold">{registration.name}</div>
           <div className="text-sm text-muted-foreground">{registration.startup_name}</div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <Select value={status} onValueChange={onStatusChange}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -601,8 +622,8 @@ function RegistrationDialogContent({ registration }: { registration: any }) {
               ))}
             </SelectContent>
           </Select>
-          <Input type="date" value={date} onChange={(e) => onDateChange(e.target.value)} />
-          <Button onClick={handleSave} disabled={!dirty || updateFixRegistration.isPending}>Save</Button>
+          <Input type="date" value={date} onChange={(e) => onDateChange(e.target.value)} className="w-full sm:w-auto" />
+          <Button onClick={handleSave} disabled={!dirty || updateFixRegistration.isPending} className="w-full sm:w-auto">Save</Button>
         </div>
       </div>
     </div>

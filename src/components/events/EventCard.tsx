@@ -27,15 +27,19 @@ export function EventCard({ event }: EventCardProps) {
     : { text: 'Loading...', variant: 'outline' as const };
 
   const startTimeFormatted = formatTime(event.start_time);
+  const endTimeFormatted = formatTime(event.end_time);
+
+  const fullDate = new Date(event.event_date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 
   const dateInfo = {
     day: new Date(event.event_date).toLocaleDateString('en-US', { day: 'numeric' }),
     month: new Date(event.event_date).toLocaleDateString('en-US', { month: 'long' }),
-    full: new Date(event.event_date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      day: 'numeric',
-      month: 'long'
-    })
+    full: fullDate
   };
 
   const canRegister = eventStatus.text !== 'Concluded';
@@ -46,12 +50,15 @@ export function EventCard({ event }: EventCardProps) {
   useEffect(() => {
     if (isHydrated && event.slug) {
       const eventLink = `${window.location.origin}/events/${event.slug}`;
+      const eventLocation = event.location?.trim() ? event.location : 'TBA';
+      const entryType = isPaidEvent ? 'Paid Entry' : 'Free Entry';
+
       const shareText = encodeURIComponent(
-        `Check out this event:\n\n*${event.title}*\n📅 ${dateInfo.full}\n🕒 ${startTimeFormatted}\n\n${eventLink}`
+        `Check out this event on Cedat:\n\n*${event.title}*\n${entryType}\n\n🕒 Time: ${startTimeFormatted} - ${endTimeFormatted}\n📅 Date: ${fullDate}\n📍 Location: ${eventLocation}\n\nFind out more and register:\n${eventLink}`
       );
       setShareUrl(`https://api.whatsapp.com/send?text=${shareText}`);
     }
-  }, [isHydrated, event.slug, event.title, dateInfo.full, startTimeFormatted]);
+  }, [isHydrated, event.slug, event.title, fullDate, startTimeFormatted, endTimeFormatted, isPaidEvent, event.location]);
 
   return (
     <div className="h-full">
@@ -154,7 +161,7 @@ export function EventCard({ event }: EventCardProps) {
                   aria-label="Share on WhatsApp"
                   disabled={!shareUrl}
                 >
-                  <span className={`w-full h-11 rounded-full text-white text-sm font-semibold inline-flex items-center justify-center transition ${shareUrl ? 'bg-primary hover:bg-green-600' : 'bg-primary/50 cursor-not-allowed'}`}>
+                  <span className={`w-full h-10 md:h-11 rounded-full text-white text-[12px] md:text-sm font-semibold inline-flex items-center justify-center transition ${shareUrl ? 'bg-primary hover:bg-green-600' : 'bg-primary/50 cursor-not-allowed'}`}>
                     Share on WhatsApp
                   </span>
                 </button>
@@ -163,7 +170,7 @@ export function EventCard({ event }: EventCardProps) {
               {/* Register */}
               <button
                 disabled={!canRegister}
-                className={`flex-1 h-11 rounded-full text-sm font-bold border-2 transition-all 
+                className={`flex-1 h-10 md:h-11 rounded-full text-[12px] md:text-sm font-bold border-2 transition-all 
                 ${!canRegister
                     ? 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
                     : 'bg-black border-slate-200 text-white hover:bg-primary'

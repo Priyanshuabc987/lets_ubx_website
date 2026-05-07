@@ -19,10 +19,10 @@ interface AdminSidebarProps {
 export function AdminSidebar({ sections, activeSection, onSectionChange }: AdminSidebarProps) {
   return (
     <div className="w-full lg:w-64 bg-card border-b lg:border-b-0 lg:border-r border-border lg:min-h-screen">
-      <div className="p-4 sm:p-6">
-        <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 break-words">Admin Panel</h2>
+      <div className="p-2 sm:p-6">
+        <h2 className="text-base sm:text-xl font-semibold mb-2 sm:mb-6 px-2 ">Admin Panel</h2>
 
-        <nav className="space-y-2 flex flex-row lg:flex-col items-center overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 -mx-2 lg:mx-0 px-2 lg:px-0">
+        <nav className="flex flex-row lg:flex-col items-center gap-2 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 -mx-2 lg:mx-0 px-2 lg:px-0 scrollbar-hide">
           {sections.map((section) => {
             const Icon = section.icon;
             const isActive = activeSection === section.id;

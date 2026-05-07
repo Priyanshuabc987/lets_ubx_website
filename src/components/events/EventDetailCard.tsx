@@ -45,17 +45,17 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
   const canRegister = eventStatus.text !== 'Concluded' && !!event.external_registration_url;
 
   const registrationButton = (
-  <Button
-    asChild
-    size="lg"
-    className="flex-1 bg-black text-base font-extrabold tracking-[0.02em] shadow-md h-12"
-    disabled={!canRegister}
-  >
-    <a href={canRegister ? event.external_registration_url : undefined} target="_blank" rel="noopener noreferrer">
-      {canRegister ? 'Register Now' : 'Closed'}
-    </a>
-  </Button>
-);
+    <Button
+      asChild
+      size="lg"
+      className="flex-1 bg-black px-0 md:px-8 text-[12px] md:text-base font-extrabold tracking-[0.02em] shadow-md h-10 md:h-12"
+      disabled={!canRegister}
+    >
+      <a href={canRegister ? event.external_registration_url : undefined} target="_blank" rel="noopener noreferrer">
+        {canRegister ? 'Register Now' : 'Closed'}
+      </a>
+    </Button>
+  );
 
   return (
     <Card className={`relative overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-card to-muted/30 shadow-2xl shadow-primary/10 ${className}`}>
@@ -104,20 +104,20 @@ export function EventDetailCard({ event, className }: EventDetailCardProps) {
         </div>
 
         <div className="flex gap-3 w-full">
-            {registrationButton}
-            {isHydrated && canRegister && (
-  <Button
-    asChild
-    size="lg"
-    className="flex-1 text-white bg-primary h-12"
-  >
-    <a href={shareUrl} target="_blank" rel="noopener noreferrer">
-      Share on WhatsApp
-    </a>
-  </Button>
-)}
+          {registrationButton}
+          {isHydrated && canRegister && (
+            <Button
+              asChild
+              size="lg"
+              className="flex-1 px-4 md:px-8 text-white bg-primary text-[12px] md:text-base h-10 md:h-12"
+            >
+              <a href={shareUrl} target="_blank" rel="noopener noreferrer">
+                Share on WhatsApp
+              </a>
+            </Button>
+          )}
         </div>
-        
+
         {canRegister && <p className='text-xs text-muted-foreground text-center'>You will be redirected to an external site.</p>}
       </CardContent>
     </Card>

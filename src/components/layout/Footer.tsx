@@ -2,7 +2,16 @@
 import Link from "next/link";
 import { Phone,Mail, Linkedin, Instagram, Twitter, Youtube, MessageCircle } from "lucide-react";
 
-export function Footer() {
+interface FooterProps {
+  description?: string;
+  contactText?: string;
+  contactPhone?: string;
+}
+
+export function Footer({ description, contactText, contactPhone }: FooterProps) {
+  const displayPhone = contactPhone || "+91 74063 45305";
+  const telLink = `tel:${displayPhone.replace(/\s+/g, '')}`;
+
   return (
     <footer className="bg-zinc-900 text-zinc-200 mt-auto">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 py-12">
@@ -10,7 +19,7 @@ export function Footer() {
           <div className="max-w-xs space-y-4">
             <h2 className="text-2xl font-black tracking-wide text-white">CEDAT</h2>
             <p className="text-zinc-400 text-sm leading-relaxed">
-              Dynamic Ecosystem of Nexus Communities for Founders, Enablers, Mentors, Learners, Investors, Freelancers & Professionals
+              {description || "Dynamic Ecosystem of Nexus Communities for Founders, Enablers, Mentors, Learners, Investors, Freelancers & Professionals"}
             </p>
           </div>
 
@@ -35,8 +44,8 @@ export function Footer() {
               <div className="space-y-2">
                 <h4 className="text-white font-bold text-sm uppercase tracking-widest">Connect</h4>
                 <p className="text-zinc-400 text-xs">
-                  Have important questions? Contact us at
-                  <a href="tel:+917406345305" className="hover:text-white transition-colors ml-1">+91 74063 45305</a>
+                  {contactText || "Have important questions? Contact us at"}
+                  <a href={telLink} className="hover:text-white transition-colors ml-1">{displayPhone}</a>
                 </p>
               </div>
 

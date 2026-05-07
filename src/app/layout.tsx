@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Providers } from "./providers";
 import { BASE_URL, LOGO_URL } from "@/lib/constants";
 import { FaviconFixer } from "@/components/layout/FaviconFixer";
+import { getHomeSettings } from "@/lib/data/settings";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalyticsTracker } from "@/components/analytics/GoogleAnalyticsTracker";
 
@@ -43,12 +44,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const homeSettings = await getHomeSettings();
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -120,7 +122,11 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           <main className="flex-grow">{children}</main>
-          <Footer />
+          <Footer 
+            description={homeSettings.footerDescription} 
+            contactText={homeSettings.footerContactText}
+            contactPhone={homeSettings.footerContactPhone}
+          />
         </Providers>
         
         <Analytics />

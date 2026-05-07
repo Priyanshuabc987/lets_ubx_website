@@ -35,11 +35,16 @@ export const metadata: Metadata = {
 };
 
 
+import { getHomeSettings } from '@/lib/data/settings';
+
 export default async function EventsPage() {
-  const initialEventsPage = await getEventsPage({
-    status_filter: 'published',
-    page_size: 9
-  });
+  const [initialEventsPage, homeSettings] = await Promise.all([
+    getEventsPage({
+      status_filter: 'published',
+      page_size: 9
+    }),
+    getHomeSettings()
+  ]);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -77,10 +82,10 @@ export default async function EventsPage() {
 
           <div className="max-w-7xl mb-8 md:mb-16 space-y-4">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-primary italic">
-            Bengaluru's Startup Meetups & Events
+              {homeSettings.eventsTitle}
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Let’s Unite | Let's Build | Let’s Xplore - Dynamic Ecosystem of Nexus Communities
+              {homeSettings.eventsDescription}
             </p>
           </div>
 

@@ -89,7 +89,16 @@ export default async function Home() {
 
       </section>
 
-      <SocialFeed initialPosts={socialPosts} />
+      <SocialFeed 
+        initialPosts={socialPosts} 
+        settings={{
+          socialTitle: homeSettings.socialTitle,
+          socialSubtitle: homeSettings.socialSubtitle,
+          linkedinLabel: homeSettings.linkedinLabel,
+          instagramLabel: homeSettings.instagramLabel,
+          youtubeLabel: homeSettings.youtubeLabel,
+        }}
+      />
 
       <Ecosystem />
 
@@ -99,15 +108,18 @@ export default async function Home() {
         <div className="container mx-auto px-4 relative z-10">
          <div className="max-w-6xl space-y-8">
             <h2 className="text-3xl sm:text-6xl font-black leading-tight">
-              Founders & Investors Xplore (FIX) by CEDAT -{" "}
-              <span className="text-accent italic">Pitch Your Startup</span>
+              {homeSettings.fixTitle.split(' - ')[0]}
+              {homeSettings.fixTitle.includes(' - ') && (
+                <>
+                  {" - "}
+                  <span className="text-accent italic">{homeSettings.fixTitle.split(' - ')[1]}</span>
+                </>
+              )}
             </h2>
           
-            <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-              FIX also features a live startup pitch session, where selected founders will get the chance to present their startups directly to investors and enablers of the ecosystem.
-              <br /><br />
-              Founders will get live feedback, valuable insights, and potential funding opportunities for their startup. Along with that, they can explore the startup ecosystem and communities through CEDAT for their startup journey.
-            </p>
+            <div className="text-lg md:text-xl text-white/80 leading-relaxed whitespace-pre-wrap">
+              {homeSettings.fixDescription}
+            </div>
           
             <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/fix">
@@ -115,7 +127,7 @@ export default async function Home() {
                   size="lg"
                   className="rounded-full bg-accent hover:bg-accent/90 text-black font-black font-bold px-3 md:px-4 h-9 md:h-12 text-xl md:text-2xl"
                 >
-                  Apply Now
+                  {homeSettings.fixApplyLabel}
                 </Button>
               </Link>
           
@@ -128,7 +140,7 @@ export default async function Home() {
                   variant="outline"
                   className="rounded-full border-2 border-white text-black font-bold hover:bg-white/10 px-3 md:px-5 h-9 md:h-12 text-xl md:text-2xl"
                 >
-                  Contact Us
+                  {homeSettings.fixContactLabel}
                 </Button>
               </Link>
             </div>

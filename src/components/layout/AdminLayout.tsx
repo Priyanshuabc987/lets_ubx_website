@@ -22,14 +22,14 @@ export function AdminLayout({ sections, activeSection, onSectionChange, children
     <AuthGuard requireAdmin>
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="pt-20 sm:pt-24">
+        <div className="pt-14 sm:pt-20">
           <div className="flex flex-col lg:flex-row">
             <AdminSidebar
               sections={sections}
               activeSection={activeSection}
               onSectionChange={onSectionChange}
             />
-            <div className="flex-1 p-4 sm:p-6 md:p-8">
+            <div className="flex-1 p-2 sm:p-6 md:p-8">
               {children}
             </div>
           </div>

@@ -12,6 +12,8 @@ import { SocialPost } from "@/lib/data/socialposts";
 interface GalleryPageClientProps {
   photos: GalleryItem[];
   videos: GalleryItem[];
+  title: string;
+  description: string;
 }
 
 const useHydrated = () => {
@@ -22,7 +24,7 @@ const useHydrated = () => {
   return hydrated;
 };
 
-export function GalleryPageClient({ photos, videos }: GalleryPageClientProps) {
+export function GalleryPageClient({ photos, videos, title, description }: GalleryPageClientProps) {
   const isHydrated = useHydrated();
 
   // Transform videos to SocialPost[]
@@ -38,10 +40,10 @@ export function GalleryPageClient({ photos, videos }: GalleryPageClientProps) {
   const Header = () => (
     <div className="container mx-auto px-4 text-center mb-6 md:mb-12">
       <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6 text-primary italic">
-        Community Moments
+        {title}
       </h1>
       <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-        Capturing the energy of innovation. See what happens when the ecosystem unites.
+        {description}
       </p>
     </div>
   );
