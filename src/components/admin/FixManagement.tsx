@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, ArrowUpRight, ExternalLink, Linkedin } from 'lucide-react';
+import { Loader2, ArrowUpRight, ExternalLink, Linkedin, Plus, Trash2, GripVertical, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFixSettings, useUpdateFixSettings } from '@/hooks/useFixSettings';
 import { FixRegistrationStatus, useFixRegistrations, useUpdateFixRegistrationStatus, useUpdateFixRegistration } from '@/hooks/useFixRegistrations';
@@ -24,6 +24,10 @@ import {
   DEFAULT_FIX_SIDEBAR_POINTS,
   DEFAULT_FIX_SIDEBAR_TITLE,
   DEFAULT_FIX_TITLE,
+  DEFAULT_FIX_REG_TITLE,
+  DEFAULT_FIX_REG_DESCRIPTION,
+  DEFAULT_FIX_QUESTIONS,
+  FixQuestion,
 } from '@/lib/fix-content';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -35,6 +39,8 @@ const fixSettingsSchema = z.object({
   about: z.string().trim().min(1, 'About section is required'),
   sidebar_title: z.string().trim().min(1, 'Right-side title is required'),
   sidebar_points: z.string().trim().min(1, 'At least one bullet point is required'),
+  registration_title: z.string().trim().min(1, 'Registration title is required'),
+  registration_description: z.string().trim().min(1, 'Registration description is required'),
 });
 
 type FixSettingsFormData = z.infer<typeof fixSettingsSchema>;
@@ -56,6 +62,10 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
   const { data: fixSettings, isLoading: isLoadingSettings } = useFixSettings();
   const updateFixSettings = useUpdateFixSettings();
   const updateFixRegistrationStatus = useUpdateFixRegistrationStatus();
+
+  // Local state for managing dynamic questions list
+  const [questions, setQuestions] = useState<FixQuestion[]>([]);
+
   const [statusFilter, setStatusFilter] = useState<FixRegistrationStatus | 'all'>('all');
   const [stageFilter, setStageFilter] = useState<string | 'all'>('all');
   // monthFilter stores month as two-digit string '01'..'12' or 'all'
@@ -103,12 +113,15 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
       about: fixSettings.about || DEFAULT_FIX_ABOUT_TEXT,
       sidebar_title: fixSettings.sidebar_title || DEFAULT_FIX_SIDEBAR_TITLE,
       sidebar_points: (fixSettings.sidebar_points || DEFAULT_FIX_SIDEBAR_POINTS).join('\n'),
+      registration_title: fixSettings.registration_title || DEFAULT_FIX_REG_TITLE,
+      registration_description: fixSettings.registration_description || DEFAULT_FIX_REG_DESCRIPTION,
     };
-    const serialized = JSON.stringify(nextFormValues);
+    const serialized = JSON.stringify({ ...nextFormValues, questions: fixSettings.registration_questions });
 
     if (serialized === lastSyncedValueRef.current || isDirty) return;
 
     reset(nextFormValues);
+    setQuestions(fixSettings.registration_questions || DEFAULT_FIX_QUESTIONS);
     lastSyncedValueRef.current = serialized;
   }, [fixSettings, isDirty, reset]);
 
@@ -120,6 +133,9 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
         about: data.about,
         sidebar_title: data.sidebar_title,
         sidebar_points: data.sidebar_points.split('\n').map((item) => item.trim()).filter(Boolean),
+        registration_title: data.registration_title,
+        registration_description: data.registration_description,
+        registration_questions: questions,
       };
 
       await updateFixSettings.mutateAsync(nextFormValues);
@@ -130,19 +146,34 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
         about: nextFormValues.about || DEFAULT_FIX_ABOUT_TEXT,
         sidebar_title: nextFormValues.sidebar_title || DEFAULT_FIX_SIDEBAR_TITLE,
         sidebar_points: nextFormValues.sidebar_points.join('\n'),
+        registration_title: nextFormValues.registration_title || DEFAULT_FIX_REG_TITLE,
+        registration_description: nextFormValues.registration_description || DEFAULT_FIX_REG_DESCRIPTION,
       };
 
       reset(syncedFormValues);
-      lastSyncedValueRef.current = JSON.stringify(syncedFormValues);
+      lastSyncedValueRef.current = JSON.stringify({ ...syncedFormValues, questions: nextFormValues.registration_questions });
 
       toast({
         title: 'Success',
-        description: 'FIX page content updated successfully.',
+        description: 'FIX settings updated successfully.',
       });
     } catch (error) {
       console.error('Failed to update FIX settings:', error);
       toast({ title: 'Error', description: 'Failed to update FIX settings.', variant: 'destructive' });
     }
+  };
+
+  const handleAddQuestion = () => {
+    const newId = `custom_${Date.now()}`;
+    setQuestions([...questions, { id: newId, label: 'New Question', type: 'text', required: false }]);
+  };
+
+  const handleRemoveQuestion = (id: string) => {
+    setQuestions(questions.filter(q => q.id !== id));
+  };
+
+  const handleUpdateQuestion = (id: string, fields: Partial<FixQuestion>) => {
+    setQuestions(questions.map(q => q.id === id ? { ...q, ...fields } : q));
   };
 
   const handleStatusChange = async (registrationId: string, status: FixRegistrationStatus) => {
@@ -207,69 +238,209 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
 
           <Card>
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle>FIX Page Content</CardTitle>
-              <CardDescription>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary" />
+                <CardTitle>FIX Page Content</CardTitle>
+              </div>
+              <CardDescription className="ml-4">
                 Manage the left-side title/about section and the right-side title and bullet points.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 pt-0">
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registration_link">External Registration Link</Label>
-                  <Input
-                    id="registration_link"
-                    type="url"
-                    {...register('registration_link')}
-                    placeholder="Leave empty to use internal FIX form"
-                  />
-                  {errors.registration_link && <p className="text-sm text-destructive">{errors.registration_link.message}</p>}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">General Content</h3>
+                    <div className="space-y-2">
+                      <Label htmlFor="registration_link">External Registration Link</Label>
+                      <Input
+                        id="registration_link"
+                        type="url"
+                        {...register('registration_link')}
+                        placeholder="Leave empty to use internal FIX form"
+                      />
+                      {errors.registration_link && <p className="text-sm text-destructive">{errors.registration_link.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="fix_title">Left Section Title</Label>
+                      <Input
+                        id="fix_title"
+                        type="text"
+                        {...register('title')}
+                        placeholder={DEFAULT_FIX_TITLE}
+                      />
+                      {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="fix_about">About Section</Label>
+                      <Textarea
+                        id="fix_about"
+                        rows={8}
+                        {...register('about')}
+                        placeholder={DEFAULT_FIX_ABOUT_TEXT}
+                      />
+                      {errors.about && <p className="text-sm text-destructive">{errors.about.message}</p>}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Sidebar Content</h3>
+                    <div className="space-y-2">
+                      <Label htmlFor="fix_sidebar_title">Right Section Title</Label>
+                      <Input
+                        id="fix_sidebar_title"
+                        type="text"
+                        {...register('sidebar_title')}
+                        placeholder={DEFAULT_FIX_SIDEBAR_TITLE}
+                      />
+                      {errors.sidebar_title && <p className="text-sm text-destructive">{errors.sidebar_title.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="fix_sidebar_points">Right Section Bullet Points</Label>
+                      <Textarea
+                        id="fix_sidebar_points"
+                        rows={6}
+                        {...register('sidebar_points')}
+                        placeholder={DEFAULT_FIX_SIDEBAR_POINTS.join('\n')}
+                      />
+                      <p className="text-xs text-muted-foreground">Add one bullet point per line.</p>
+                      {errors.sidebar_points && <p className="text-sm text-destructive">{errors.sidebar_points.message}</p>}
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="fix_title">Left Section Title</Label>
-                  <Input
-                    id="fix_title"
-                    type="text"
-                    {...register('title')}
-                    placeholder={DEFAULT_FIX_TITLE}
-                  />
-                  {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
+
+                <div className="border-t-4 border-zinc-900/10 pt-8 mt-4 space-y-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <h3 className="text-lg font-bold">Registration Form Settings</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground ml-4 -mt-4">Configure the internal registration form title, description, and questions.</p>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="registration_title">Form Header Title</Label>
+                      <Input
+                        id="registration_title"
+                        {...register('registration_title')}
+                        placeholder={DEFAULT_FIX_REG_TITLE}
+                      />
+                      {errors.registration_title && <p className="text-sm text-destructive">{errors.registration_title.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="registration_description">Form Header Description</Label>
+                      <Textarea
+                        id="registration_description"
+                        rows={3}
+                        {...register('registration_description')}
+                        placeholder={DEFAULT_FIX_REG_DESCRIPTION}
+                      />
+                      {errors.registration_description && <p className="text-sm text-destructive">{errors.registration_description.message}</p>}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b pb-4">
+                      <Label className="text-base font-bold">Form Questions</Label>
+                      <Button type="button" variant="outline" size="sm" onClick={handleAddQuestion}>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Question
+                      </Button>
+                    </div>
+
+                    <div className="hidden sm:grid grid-cols-12 gap-4 px-11 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      <div className="col-span-5">Label</div>
+                      <div className="col-span-3">Type</div>
+                      <div className="col-span-2 text-center">Required</div>
+                      <div className="col-span-2 text-right pr-2">Action</div>
+                    </div>
+
+                    <div className="space-y-3">
+                      {questions.map((q, index) => (
+                        <div key={q.id} className="flex flex-col gap-3 p-4 rounded-xl border bg-zinc-50/50 group transition-all hover:border-zinc-300">
+                          <div className="flex items-start gap-3">
+                            <div className="mt-2 text-zinc-400">
+                              <GripVertical className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 grid gap-4 sm:grid-cols-12 items-start">
+                              <div className="sm:col-span-5 space-y-1">
+                                <Label className="sm:hidden text-[10px] uppercase tracking-widest text-muted-foreground">Label</Label>
+                                <Input
+                                  value={q.label}
+                                  onChange={(e) => handleUpdateQuestion(q.id, { label: e.target.value })}
+                                  className="h-10 bg-white"
+                                  placeholder="Question text"
+                                />
+                              </div>
+                              <div className="sm:col-span-3 space-y-1">
+                                <Label className="sm:hidden text-[10px] uppercase tracking-widest text-muted-foreground">Type</Label>
+                                <Select
+                                  value={q.type}
+                                  onValueChange={(v: any) => handleUpdateQuestion(q.id, { type: v })}
+                                >
+                                  <SelectTrigger className="h-10 bg-white">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="text">Text Input</SelectItem>
+                                    <SelectItem value="textarea">Textarea</SelectItem>
+                                    <SelectItem value="select">Dropdown</SelectItem>
+                                    <SelectItem value="url">URL/Link</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="sm:col-span-2 space-y-1">
+                                <Label className="sm:hidden text-[10px] uppercase tracking-widest text-muted-foreground">Required</Label>
+                                <div className="flex items-center justify-center h-10">
+                                  <Button
+                                    type="button"
+                                    variant={q.required ? 'default' : 'outline'}
+                                    size="icon"
+                                    className={`h-8 w-8 rounded-lg transition-all ${q.required ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20' : 'text-zinc-400 bg-white'}`}
+                                    onClick={() => handleUpdateQuestion(q.id, { required: !q.required })}
+                                  >
+                                    <Check className={`h-4 w-4 transition-transform ${q.required ? 'scale-110' : 'scale-90 opacity-20'}`} />
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="sm:col-span-2 flex items-center justify-end h-10">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive group-hover:bg-red-50 transition-colors"
+                                  onClick={() => handleRemoveQuestion(q.id)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                          {q.type === 'select' && (
+                            <div className="ml-7 space-y-1 pt-1">
+                              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Dropdown Options (comma separated)</Label>
+                              <Input
+                                value={q.options?.join(', ') || ''}
+                                onChange={(e) => handleUpdateQuestion(q.id, { options: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                                className="h-10 bg-white"
+                                placeholder="e.g. Option 1, Option 2, Option 3"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {questions.length === 0 && (
+                      <div className="text-center py-12 border-2 border-dashed rounded-2xl text-muted-foreground">
+                        No questions added. Click "Add Question" to start building your form.
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="fix_about">About Section</Label>
-                  <Textarea
-                    id="fix_about"
-                    rows={8}
-                    {...register('about')}
-                    placeholder={DEFAULT_FIX_ABOUT_TEXT}
-                  />
-                  <p className="text-xs text-muted-foreground">Use a blank line between paragraphs.</p>
-                  {errors.about && <p className="text-sm text-destructive">{errors.about.message}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="fix_sidebar_title">Right Section Title</Label>
-                  <Input
-                    id="fix_sidebar_title"
-                    type="text"
-                    {...register('sidebar_title')}
-                    placeholder={DEFAULT_FIX_SIDEBAR_TITLE}
-                  />
-                  {errors.sidebar_title && <p className="text-sm text-destructive">{errors.sidebar_title.message}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="fix_sidebar_points">Right Section Bullet Points</Label>
-                  <Textarea
-                    id="fix_sidebar_points"
-                    rows={6}
-                    {...register('sidebar_points')}
-                    placeholder={DEFAULT_FIX_SIDEBAR_POINTS.join('\n')}
-                  />
-                  <p className="text-xs text-muted-foreground">Add one bullet point per line.</p>
-                  {errors.sidebar_points && <p className="text-sm text-destructive">{errors.sidebar_points.message}</p>}
-                </div>
-                <div className="flex justify-end">
-                  <Button type="submit" disabled={updateFixSettings.isPending}>
+
+                <div className="flex justify-end pt-4 border-t">
+                  <Button type="submit" size="lg" disabled={updateFixSettings.isPending}>
                     {updateFixSettings.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                    Save FIX Settings
+                    Save All FIX Settings
                   </Button>
                 </div>
               </form>
@@ -505,50 +676,70 @@ export function FixManagement({ mode = 'content' }: FixManagementProps) {
                             <DialogTrigger asChild>
                               <Button variant="outline" size="sm">View</Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+                            <DialogContent className="max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                               <DialogHeader>
-                                <DialogTitle className="text-center mb-4">
-                                  <span className="font-normal">FIX Application:</span> {registration.name}
+                                <DialogTitle className="text-center mb-4 text-lg sm:text-xl">
+                                  <span className="font-normal text-muted-foreground">Application:</span> {registration.name}
                                 </DialogTitle>
                               </DialogHeader>
 
                               <RegistrationDialogContent registration={registration} />
 
                               {registration.pitch_deck_link && (
-                                <div className="mb-2">
-                                  <a href={registration.pitch_deck_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary hover:underline break-all">
-                                    <ArrowUpRight className="h-4 w-4" />
-                                    <span className="truncate">{registration.pitch_deck_link}</span>
+                                <div className="mb-4 p-3 bg-zinc-50 rounded-xl border border-zinc-100">
+                                  <p className="text-[12px] font-black uppercase tracking-widest text-black mb-1">Pitch Deck / Website</p>
+                                  <a href={registration.pitch_deck_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary hover:underline break-all text-sm font-medium">
+                                    <ArrowUpRight className="h-4 w-4 shrink-0" />
+                                    <span>{registration.pitch_deck_link}</span>
                                   </a>
                                 </div>
                               )}
-
-                              <div className="space-y-4 text-sm">
-                                <div className="grid gap-4 md:grid-cols-2">
-                                  <div><span className="font-semibold">Mail ID:</span> {registration.email}</div>
-                                  <div><span className="font-semibold">Phone Number:</span> {registration.phone}</div>
-                                  <div><span className="font-semibold">Startup:</span> {registration.startup_name}</div>
-                                  <div><span className="font-semibold">Startup Stage:</span> {registration.startup_stage}</div>
+                              <div className="space-y-6 text-sm">
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                  <div className="space-y-1">
+                                    <span className="text-[12px] font-black uppercase tracking-widest text-black block">Mail ID</span>
+                                    <div className="break-all font-medium">{registration.email}</div>
+                                  </div>
+                                  <div className="space-y-1">
+                                    <span className="text-[12px] font-black uppercase tracking-widest text-black block">Phone Number</span>
+                                    <div className="break-all font-medium">{registration.phone}</div>
+                                  </div>
+                                  <div className="space-y-1">
+                                    <span className="text-[12px] font-black uppercase tracking-widest text-black block">Startup Name</span>
+                                    <div className="font-black italic uppercase">{registration.startup_name}</div>
+                                  </div>
+                                  <div className="space-y-1">
+                                    <span className="text-[12px] font-black uppercase tracking-widest text-black block">Current Stage</span>
+                                    <div className="font-medium">{registration.startup_stage}</div>
+                                  </div>
                                 </div>
+
                                 {registration.founder_linkedin && (
-                                  <div>
-                                    <span className="font-semibold">Founder's LinkedIn:</span>{' '}
-                                    <Link href={registration.founder_linkedin} target="_blank" className="text-primary hover:underline">
-                                      Open LinkedIn <ExternalLink className="ml-1 inline h-3.5 w-3.5" />
+                                  <div className="space-y-1 pt-2 border-t border-zinc-50">
+                                    <span className="text-[12px] font-black uppercase tracking-widest text-black block">Founder's LinkedIn</span>
+                                    <Link href={registration.founder_linkedin} target="_blank" className="text-primary hover:underline font-medium inline-flex items-center gap-1 break-all">
+                                      {registration.founder_linkedin} <ExternalLink className="h-3 w-3" />
                                     </Link>
                                   </div>
                                 )}
-                                <div>
-                                  <p className="font-semibold">Startup Summary</p>
-                                  <p className="mt-1 whitespace-pre-wrap text-muted-foreground">{registration.startup_summary}</p>
-                                </div>
-                                <div>
-                                  <p className="font-semibold">Support Needed</p>
-                                  <p className="mt-1 whitespace-pre-wrap text-muted-foreground">{registration.support_needed}</p>
-                                </div>
-                                <div>
-                                  <p className="font-semibold">Additional Information</p>
-                                  <p className="mt-1 whitespace-pre-wrap text-muted-foreground">{registration.additional_info}</p>
+
+                                <div className="space-y-4 pt-4 border-t border-zinc-100">
+                                  <div className="bg-zinc-50/50 p-4 rounded-xl space-y-1">
+                                    <p className="text-[12px] font-black uppercase tracking-widest text-black">Startup Summary</p>
+                                    <p className="whitespace-pre-wrap text-zinc-700 leading-relaxed">{registration.startup_summary}</p>
+                                  </div>
+
+                                  <div className="bg-zinc-50/50 p-4 rounded-xl space-y-1">
+                                    <p className="text-[12px] font-black uppercase tracking-widest text-black">Support Needed</p>
+                                    <p className="whitespace-pre-wrap text-zinc-700 leading-relaxed">{registration.support_needed}</p>
+                                  </div>
+
+                                  {registration.additional_info && (
+                                    <div className="bg-zinc-50/50 p-4 rounded-xl space-y-1">
+                                      <p className="text-[12px] font-black uppercase tracking-widest text-black">Additional Information</p>
+                                      <p className="whitespace-pre-wrap text-zinc-700 leading-relaxed">{registration.additional_info}</p>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </DialogContent>
@@ -605,27 +796,39 @@ function RegistrationDialogContent({ registration }: { registration: any }) {
   };
 
   return (
-    <div>
-      <div className="mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="text-sm font-semibold">{registration.name}</div>
-          <div className="text-sm text-muted-foreground">{registration.startup_name}</div>
+    <div className="mb-6 p-4 bg-emerald-50/30 border border-emerald-100/50 rounded-2xl text-emerald-950 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="flex-1 space-y-1">
+          <p className="text-[12px] font-black uppercase tracking-widest text-emerald-700/60">Update Status & Allocation</p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Select value={status} onValueChange={onStatusChange}>
+              <SelectTrigger className="w-full sm:w-[140px] bg-white border-emerald-100 h-10 text-emerald-900 font-bold">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {statusOptions.map((s) => (
+                  <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => onDateChange(e.target.value)}
+              className="w-full sm:w-auto bg-white border-emerald-100 h-10 text-sm font-bold text-emerald-900"
+            />
+          </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-          <Select value={status} onValueChange={onStatusChange}>
-            <SelectTrigger className="w-full sm:w-[140px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {statusOptions.map((s) => (
-                <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Input type="date" value={date} onChange={(e) => onDateChange(e.target.value)} className="w-full sm:w-auto" />
-          <Button onClick={handleSave} disabled={!dirty || updateFixRegistration.isPending} className="w-full sm:w-auto">Save</Button>
-        </div>
+        <Button
+          onClick={handleSave}
+          disabled={!dirty || updateFixRegistration.isPending}
+          className="sm:mt-5 bg-emerald-600 text-white hover:bg-emerald-700 h-10 font-bold px-6 shadow-lg shadow-emerald-600/20"
+        >
+          {updateFixRegistration.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Update Application'}
+        </Button>
       </div>
     </div>
   );
 }
+
+

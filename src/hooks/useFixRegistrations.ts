@@ -99,6 +99,10 @@ export function useCreateFixRegistration() {
           allocated_date: null,
           savedAt: Date.now(),
         };
+        // Clear old entries
+        Object.keys(localStorage).forEach(k => {
+          if (k.startsWith('fix_status_cache:')) localStorage.removeItem(k);
+        });
         localStorage.setItem(key, JSON.stringify(cached));
       } catch (e) {
         // ignore localStorage errors
@@ -126,6 +130,10 @@ export function useCreateFixRegistration() {
           allocated_date: null,
           savedAt: Date.now(),
         };
+        // Clear old entries
+        Object.keys(localStorage).forEach(k => {
+          if (k.startsWith('fix_status_cache:')) localStorage.removeItem(k);
+        });
         localStorage.setItem(key, JSON.stringify(cached));
       } catch (e) {
         // ignore
@@ -183,7 +191,13 @@ export function useFixRegistrationLookup(startup_name?: string, phone?: string, 
           allocated_date: data.registration.allocated_date || null,
           savedAt: Date.now(),
         };
-        try { localStorage.setItem(cacheKey, JSON.stringify(cached)); } catch (e) {}
+        try { 
+          // Clear any existing FIX cache entries first to ensure "overriding"
+          Object.keys(localStorage).forEach(k => {
+            if (k.startsWith('fix_status_cache:')) localStorage.removeItem(k);
+          });
+          localStorage.setItem(cacheKey, JSON.stringify(cached)); 
+        } catch (e) {}
         setRegistration(cached);
         return cached;
       } else if (res.ok && !data?.registration) {

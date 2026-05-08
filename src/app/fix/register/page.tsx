@@ -31,7 +31,7 @@ export default function FixRegisterPage() {
 
           <div className="mx-auto max-w-4xl space-y-6">
             <div className="flex justify-center">
-              <Link href="/fix/status">
+              <Link href="/fix/check">
                 <Button size="lg" className="rounded-full bg-primary px-6 font-semibold text-white shadow-lg ">
                   <Search className="mr-2 h-4 w-4" />
                   Check Your Status

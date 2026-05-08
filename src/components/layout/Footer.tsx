@@ -43,9 +43,9 @@ export function Footer({ description, contactText, contactPhone }: FooterProps) 
             <div className="space-y-4">
               <div className="space-y-2">
                 <h4 className="text-white font-bold text-sm uppercase tracking-widest">Connect</h4>
-                <p className="text-zinc-400 text-xs">
-                  {contactText || "Have important questions? Contact us at"}
-                  <a href={telLink} className="hover:text-white transition-colors ml-1">{displayPhone}</a>
+                <p className="text-zinc-400 text-xs flex flex-wrap sm:flex-nowrap items-center gap-x-1">
+                  <span className="whitespace-nowrap">{contactText || "Have important questions? Contact us at"}</span>
+                  <a href={telLink} className="hover:text-white transition-colors whitespace-nowrap font-medium">{displayPhone}</a>
                 </p>
               </div>
 

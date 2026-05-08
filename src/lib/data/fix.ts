@@ -7,6 +7,9 @@ import {
   DEFAULT_FIX_SIDEBAR_POINTS,
   DEFAULT_FIX_SIDEBAR_TITLE,
   DEFAULT_FIX_TITLE,
+  DEFAULT_FIX_REG_TITLE,
+  DEFAULT_FIX_REG_DESCRIPTION,
+  DEFAULT_FIX_QUESTIONS,
   FixContentSettings,
 } from '@/lib/fix-content';
 
@@ -25,6 +28,11 @@ async function _getFixSettings(): Promise<FixContentSettings> {
       about: data.about?.trim() || DEFAULT_FIX_ABOUT_TEXT,
       sidebar_title: data.sidebar_title?.trim() || DEFAULT_FIX_SIDEBAR_TITLE,
       sidebar_points: sidebarPoints.length ? sidebarPoints : DEFAULT_FIX_SIDEBAR_POINTS,
+      registration_title: data.registration_title?.trim() || DEFAULT_FIX_REG_TITLE,
+      registration_description: data.registration_description?.trim() || DEFAULT_FIX_REG_DESCRIPTION,
+      registration_questions: Array.isArray(data.registration_questions)
+        ? data.registration_questions
+        : DEFAULT_FIX_QUESTIONS,
     };
   } catch (error) {
     console.error(`Error fetching FIX settings:`, error);
@@ -34,6 +42,9 @@ async function _getFixSettings(): Promise<FixContentSettings> {
       about: DEFAULT_FIX_ABOUT_TEXT,
       sidebar_title: DEFAULT_FIX_SIDEBAR_TITLE,
       sidebar_points: DEFAULT_FIX_SIDEBAR_POINTS,
+      registration_title: DEFAULT_FIX_REG_TITLE,
+      registration_description: DEFAULT_FIX_REG_DESCRIPTION,
+      registration_questions: DEFAULT_FIX_QUESTIONS,
     };
   }
 }

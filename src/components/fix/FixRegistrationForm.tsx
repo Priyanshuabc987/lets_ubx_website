@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Loader2, CheckCircle2, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,51 +9,26 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateFixRegistration } from '@/hooks/useFixRegistrations';
-
+import { useFixSettings } from '@/hooks/useFixSettings';
 import { useRouter } from 'next/navigation';
+
 const maxWordCount = 300;
 
 const countWords = (value: string) =>
   value
-    .trim()
+    ?.trim()
     .split(/\s+/)
-    .filter(Boolean).length;
-
-const maxWords = (label: string) =>
-  z.string().min(1, `${label} is required`).refine((value) => countWords(value) <= maxWordCount, {
-    message: `${label} must be within ${maxWordCount} words`,
-  });
-
-const fixRegistrationSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Valid email is required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  founder_linkedin: z.string().url('Please enter a valid LinkedIn URL').optional().or(z.literal('')),
-  startup_name: z.string().min(1, 'Startup or company name is required'),
-  startup_stage: z.string().min(1, 'Startup stage is required'),
-  startup_summary: maxWords('Startup summary'),
-  support_needed: maxWords('Support or resources'),
-  additional_info: maxWords('Additional information'),
-  pitch_deck_link: z.string().url('Valid Google Drive link is required').min(1, 'Pitch deck link is required'),
-});
-
-type FixRegistrationFormData = z.infer<typeof fixRegistrationSchema>;
-
-const startupStageOptions = [
-  'Idea Stage',
-  'Early Stage',
-  'MVP Stage',
-  'Growth Stage',
-  'Revenue Stage',
-];
+    .filter(Boolean).length || 0;
 
 function QuestionCard({
   title,
+  description,
   required = false,
   children,
   error,
 }: {
   title: string;
+  description?: string;
   required?: boolean;
   children: React.ReactNode;
   error?: string;
@@ -68,6 +40,7 @@ function QuestionCard({
           {title}
           {required ? <span className="ml-1 text-red-400">*</span> : null}
         </Label>
+        {description && <p className="text-xs text-white/60 mt-1 font-normal">{description}</p>}
       </div>
       <div className="space-y-4 px-6 py-6">
         {children}
@@ -79,302 +52,266 @@ function QuestionCard({
 
 export function FixRegistrationForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const createFixRegistration = useCreateFixRegistration();
+  const { data: fixSettings, isLoading: isLoadingSettings } = useFixSettings();
+  
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [isAnsweredBarDocked, setIsAnsweredBarDocked] = useState(false);
   const answeredBarAnchorRef = useRef<HTMLDivElement | null>(null);
 
-  const router = useRouter();
+  const questions = fixSettings?.registration_questions || [];
 
-  // If a cached submission exists locally, redirect user to the status page.
+  // Redirect returning users
   useEffect(() => {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (!key) continue;
-        if (key.startsWith('fix_status_cache:')) {
+        if (key && key.startsWith('fix_status_cache:')) {
           const raw = localStorage.getItem(key);
-          if (!raw) continue;
-          const parsed = JSON.parse(raw);
-          if (parsed && parsed.startup_name) {
-            const phone = parsed.phone || '';
-            router.push(`/fix/status?startup_name=${encodeURIComponent(parsed.startup_name)}&phone=${encodeURIComponent(phone)}`);
-            return;
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.startup_name) {
+              const phone = parsed.phone || '';
+              router.push(`/fix/status?startup_name=${encodeURIComponent(parsed.startup_name)}&phone=${encodeURIComponent(phone)}`);
+              return;
+            }
           }
         }
       }
-    } catch (e) {
-      // ignore localStorage access errors
-    }
+    } catch (e) {}
   }, [router]);
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<FixRegistrationFormData>({
-    resolver: zodResolver(fixRegistrationSchema),
-    defaultValues: {
-      founder_linkedin: '',
-      startup_stage: '',
-    },
-  });
 
-  const values = watch();
-
-  const answeredCount = useMemo(() => {
-    const trackedValues = [
-      values.name,
-      values.email,
-      values.phone,
-      values.founder_linkedin,
-      values.startup_name,
-      values.startup_stage,
-      values.startup_summary,
-      values.support_needed,
-      values.additional_info,
-      values.pitch_deck_link,
-    ];
-
-    return trackedValues.filter((value) => typeof value === 'string' && value.trim().length > 0).length;
-  }, [values]);
-
-  const onSubmit = async (data: FixRegistrationFormData) => {
-    try {
-      await createFixRegistration.mutateAsync(data);
-      // write optimistic local cache with normalized key so FixStatusViewer can read it
-      try {
-        const normalizedName = data.startup_name.trim().toLowerCase().replace(/\s+/g, ' ');
-        const key = `fix_status_cache:${normalizedName}:${data.phone.trim()}`;
-        const cached = {
-          id: null,
-          name: data.name || '',
-          startup_name: data.startup_name || '',
-          startup_normalised: normalizedName,
-          phone: data.phone.trim(),
-          status: 'pending',
-          allocated_date: null,
-          savedAt: Date.now(),
-        };
-        localStorage.setItem(key, JSON.stringify(cached));
-      } catch (e) {}
-
-      // navigate immediately to status page (user sees pending cached state)
-      router.push(`/fix/status?startup_name=${encodeURIComponent(data.startup_name)}&phone=${encodeURIComponent(data.phone)}`);
-      // Note: mutateAsync above already submitted — do NOT call mutate() again here
-
-      setSubmitted(true);
-      reset({
-        name: '',
-        email: '',
-        phone: '',
-        founder_linkedin: '',
-        startup_name: '',
-        startup_stage: '',
-        startup_summary: '',
-        support_needed: '',
-        additional_info: '',
-        pitch_deck_link: '',
-      });
-      try {
-        localStorage.removeItem('fix_registration_draft');
-      } catch (e) {
-        // ignore
-      }
-      toast({
-        title: 'Application submitted',
-        description: 'Your FIX application has been received and is now pending review.',
-      });
-    } catch (error) {
-      console.error('Failed to submit FIX registration:', error);
-      toast({
-        title: 'Submission failed',
-        description: 'We could not submit your application right now. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  useEffect(() => {
-    const anchor = answeredBarAnchorRef.current;
-    if (!anchor) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsAnsweredBarDocked(entry.isIntersecting);
-      },
-      {
-        threshold: 0.2,
-      }
-    );
-
-    observer.observe(anchor);
-    return () => observer.disconnect();
-  }, []);
-
-  // load draft from localStorage on mount
+  // Load draft
   useEffect(() => {
     try {
       const raw = localStorage.getItem('fix_registration_draft');
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === 'object') {
-          Object.keys(parsed).forEach((key) => {
-            // @ts-ignore
-            if (parsed[key] !== undefined) setValue(key, parsed[key]);
-          });
-        }
+        if (parsed && typeof parsed === 'object') setFormData(parsed);
       }
-    } catch (e) {
-      // ignore
-    }
-  }, [setValue]);
+    } catch (e) {}
+  }, []);
 
-  // save draft to localStorage when values change
+  // Save draft
   useEffect(() => {
-    try {
-      const draft = {
-        name: values.name || '',
-        email: values.email || '',
-        phone: values.phone || '',
-        founder_linkedin: values.founder_linkedin || '',
-        startup_name: values.startup_name || '',
-        startup_stage: values.startup_stage || '',
-        startup_summary: values.startup_summary || '',
-        support_needed: values.support_needed || '',
-        additional_info: values.additional_info || '',
-        pitch_deck_link: values.pitch_deck_link || '',
-      };
-      localStorage.setItem('fix_registration_draft', JSON.stringify(draft));
-    } catch (e) {
-      // ignore
+    if (Object.keys(formData).length > 0) {
+      try {
+        localStorage.setItem('fix_registration_draft', JSON.stringify(formData));
+      } catch (e) {}
     }
-  }, [values]);
+  }, [formData]);
+
+  const handleInputChange = (id: string, value: string) => {
+    setFormData((prev: Record<string, string>) => ({ ...prev, [id]: value }));
+    if (errors[id]) setErrors((prev: Record<string, string>) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  };
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    questions.forEach(q => {
+      const val = formData[q.id]?.trim() || '';
+      if (q.required && !val) {
+        newErrors[q.id] = 'This field is required';
+      } else if (q.type === 'url' && val && !/^https?:\/\/.+/i.test(val)) {
+        newErrors[q.id] = 'Please enter a valid URL';
+      } else if (q.type === 'textarea' && countWords(val) > maxWordCount) {
+        newErrors[q.id] = `Maximum ${maxWordCount} words allowed`;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) {
+      toast({ title: 'Validation Error', description: 'Please fill all required fields correctly.', variant: 'destructive' });
+      return;
+    }
+
+    try {
+      await createFixRegistration.mutateAsync(formData as any);
+      
+      // Save to local cache for status check
+      try {
+        const startupName = formData['startup_name'] || '';
+        const phone = formData['phone'] || '';
+        const name = formData['name'] || '';
+        const normalizedName = startupName.trim().toLowerCase().replace(/\s+/g, ' ');
+        const key = `fix_status_cache:${normalizedName}:${phone.trim()}`;
+        const cached = {
+          id: null,
+          name,
+          startup_name: startupName,
+          startup_normalised: normalizedName,
+          phone: phone.trim(),
+          status: 'pending',
+          allocated_date: null,
+          savedAt: Date.now(),
+        };
+        localStorage.setItem(key, JSON.stringify(cached));
+        router.push(`/fix/status?startup_name=${encodeURIComponent(startupName)}&phone=${encodeURIComponent(phone)}`);
+      } catch (e) {}
+
+      setSubmitted(true);
+      setFormData({});
+      localStorage.removeItem('fix_registration_draft');
+      toast({ title: 'Application submitted', description: 'Your FIX application has been received.' });
+    } catch (error) {
+      toast({ title: 'Submission failed', description: 'Please try again later.', variant: 'destructive' });
+    }
+  };
+
+  const answeredCount = questions.filter(q => formData[q.id]?.trim().length > 0).length;
+
+  useEffect(() => {
+    const anchor = answeredBarAnchorRef.current;
+    if (!anchor) return;
+    // We use a larger rootMargin to trigger the docking earlier (when the bottom area is 200px from the viewport)
+    const observer = new IntersectionObserver(([entry]) => setIsAnsweredBarDocked(entry.isIntersecting), { 
+      threshold: 0,
+      rootMargin: '0px 0px -50px 0px' 
+    });
+    observer.observe(anchor);
+    return () => observer.disconnect();
+  }, []);
+
+  if (isLoadingSettings) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+        <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+        <p className="text-zinc-500 font-medium animate-pulse">Preparing Registration Form...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-5">
-      <div className="mx-auto max-w-5xl space-y-3 text-center text-black">
-        <h1 className="text-balance text-3xl font-medium sm:text-5xl">
-          Founders & Investors Xplore (FIX) By CEDAT
+    <div className="space-y-8">
+      <div className="mx-auto max-w-5xl space-y-4 text-center text-black px-4">
+        <h1 className="text-balance text-3xl font-black sm:text-5xl tracking-tight uppercase italic">
+          {fixSettings?.registration_title || 'FIX Registration'}
         </h1>
-        <p className="mx-auto max-w-4xl text-base leading-relaxed sm:text-[1.05rem]">
-          CEDAT - Dynamic Ecosystem of Nexus Communities. Only shortlisted startups will be onboarded to
-          CEDAT. A registration fee of Rs5000 applies only to those shortlisted & confirmed startups
+        <p className="mx-auto max-w-3xl text-sm leading-relaxed sm:text-base text-zinc-600 font-medium">
+          {fixSettings?.registration_description}
         </p>
       </div>
 
       {submitted && (
-        <div className="mx-auto flex max-w-3xl items-start gap-3 rounded-sm border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 shadow-md">
-          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
+        <div className="mx-auto flex max-w-3xl items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-6 text-emerald-900 shadow-sm animate-in fade-in zoom-in duration-300">
+          <CheckCircle2 className="mt-0.5 h-6 w-6 text-emerald-600 shrink-0" />
           <div>
-            <p className="font-semibold">Application submitted successfully.</p>
-            <p className="text-sm">Your FIX application has been received and is now pending review.</p>
+            <p className="font-black text-lg uppercase italic">Success!</p>
+            <p className="text-sm font-medium text-emerald-800/70">Your application has been received and is pending review.</p>
           </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-3xl space-y-4">
-        <QuestionCard title="1. Name" required error={errors.name?.message}>
-          <Input id="name" {...register('name')} className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-        </QuestionCard>
+      <form onSubmit={onSubmit} className="mx-auto max-w-3xl space-y-6 px-4">
+        {questions.map((q, idx) => (
+          <QuestionCard 
+            key={q.id} 
+            title={q.label} 
+            description={q.description}
+            required={q.required} 
+            error={errors[q.id]}
+          >
+            {q.type === 'text' && (
+              <Input 
+                value={formData[q.id] || ''} 
+                onChange={(e) => handleInputChange(q.id, e.target.value)}
+                className="h-14 rounded-none border-0 border-b border-zinc-200 px-4 text-lg shadow-none focus-visible:ring-0 focus-visible:border-black transition-all font-bold placeholder:font-normal"
+                placeholder="Type your answer here..."
+              />
+            )}
+            {q.type === 'url' && (
+              <Input 
+                type="url"
+                value={formData[q.id] || ''} 
+                onChange={(e) => handleInputChange(q.id, e.target.value)}
+                className="h-14 rounded-none border-0 border-b border-zinc-200 px-4 text-lg shadow-none focus-visible:ring-0 focus-visible:border-black transition-all font-bold placeholder:font-normal"
+                placeholder="https://..."
+              />
+            )}
+            {q.type === 'textarea' && (
+              <div className="space-y-2">
+                <Textarea 
+                  value={formData[q.id] || ''} 
+                  onChange={(e) => handleInputChange(q.id, e.target.value)}
+                  rows={4}
+                  className="min-h-[120px] rounded-none border-0 border-b border-zinc-200 px-4 text-lg shadow-none focus-visible:ring-0 focus-visible:border-black transition-all font-bold resize-none placeholder:font-normal"
+                  placeholder="Share the details..."
+                />
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 text-right">
+                  {countWords(formData[q.id])} / {maxWordCount} words
+                </p>
+              </div>
+            )}
+            {q.type === 'select' && (
+              <Select value={formData[q.id] || ''} onValueChange={(v) => handleInputChange(q.id, v)}>
+                <SelectTrigger className="h-14 rounded-none border-0 border-b border-zinc-200 px-4 text-lg shadow-none focus:ring-0 focus:border-black font-bold">
+                  <SelectValue placeholder="Select an option" />
+                </SelectTrigger>
+                <SelectContent>
+                  {q.options?.map(opt => (
+                    <SelectItem key={opt} value={opt} className="font-medium">{opt}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </QuestionCard>
+        ))}
 
-        <QuestionCard title="2. Mail ID" required error={errors.email?.message}>
-          <Input id="email" type="email" {...register('email')} className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-        </QuestionCard>
+        {/* This anchor determines when the bar should stop floating */}
+        <div ref={answeredBarAnchorRef} className="h-4" />
 
-        <QuestionCard title="3. Phone Number" required error={errors.phone?.message}>
-          <Input id="phone" {...register('phone')} className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-        </QuestionCard>
-
-        <QuestionCard title="4. Founder's Linkedin" error={errors.founder_linkedin?.message}>
-          <Input
-            id="founder_linkedin"
-            type="url"
-            {...register('founder_linkedin')}
-            placeholder="https://linkedin.com/in/..."
-            className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0"
-          />
-        </QuestionCard>
-
-        <QuestionCard title="5. Name of the startup or company" required error={errors.startup_name?.message}>
-          <Input id="startup_name" {...register('startup_name')} className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-        </QuestionCard>
-
-        <QuestionCard title="6. Select the stage of your startup from the options below" required error={errors.startup_stage?.message}>
-          <Select value={watch('startup_stage')} onValueChange={(value) => setValue('startup_stage', value, { shouldDirty: true, shouldValidate: true })}>
-            <SelectTrigger id="startup_stage" className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus:ring-0">
-              <SelectValue placeholder="Choose startup stage" />
-            </SelectTrigger>
-            <SelectContent>
-              {startupStageOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </QuestionCard>
-
-        <QuestionCard title="7. Kindly share about your startup (Max 300 words)" required error={errors.startup_summary?.message}>
-          <Textarea id="startup_summary" {...register('startup_summary')} rows={5} className="min-h-32 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-          <p className="text-xs text-zinc-500">{countWords(values.startup_summary || '')} / {maxWordCount} words</p>
-        </QuestionCard>
-
-        <QuestionCard title="8. What kind of support or resources do you need for your startup (Max 300 Words)" required error={errors.support_needed?.message}>
-          <Textarea id="support_needed" {...register('support_needed')} rows={5} className="min-h-32 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-          <p className="text-xs text-zinc-500">{countWords(values.support_needed || '')} / {maxWordCount} words</p>
-        </QuestionCard>
-
-        <QuestionCard title="9. Is there anything else you would like us to know about your experiences, interests & skills (Max 300 Words)" required error={errors.additional_info?.message}>
-          <Textarea id="additional_info" {...register('additional_info')} rows={5} className="min-h-32 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0" />
-          <p className="text-xs text-zinc-500">{countWords(values.additional_info || '')} / {maxWordCount} words</p>
-        </QuestionCard>
-
-        <QuestionCard
-          title="10. Upload a Google Drive link that includes your pitch deck and any other documents to be shared."
-          required
-          error={errors.pitch_deck_link?.message}
-        >
-          <p className="text-sm text-zinc-600">
-            Please ensure the access is given to "Anyone with the link can view"
-          </p>
-          <Input
-            id="pitch_deck_link"
-            type="url"
-            {...register('pitch_deck_link')}
-            placeholder="https://drive.google.com/..."
-            className="h-14 rounded-none border-0 border-b border-zinc-300 px-2 text-base shadow-none focus-visible:ring-0"
-          />
-        </QuestionCard>
-
-        <div className="pt-2 text-center">
+        <div className="pt-8 text-center">
           <Button
             type="submit"
             size="lg"
-            className="min-h-[52px] rounded-full bg-black px-8 font-bold text-white shadow-lg "
+            className="h-14 rounded-full bg-black hover:bg-zinc-800 text-white px-10 font-black uppercase italic tracking-widest shadow-2xl shadow-black/20 group transition-all"
             disabled={createFixRegistration.isPending}
           >
-            {createFixRegistration.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {createFixRegistration.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
             Submit Application
+            <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-        </div>
-
-        <div ref={answeredBarAnchorRef} className="flex justify-center pt-4">
-          <div className="rounded-xl bg-white px-6 py-2 text-sm font-medium text-zinc-900 shadow-xl">
-            Answered <span className="font-bold">{answeredCount}</span> of 10
-          </div>
         </div>
       </form>
 
+      {/* Unified Progress Bar */}
       <div
-        className={`pointer-events-none fixed bottom-4 left-1/2 z-30 -translate-x-1/2 px-4 transition-opacity duration-200 ${
-          isAnsweredBarDocked ? 'opacity-0' : 'opacity-100'
+        className={`z-30 px-4 transition-all duration-500 ease-in-out ${
+          isAnsweredBarDocked 
+            ? 'relative mt-0 mb-12 opacity-100 translate-y-0 flex justify-center' 
+            : 'fixed bottom-8 left-1/2 -translate-x-1/2 opacity-100 translate-y-0'
         }`}
       >
-        <div className="rounded-xl bg-white px-6 py-2 text-sm font-medium text-zinc-900 shadow-xl">
-          Answered <span className="font-bold">{answeredCount}</span> of 10
+        <div className={`rounded-full shadow-2xl flex items-center gap-4 border transition-all duration-500 ${
+          isAnsweredBarDocked 
+            ? 'bg-white border-zinc-100 px-6 py-2.5 text-zinc-900' 
+            : 'bg-black/90 backdrop-blur-md px-8 py-3 text-white border-white/10'
+        }`}>
+          <div className="flex flex-col items-start leading-none">
+            <span className={`text-[10px] mb-1 ${isAnsweredBarDocked ? 'text-zinc-500' : 'text-zinc-400'}`}>
+              Current Progress
+            </span>
+            <span className="text-xs font-black uppercase tracking-widest whitespace-nowrap">
+              {answeredCount} / {questions.length} Answered
+            </span>
+          </div>
+          <div className={`w-12 h-1.5 rounded-full overflow-hidden ${isAnsweredBarDocked ? 'bg-zinc-100' : 'bg-zinc-700'}`}>
+            <div 
+              className={`h-full transition-all duration-500 ${isAnsweredBarDocked ? 'bg-black' : 'bg-white'}`} 
+              style={{ width: `${(answeredCount / (questions.length || 1)) * 100}%` }}
+            />
+          </div>
         </div>
       </div>
     </div>

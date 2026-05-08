@@ -10,7 +10,11 @@ import {
   DEFAULT_FIX_SIDEBAR_POINTS,
   DEFAULT_FIX_SIDEBAR_TITLE,
   DEFAULT_FIX_TITLE,
+  DEFAULT_FIX_REG_TITLE,
+  DEFAULT_FIX_REG_DESCRIPTION,
+  DEFAULT_FIX_QUESTIONS,
   FixContentSettings,
+  FixQuestion,
 } from '@/lib/fix-content';
 
 export interface FixSettings extends Partial<FixContentSettings> {
@@ -39,6 +43,11 @@ export function useFixSettings() {
       sidebar_points: Array.isArray(data?.sidebar_points) && data?.sidebar_points.length
         ? data!.sidebar_points
         : DEFAULT_FIX_SIDEBAR_POINTS,
+      registration_title: data?.registration_title || DEFAULT_FIX_REG_TITLE,
+      registration_description: data?.registration_description || DEFAULT_FIX_REG_DESCRIPTION,
+      registration_questions: Array.isArray(data?.registration_questions)
+        ? data!.registration_questions
+        : DEFAULT_FIX_QUESTIONS,
     },
     isLoading,
     error,
@@ -57,6 +66,9 @@ export function useUpdateFixSettings() {
       about?: string;
       sidebar_title?: string;
       sidebar_points?: string[];
+      registration_title?: string;
+      registration_description?: string;
+      registration_questions?: FixQuestion[];
     }) => {
       const docRef = doc(db, SETTINGS_COLLECTION, FIX_SETTINGS_DOC);
       const payload = {
@@ -66,6 +78,9 @@ export function useUpdateFixSettings() {
         about: settings.about?.trim() || DEFAULT_FIX_ABOUT_TEXT,
         sidebar_title: settings.sidebar_title?.trim() || DEFAULT_FIX_SIDEBAR_TITLE,
         sidebar_points: settings.sidebar_points?.map((item) => item.trim()).filter(Boolean) || DEFAULT_FIX_SIDEBAR_POINTS,
+        registration_title: settings.registration_title?.trim() || DEFAULT_FIX_REG_TITLE,
+        registration_description: settings.registration_description?.trim() || DEFAULT_FIX_REG_DESCRIPTION,
+        registration_questions: settings.registration_questions || DEFAULT_FIX_QUESTIONS,
         updatedAt: serverTimestamp(),
       };
       await setDoc(docRef, payload, { merge: true });
