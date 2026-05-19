@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import admin, { adminFirestore } from '@/lib/adminFirebase';
 
+export const dynamic = 'force-dynamic';
+
 // Simple in-memory rate limiter (per-process). Works for single-instance deployments.
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX = 20;

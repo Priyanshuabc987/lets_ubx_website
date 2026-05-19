@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import admin, { adminAuth, adminFirestore } from '@/lib/adminFirebase';
 
+export const dynamic = 'force-dynamic';
+
 async function verifyAdmin(token?: string | null) {
   if (!token) return null;
   try {
