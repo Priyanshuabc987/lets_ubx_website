@@ -41,7 +41,7 @@ export type FixContentSettings = {
 };
 
 export const DEFAULT_FIX_REG_TITLE = "Founders & Investors Xplore (FIX) By Let's UBX";
-export const DEFAULT_FIX_REG_DESCRIPTION = "Let\'s UBX - Dynamic Ecosystem of Nexus Communities. Only shortlisted startups will be onboarded to Let"s UBX. A registration fee of Rs5000 applies only to those shortlisted & confirmed startups';
+export const DEFAULT_FIX_REG_DESCRIPTION = "Let's UBX - Dynamic Ecosystem of Nexus Communities. Only shortlisted startups will be onboarded to Let's UBX. A registration fee of Rs5000 applies only to those shortlisted & confirmed startups";
 
 export const DEFAULT_FIX_QUESTIONS: FixQuestion[] = [
   { id: 'name', label: '1. Name', type: 'text', required: true },

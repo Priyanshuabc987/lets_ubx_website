@@ -12,19 +12,19 @@
     --card-foreground: 216 5% 21%;
     --popover: 0 0% 100%;
     --popover-foreground: 216 5% 21%;
-    --primary: 180 100% 30%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 146 54% 51%; /* #3CC878 Vibrant Green */
-    --secondary-foreground: 0 0% 100%;
+    --primary: 238 100% 21%; /* #000369 */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 180 100% 50%; /* #00ffff */
+    --secondary-foreground: 238 100% 21%; /* #000369 */
     --muted: 180 10% 85%;
     --muted-foreground: 216 5% 45%;
-    --accent: 146 54% 51%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 180 100% 50%; /* #00ffff */
+    --accent-foreground: 238 100% 21%; /* #000369 */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 180 10% 85%;
-    --input: 180 10% 85%;
-    --ring: 180 100% 25%;
+    --border: 216 10% 85%;
+    --input: 216 10% 85%;
+    --ring: 238 100% 21%; /* #000369 */
     --radius: 1.5rem; /* Larger default radius for a softer feel */
   }
   .dark {
@@ -34,19 +34,19 @@
     --card-foreground: 0 0% 98%;
     --popover: 216 5% 12%;
     --popover-foreground: 0 0% 98%;
-    --primary: 180 100% 35%;
+    --primary: 238 100% 50%; /* Lighter blue for dark mode visibility, or just keep it 21%? Let's use 60% lightness for visibility: 238 100% 60% */
     --primary-foreground: 0 0% 100%;
-    --secondary: 146 54% 51%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 180 100% 50%; /* #00ffff */
+    --secondary-foreground: 238 100% 21%; /* #000369 */
     --muted: 216 5% 25%;
     --muted-foreground: 216 5% 65%;
-    --accent: 146 54% 51%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 180 100% 50%; /* #00ffff */
+    --accent-foreground: 238 100% 21%; /* #000369 */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 216 5% 25%;
     --input: 216 5% 25%;
-    --ring: 180 100% 35%;
+    --ring: 238 100% 60%;
   }
 }
 

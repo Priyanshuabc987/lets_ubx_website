@@ -25,18 +25,20 @@ export function Footer({ description, contactText, contactPhone }: FooterProps) 
 
           <nav className="grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div className="space-y-4">
-              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Platform</h4>
+              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Let's UBX</h4>
               <ul className="space-y-2 text-sm text-zinc-400">
                 <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-                <li><Link href="/events" className="hover:text-white transition-colors">Events</Link></li>
-                <li><Link href="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
+                <li><Link href="/unite" className="hover:text-white transition-colors">Unite</Link></li>
+                <li><Link href="/build" className="hover:text-white transition-colors">Build</Link></li>
+                <li><Link href="/xplore" className="hover:text-white transition-colors">Xplore</Link></li>
               </ul>
             </div>
             <div className="space-y-4">
-              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Programs</h4>
+              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Explore</h4>
               <ul className="space-y-2 text-sm text-zinc-400">
-                <li><Link href="/startup-world-cup" className="hover:text-white transition-colors">Startup World Cup</Link></li>
-                <li><Link href="/fix" className="hover:text-white transition-colors">FIX</Link></li>
+                <li><Link href="/events" className="hover:text-white transition-colors">Events</Link></li>
+                <li><Link href="/fix" className="hover:text-white transition-colors">FIX Program</Link></li>
+                <li><Link href="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
                 <li><Link href="/ask-us" className="hover:text-white transition-colors">Ask Us</Link></li>
               </ul>
             </div>

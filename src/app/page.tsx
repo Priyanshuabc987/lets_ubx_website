@@ -1,5 +1,6 @@
 
 import { Hero } from "@/components/home/Hero";
+import { UBXSection } from "@/components/home/UBXSection";
 import { SocialFeed } from "@/components/home/SocialFeed";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -89,8 +90,10 @@ export default async function Home() {
 
       </section>
 
-      <SocialFeed 
-        initialPosts={socialPosts} 
+      <UBXSection />
+
+      <SocialFeed
+        initialPosts={socialPosts}
         settings={{
           socialTitle: homeSettings.socialTitle,
           socialSubtitle: homeSettings.socialSubtitle,
@@ -106,7 +109,7 @@ export default async function Home() {
       <section className="py-24 pb-10 bg-black text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="container mx-auto px-4 relative z-10">
-         <div className="max-w-6xl space-y-8">
+          <div className="max-w-6xl space-y-8">
             <h2 className="text-3xl sm:text-6xl font-black leading-tight">
               {homeSettings.fixTitle.split(' - ')[0]}
               {homeSettings.fixTitle.includes(' - ') && (
@@ -116,11 +119,11 @@ export default async function Home() {
                 </>
               )}
             </h2>
-          
+
             <div className="text-lg md:text-xl text-white/80 leading-relaxed whitespace-pre-wrap">
               {homeSettings.fixDescription}
             </div>
-          
+
             <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/fix">
                 <Button
@@ -130,11 +133,11 @@ export default async function Home() {
                   {homeSettings.fixApplyLabel}
                 </Button>
               </Link>
-          
-               <Link 
-                  href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)" 
-                  target="_blank"
-                >
+
+              <Link
+                href="https://wa.me/7406345305?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Founders%20%26%20Investors%20Xplore%20(FIX)"
+                target="_blank"
+              >
                 <Button
                   size="lg"
                   variant="outline"
@@ -144,7 +147,7 @@ export default async function Home() {
                 </Button>
               </Link>
             </div>
-          </div>        
+          </div>
         </div>
       </section>
     </div>

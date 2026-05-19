@@ -33,11 +33,10 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/events", label: "Events" },
-    { href: "/fix", label: "FIX" },
-    { href: "/gallery", label: "Gallery" },
-    { href: "/startup-world-cup", label: "Startup World Cup" },
-    { href: "/ask-us", label: "Ask Us" },
+    { href: "/unite", label: "Unite" },
+    { href: "/build", label: "Build" },
+    { href: "/xplore", label: "Xplore" },
+        { href: "/gallery", label: "Gallery" },
   ];
 
   const isTransparentDefault = pathname === "/" || pathname === "/startup-world-cup";
@@ -53,7 +52,11 @@ export function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-24 h-16 sm:w-32 sm:h-20 overflow-hidden rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
-            <img src="/logo/cedat-logo.png" alt="Let's UBX" className="w-full h-full object-contain" />
+            <img
+              src="/logo/letsubx_logo.png"
+              alt="Let's UBX"
+              className="w-full h-full object-contain scale-[1.5]"
+            />
           </div>
         </Link>
 
@@ -83,13 +86,13 @@ export function Navbar() {
             <div className="flex items-center gap-4">
               {user?.roles?.includes('admin') && (
                 <Link href="/admin">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className={cn(
                       "rounded-full border-2 transition-all font-bold",
-                      isSolid 
-                        ? "border-primary/20 text-primary hover:bg-primary/5" 
+                      isSolid
+                        ? "border-primary/20 text-primary hover:bg-primary/5"
                         : "border-white/20 bg-white/10 text-white hover:bg-white/20"
                     )}
                   >
@@ -98,15 +101,15 @@ export function Navbar() {
                   </Button>
                 </Link>
               )}
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className={cn(
                       "rounded-full border-2 transition-all font-bold",
-                      isSolid 
-                        ? "border-primary/20 text-primary hover:bg-primary/5" 
+                      isSolid
+                        ? "border-primary/20 text-primary hover:bg-primary/5"
                         : "border-white/20 bg-white/10 text-white hover:bg-white/20"
                     )}
                   >
@@ -128,52 +131,52 @@ export function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-          <button
-            className={cn(
-              "md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors",
-              isSolid ? "text-foreground" : "text-white"
-            )}
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
+        <button
+          className={cn(
+            "md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors",
+            isSolid ? "text-foreground" : "text-white"
+          )}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-background  border-border/40 p-6 flex flex-col gap-4 animate-in slide-in-from-top-5 shadow-2xl">
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)}>
-                <span className={cn(
-                  "text-lg font-bold py-2 block transition-colors",
-                  pathname === link.href ? "text-primary" : "text-foreground"
-                )}>
-                  {link.label}
-                </span>
-              </Link>
-            ))}
-            <div className="h-px bg-border my-2" />
-            {isAuthenticated && (
-              <div className="flex flex-col gap-2">
-                {user?.roles?.includes('admin') && (
-                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start rounded-full h-12">
-                      <Shield className="w-4 h-4 mr-2" /> Admin Dashboard
-                    </Button>
-                  </Link>
-                )}
-                <Button
-                  variant="ghost"
-                  className="justify-start px-0 text-destructive h-12"
-                  onClick={() => { logout(); setIsMobileMenuOpen(false); }}
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-background  border-border/40 p-6 flex flex-col gap-4 animate-in slide-in-from-top-5 shadow-2xl">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)}>
+              <span className={cn(
+                "text-lg font-bold py-2 block transition-colors",
+                pathname === link.href ? "text-primary" : "text-foreground"
+              )}>
+                {link.label}
+              </span>
+            </Link>
+          ))}
+          <div className="h-px bg-border my-2" />
+          {isAuthenticated && (
+            <div className="flex flex-col gap-2">
+              {user?.roles?.includes('admin') && (
+                <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start rounded-full h-12">
+                    <Shield className="w-4 h-4 mr-2" /> Admin Dashboard
+                  </Button>
+                </Link>
+              )}
+              <Button
+                variant="ghost"
+                className="justify-start px-0 text-destructive h-12"
+                onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
