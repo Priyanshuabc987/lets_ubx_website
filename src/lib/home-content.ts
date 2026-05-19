@@ -2,6 +2,21 @@ export const DEFAULT_HOME_TITLE = 'Startup Ecosystem Meetups & Events';
 export const DEFAULT_HOME_DESCRIPTION =
   "Explore exclusive meetups and networking sessions. Let's UBX is your gateway to the heart of the Bengaluru startup ecosystem.";
 
+export const DEFAULT_UBX_UNITE_TITLE = "Let's Unite";
+export const DEFAULT_UBX_UNITE_DESCRIPTION =
+  'Event listings and hosting for meetups, workshops, programs, and startup gatherings.';
+export const DEFAULT_UBX_UNITE_CARDS = ['Events', 'Meetups', 'Seminars', 'Programs', 'Workshops'];
+
+export const DEFAULT_UBX_BUILD_TITLE = "Let's Build";
+export const DEFAULT_UBX_BUILD_DESCRIPTION =
+  'A builder platform led by FIX for startup showcases, founder feedback, and growth opportunities.';
+export const DEFAULT_UBX_BUILD_CARDS = ['Ideas', 'Projects', 'Startups', 'Incubations', 'Investments'];
+
+export const DEFAULT_UBX_XPLORE_TITLE = "Let's Xplore";
+export const DEFAULT_UBX_XPLORE_DESCRIPTION =
+  'Ask Us, opportunity listings, and hosting support for colleges, companies, and communities.';
+export const DEFAULT_UBX_XPLORE_CARDS = ['Companies', 'Ecosystems', 'Connections', 'Communities', 'Collaborations'];
+
 export const DEFAULT_SOCIAL_TITLE = 'Follow Our Journey';
 export const DEFAULT_SOCIAL_SUBTITLE = "Stay updated with the latest from Let's UBX on social media.";
 export const DEFAULT_LINKEDIN_LABEL = 'LinkedIn Updates';
@@ -18,6 +33,16 @@ export const DEFAULT_FOOTER_DESCRIPTION = 'Dynamic ecosystem of nexus communitie
 export type HomeSettings = {
   title: string;
   description: string;
+  // UBX Section
+  ubxUniteTitle: string;
+  ubxUniteDescription: string;
+  ubxUniteCards: string[];
+  ubxBuildTitle: string;
+  ubxBuildDescription: string;
+  ubxBuildCards: string[];
+  ubxXploreTitle: string;
+  ubxXploreDescription: string;
+  ubxXploreCards: string[];
   // Social Feed
   socialTitle: string;
   socialSubtitle: string;

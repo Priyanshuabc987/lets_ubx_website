@@ -12,6 +12,15 @@ import {
 import {
   DEFAULT_HOME_DESCRIPTION,
   DEFAULT_HOME_TITLE,
+  DEFAULT_UBX_UNITE_TITLE,
+  DEFAULT_UBX_UNITE_DESCRIPTION,
+  DEFAULT_UBX_UNITE_CARDS,
+  DEFAULT_UBX_BUILD_TITLE,
+  DEFAULT_UBX_BUILD_DESCRIPTION,
+  DEFAULT_UBX_BUILD_CARDS,
+  DEFAULT_UBX_XPLORE_TITLE,
+  DEFAULT_UBX_XPLORE_DESCRIPTION,
+  DEFAULT_UBX_XPLORE_CARDS,
   DEFAULT_SOCIAL_TITLE,
   DEFAULT_SOCIAL_SUBTITLE,
   DEFAULT_LINKEDIN_LABEL,
@@ -36,6 +45,18 @@ import {
   HomeSettings,
 } from '@/lib/home-content';
 
+function cardsToTextareaValue(cards: string[]) {
+  return cards.join('\n');
+}
+
+function textareaValueToCards(value: string) {
+  return value
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, 5);
+}
+
 export function ContentManagement() {
   const { toast } = useToast();
   const { data: homeContent, isLoading } = useHomeContentSettings();
@@ -44,6 +65,15 @@ export function ContentManagement() {
   const [formData, setFormData] = useState<HomeSettings>({
     title: '',
     description: '',
+    ubxUniteTitle: '',
+    ubxUniteDescription: '',
+    ubxUniteCards: [],
+    ubxBuildTitle: '',
+    ubxBuildDescription: '',
+    ubxBuildCards: [],
+    ubxXploreTitle: '',
+    ubxXploreDescription: '',
+    ubxXploreCards: [],
     socialTitle: '',
     socialSubtitle: '',
     linkedinLabel: '',
@@ -75,6 +105,15 @@ export function ContentManagement() {
       setFormData({
         title: homeContent?.title || '',
         description: homeContent?.description || '',
+        ubxUniteTitle: homeContent?.ubxUniteTitle || DEFAULT_UBX_UNITE_TITLE,
+        ubxUniteDescription: homeContent?.ubxUniteDescription || DEFAULT_UBX_UNITE_DESCRIPTION,
+        ubxUniteCards: homeContent?.ubxUniteCards || DEFAULT_UBX_UNITE_CARDS,
+        ubxBuildTitle: homeContent?.ubxBuildTitle || DEFAULT_UBX_BUILD_TITLE,
+        ubxBuildDescription: homeContent?.ubxBuildDescription || DEFAULT_UBX_BUILD_DESCRIPTION,
+        ubxBuildCards: homeContent?.ubxBuildCards || DEFAULT_UBX_BUILD_CARDS,
+        ubxXploreTitle: homeContent?.ubxXploreTitle || DEFAULT_UBX_XPLORE_TITLE,
+        ubxXploreDescription: homeContent?.ubxXploreDescription || DEFAULT_UBX_XPLORE_DESCRIPTION,
+        ubxXploreCards: homeContent?.ubxXploreCards || DEFAULT_UBX_XPLORE_CARDS,
         socialTitle: homeContent?.socialTitle || '',
         socialSubtitle: homeContent?.socialSubtitle || '',
         linkedinLabel: homeContent?.linkedinLabel || '',
@@ -105,6 +144,13 @@ export function ContentManagement() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleCardsChange = (
+    field: 'ubxUniteCards' | 'ubxBuildCards' | 'ubxXploreCards',
+    value: string
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: textareaValueToCards(value) }));
+  };
+
   const handleSave = async () => {
     try {
       await updateHomeContentMutation.mutateAsync(formData);
@@ -119,6 +165,15 @@ export function ContentManagement() {
     setFormData({
       title: homeContent?.title || '',
       description: homeContent?.description || '',
+      ubxUniteTitle: homeContent?.ubxUniteTitle || DEFAULT_UBX_UNITE_TITLE,
+      ubxUniteDescription: homeContent?.ubxUniteDescription || DEFAULT_UBX_UNITE_DESCRIPTION,
+      ubxUniteCards: homeContent?.ubxUniteCards || DEFAULT_UBX_UNITE_CARDS,
+      ubxBuildTitle: homeContent?.ubxBuildTitle || DEFAULT_UBX_BUILD_TITLE,
+      ubxBuildDescription: homeContent?.ubxBuildDescription || DEFAULT_UBX_BUILD_DESCRIPTION,
+      ubxBuildCards: homeContent?.ubxBuildCards || DEFAULT_UBX_BUILD_CARDS,
+      ubxXploreTitle: homeContent?.ubxXploreTitle || DEFAULT_UBX_XPLORE_TITLE,
+      ubxXploreDescription: homeContent?.ubxXploreDescription || DEFAULT_UBX_XPLORE_DESCRIPTION,
+      ubxXploreCards: homeContent?.ubxXploreCards || DEFAULT_UBX_XPLORE_CARDS,
       socialTitle: homeContent?.socialTitle || '',
       socialSubtitle: homeContent?.socialSubtitle || '',
       linkedinLabel: homeContent?.linkedinLabel || '',
@@ -204,6 +259,105 @@ export function ContentManagement() {
                   placeholder={DEFAULT_HOME_DESCRIPTION}
                   rows={3}
                 />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg">Unite / Build / Xplore Section (Home)</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 pt-0 space-y-8">
+              <div className="grid gap-8 xl:grid-cols-3">
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold text-primary">Let&apos;s Unite</h3>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Title</label>
+                    <Input
+                      value={formData.ubxUniteTitle}
+                      onChange={e => handleInputChange('ubxUniteTitle', e.target.value)}
+                      placeholder={DEFAULT_UBX_UNITE_TITLE}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea
+                      value={formData.ubxUniteDescription}
+                      onChange={e => handleInputChange('ubxUniteDescription', e.target.value)}
+                      placeholder={DEFAULT_UBX_UNITE_DESCRIPTION}
+                      rows={4}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">5 Card Labels (one per line)</label>
+                    <Textarea
+                      value={cardsToTextareaValue(formData.ubxUniteCards)}
+                      onChange={e => handleCardsChange('ubxUniteCards', e.target.value)}
+                      placeholder={cardsToTextareaValue(DEFAULT_UBX_UNITE_CARDS)}
+                      rows={6}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold text-primary">Let&apos;s Build</h3>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Title</label>
+                    <Input
+                      value={formData.ubxBuildTitle}
+                      onChange={e => handleInputChange('ubxBuildTitle', e.target.value)}
+                      placeholder={DEFAULT_UBX_BUILD_TITLE}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea
+                      value={formData.ubxBuildDescription}
+                      onChange={e => handleInputChange('ubxBuildDescription', e.target.value)}
+                      placeholder={DEFAULT_UBX_BUILD_DESCRIPTION}
+                      rows={4}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">5 Card Labels (one per line)</label>
+                    <Textarea
+                      value={cardsToTextareaValue(formData.ubxBuildCards)}
+                      onChange={e => handleCardsChange('ubxBuildCards', e.target.value)}
+                      placeholder={cardsToTextareaValue(DEFAULT_UBX_BUILD_CARDS)}
+                      rows={6}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold text-primary">Let&apos;s Xplore</h3>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Title</label>
+                    <Input
+                      value={formData.ubxXploreTitle}
+                      onChange={e => handleInputChange('ubxXploreTitle', e.target.value)}
+                      placeholder={DEFAULT_UBX_XPLORE_TITLE}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea
+                      value={formData.ubxXploreDescription}
+                      onChange={e => handleInputChange('ubxXploreDescription', e.target.value)}
+                      placeholder={DEFAULT_UBX_XPLORE_DESCRIPTION}
+                      rows={4}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">5 Card Labels (one per line)</label>
+                    <Textarea
+                      value={cardsToTextareaValue(formData.ubxXploreCards)}
+                      onChange={e => handleCardsChange('ubxXploreCards', e.target.value)}
+                      placeholder={cardsToTextareaValue(DEFAULT_UBX_XPLORE_CARDS)}
+                      rows={6}
+                    />
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

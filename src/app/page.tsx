@@ -74,7 +74,7 @@ export default async function Home() {
             </p>
           </div>
           <Link href="/events">
-            <Button size="lg" className="rounded-full group text-black">
+            <Button size="lg" className="rounded-full group text-white">
               View All Events <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -90,7 +90,19 @@ export default async function Home() {
 
       </section>
 
-      <UBXSection />
+      <UBXSection
+        settings={{
+          ubxUniteTitle: homeSettings.ubxUniteTitle,
+          ubxUniteDescription: homeSettings.ubxUniteDescription,
+          ubxUniteCards: homeSettings.ubxUniteCards,
+          ubxBuildTitle: homeSettings.ubxBuildTitle,
+          ubxBuildDescription: homeSettings.ubxBuildDescription,
+          ubxBuildCards: homeSettings.ubxBuildCards,
+          ubxXploreTitle: homeSettings.ubxXploreTitle,
+          ubxXploreDescription: homeSettings.ubxXploreDescription,
+          ubxXploreCards: homeSettings.ubxXploreCards,
+        }}
+      />
 
       <SocialFeed
         initialPosts={socialPosts}

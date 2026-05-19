@@ -5,6 +5,15 @@ import { adminDb } from '@/firebase/admin';
 import {
   DEFAULT_HOME_DESCRIPTION,
   DEFAULT_HOME_TITLE,
+  DEFAULT_UBX_UNITE_TITLE,
+  DEFAULT_UBX_UNITE_DESCRIPTION,
+  DEFAULT_UBX_UNITE_CARDS,
+  DEFAULT_UBX_BUILD_TITLE,
+  DEFAULT_UBX_BUILD_DESCRIPTION,
+  DEFAULT_UBX_BUILD_CARDS,
+  DEFAULT_UBX_XPLORE_TITLE,
+  DEFAULT_UBX_XPLORE_DESCRIPTION,
+  DEFAULT_UBX_XPLORE_CARDS,
   DEFAULT_SOCIAL_TITLE,
   DEFAULT_SOCIAL_SUBTITLE,
   DEFAULT_LINKEDIN_LABEL,
@@ -29,6 +38,13 @@ import {
   HomeSettings,
 } from '@/lib/home-content';
 
+function normalizeStringArray(value: unknown, fallback: string[]) {
+  if (!Array.isArray(value)) return fallback;
+
+  const cleaned = value.map((item) => String(item).trim()).filter(Boolean);
+  return cleaned.length ? cleaned : fallback;
+}
+
 async function _getHomeSettings(): Promise<HomeSettings> {
   try {
     const snapshot = await adminDb.collection('settings').doc('home').get();
@@ -37,6 +53,15 @@ async function _getHomeSettings(): Promise<HomeSettings> {
     return {
       title: data?.title?.trim() || DEFAULT_HOME_TITLE,
       description: data?.description?.trim() || DEFAULT_HOME_DESCRIPTION,
+      ubxUniteTitle: data?.ubxUniteTitle?.trim() || DEFAULT_UBX_UNITE_TITLE,
+      ubxUniteDescription: data?.ubxUniteDescription?.trim() || DEFAULT_UBX_UNITE_DESCRIPTION,
+      ubxUniteCards: normalizeStringArray(data?.ubxUniteCards, DEFAULT_UBX_UNITE_CARDS),
+      ubxBuildTitle: data?.ubxBuildTitle?.trim() || DEFAULT_UBX_BUILD_TITLE,
+      ubxBuildDescription: data?.ubxBuildDescription?.trim() || DEFAULT_UBX_BUILD_DESCRIPTION,
+      ubxBuildCards: normalizeStringArray(data?.ubxBuildCards, DEFAULT_UBX_BUILD_CARDS),
+      ubxXploreTitle: data?.ubxXploreTitle?.trim() || DEFAULT_UBX_XPLORE_TITLE,
+      ubxXploreDescription: data?.ubxXploreDescription?.trim() || DEFAULT_UBX_XPLORE_DESCRIPTION,
+      ubxXploreCards: normalizeStringArray(data?.ubxXploreCards, DEFAULT_UBX_XPLORE_CARDS),
       socialTitle: data?.socialTitle?.trim() || DEFAULT_SOCIAL_TITLE,
       socialSubtitle: data?.socialSubtitle?.trim() || DEFAULT_SOCIAL_SUBTITLE,
       linkedinLabel: data?.linkedinLabel?.trim() || DEFAULT_LINKEDIN_LABEL,
@@ -65,6 +90,15 @@ async function _getHomeSettings(): Promise<HomeSettings> {
     return {
       title: DEFAULT_HOME_TITLE,
       description: DEFAULT_HOME_DESCRIPTION,
+      ubxUniteTitle: DEFAULT_UBX_UNITE_TITLE,
+      ubxUniteDescription: DEFAULT_UBX_UNITE_DESCRIPTION,
+      ubxUniteCards: DEFAULT_UBX_UNITE_CARDS,
+      ubxBuildTitle: DEFAULT_UBX_BUILD_TITLE,
+      ubxBuildDescription: DEFAULT_UBX_BUILD_DESCRIPTION,
+      ubxBuildCards: DEFAULT_UBX_BUILD_CARDS,
+      ubxXploreTitle: DEFAULT_UBX_XPLORE_TITLE,
+      ubxXploreDescription: DEFAULT_UBX_XPLORE_DESCRIPTION,
+      ubxXploreCards: DEFAULT_UBX_XPLORE_CARDS,
       socialTitle: DEFAULT_SOCIAL_TITLE,
       socialSubtitle: DEFAULT_SOCIAL_SUBTITLE,
       linkedinLabel: DEFAULT_LINKEDIN_LABEL,

@@ -65,6 +65,7 @@ export function useUpdateHomeContentSettings() {
       const cleanedValue: Record<string, any> = {};
       Object.entries(value).forEach(([key, val]) => {
         if (typeof val === 'string') cleanedValue[key] = val.trim();
+        if (Array.isArray(val)) cleanedValue[key] = val.map((item) => String(item).trim()).filter(Boolean);
       });
 
       return setDoc(
