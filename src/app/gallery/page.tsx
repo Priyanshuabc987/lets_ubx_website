@@ -7,28 +7,28 @@ import { GalleryItem } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Event Gallery - Photos & Videos of Bengaluru's Startup Ecosystem of Communities ",
-  description: "Explore photos from Cedat's vibrant events. See the energy of our startup meetups, workshops, and networking sessions. A glimpse into the heart of Bengaluru's tech ecosystem.",
+  description: "Explore photos from Let's UBX's vibrant events. See the energy of our startup meetups, workshops, and networking sessions. A glimpse into the heart of Bengaluru's tech ecosystem.",
   openGraph: {
-    title: "Event Gallery - Cedat",
-    description: "Explore photos from Cedat's vibrant events and see the energy of our startup community.",
+    title: "Event Gallery - Let's UBX",
+    description: "Explore photos from Let's UBX's vibrant events and see the energy of our startup community.",
     url: `${BASE_URL}/gallery`,
-    siteName: 'Cedat',
+    siteName: "Let\'s UBX",
     images: [
       {
         url: LOGO_URL,
         width: 1200,
         height: 630,
-        alt: 'Cedat Event Gallery',
+        alt: "Let\'s UBX Event Gallery",
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Event Gallery - Cedat",
-    description: "Explore photos from Cedat's vibrant events and see the energy of our startup community.",
+    title: "Event Gallery - Let's UBX",
+    description: "Explore photos from Let's UBX's vibrant events and see the energy of our startup community.",
     images: [LOGO_URL],
-    creator: '@cedat_org',
+    creator: '@letsubx_org',
   },
 };
 

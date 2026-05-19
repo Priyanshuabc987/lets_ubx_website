@@ -17,7 +17,7 @@ export function Footer({ description, contactText, contactPhone }: FooterProps) 
       <div className="container mx-auto px-4 sm:px-6 md:px-8 py-12">
         <div className="flex flex-col md:flex-row justify-between gap-12">
           <div className="max-w-xs space-y-4">
-            <h2 className="text-2xl font-black tracking-wide text-white">CEDAT</h2>
+            <h2 className="text-2xl font-black tracking-wide text-white">Let's UBX</h2>
             <p className="text-zinc-400 text-sm leading-relaxed">
               {description || "Dynamic Ecosystem of Nexus Communities for Founders, Enablers, Mentors, Learners, Investors, Freelancers & Professionals"}
             </p>
@@ -58,19 +58,19 @@ export function Footer({ description, contactText, contactPhone }: FooterProps) 
                 <a href="https://wa.me/7406345305" target="_blank" rel="noopener noreferrer" className="text-[#25D366] transition-colors">
                   <MessageCircle className="w-5 h-5" />
                 </a>
-                <a href="https://www.instagram.com/cedat.in" target="_blank" rel="noopener noreferrer" className="text-[#E4405F] transition-colors">
+                <a href="https://www.instagram.com/letsubx.in" target="_blank" rel="noopener noreferrer" className="text-[#E4405F] transition-colors">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="https://www.linkedin.com/company/cedatnexus" target="_blank" rel="noopener noreferrer" className="text-[#0077B5] transition-colors">
+                <a href="https://www.linkedin.com/company/letsubx" target="_blank" rel="noopener noreferrer" className="text-[#0077B5] transition-colors">
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <a href="https://www.youtube.com/channel/UCmY3PX-DZdvnaOOp8uSHheA" target="_blank" rel="noopener noreferrer" className="text-[#FF0000] transition-colors">
                   <Youtube className="w-5 h-5" />
                 </a>
-                <a href="https://x.com/CEDAT_NEXUS" target="_blank" rel="noopener noreferrer" className="text-[#1DA1F2] transition-colors">
+                <a href="https://x.com/letsubx" target="_blank" rel="noopener noreferrer" className="text-[#1DA1F2] transition-colors">
                   <Twitter className="w-5 h-5" />
                 </a>
-                <a href="mailto:cedat.center@gmail.com" className="text-[#EA4335] transition-colors">
+                <a href="mailto:letsubx.center@gmail.com" className="text-[#EA4335] transition-colors">
                   <Mail className="w-5 h-5" />
                 </a>
               </div>
@@ -79,7 +79,7 @@ export function Footer({ description, contactText, contactPhone }: FooterProps) 
         </div>
 
         <div className="border-t border-zinc-800 mt-12 pt-8 flex flex-col sm:flex-row justify-around items-center gap-4 text-xs text-zinc-500">
-          <p>© {new Date().getFullYear()} CEDAT Startup Ecosystem. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Let's UBX Startup Ecosystem. All rights reserved.</p>
           {/* <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-zinc-300">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-zinc-300">Terms of Service</Link>

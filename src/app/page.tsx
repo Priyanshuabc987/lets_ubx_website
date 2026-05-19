@@ -16,29 +16,29 @@ import { Metrics } from "@/components/home/Metrics";
 import { MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "CEDAT: Bengaluru's Largest Startup Ecosystem of Communities ",
-  description: "Welcome to CEDAT, Bengaluru's largest and dynamic startup ecosystem of communities for Founders, Enablers, Mentors, Learners & Investors We are ecosystem across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech & AI, Food & Agri, Fashion & lifestyle and Social Impact, and more. Join us to connect, learn, and grow your startup.",
+  title: "Let's UBX: Bengaluru's Largest Startup Ecosystem of Communities ",
+  description: "Welcome to Let's UBX, Bengaluru's largest and dynamic startup ecosystem of communities for Founders, Enablers, Mentors, Learners & Investors We are ecosystem across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech & AI, Food & Agri, Fashion & lifestyle and Social Impact, and more. Join us to connect, learn, and grow your startup.",
   openGraph: {
-    title: "CEDAT: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
-    description: "Welcome to CEDAT, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
+    title: "Let's UBX: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
+    description: "Welcome to Let's UBX, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
     url: BASE_URL,
-    siteName: 'Cedat',
+    siteName: "Let\'s UBX",
     images: [
       {
         url: LOGO_URL,
         width: 1200,
         height: 630,
-        alt: 'Cedat Community',
+        alt: "Let\'s UBX Community",
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
-    description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
+    title: "Let's UBX: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
+    description: "Welcome to Let's UBX, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
     images: [LOGO_URL],
-    creator: '@cedat_org',
+    creator: '@letsubx_org',
   },
 };
 

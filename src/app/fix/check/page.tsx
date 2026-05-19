@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: 'FIX Application - Check Status',
     description: 'Check the status of your Founders & Investors Xplore (FIX) application.',
     url: `${BASE_URL}/fix/check`,
-    siteName: 'CEDAT',
+    siteName: "Let\'s UBX",
     type: 'website',
   },
 };

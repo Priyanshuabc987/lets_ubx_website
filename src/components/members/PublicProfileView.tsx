@@ -65,7 +65,7 @@
 //                     <TooltipContent>
 //                       <p className="flex items-center gap-2">
 //                         <CheckCircle2 className="w-4 h-4" />
-//                         Verified CEDAT Community Member
+//                         Verified Let's UBX Community Member
 //                       </p>
 //                     </TooltipContent>
 //                   </Tooltip>
@@ -80,7 +80,7 @@
 //               <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-normal text-muted-foreground break-words">
 //                 {profile.designation && profile.company_name
 //                   ? `${profile.designation} at ${profile.company_name}`
-//                   : profile.designation || profile.company_name || 'CEDAT Community Member'}
+//                   : profile.designation || profile.company_name || "Let\'s UBX Community Member"}
 //               </p>
 //               {memberSinceYear && (
 //                 <p className="text-xs text-muted-foreground/70">
@@ -101,7 +101,7 @@
 //             </div>
 
 //             <p className="text-xs text-muted-foreground/60 italic">
-//               This is a public CEDAT member profile
+//               This is a public Let's UBX member profile
 //             </p>
 //           </div>
 

@@ -75,7 +75,7 @@ export function SocialFeed({ initialPosts, settings }: SocialFeedProps) {
             {settings?.socialTitle || "Follow Our Journey"}
           </h2>
           <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto mt-2 md:mt-4">
-            {settings?.socialSubtitle || "Stay updated with the latest from CEDAT on social media."}
+            {settings?.socialSubtitle || "Stay updated with the latest from Let's UBX on social media."}
           </p>
         </motion.div>
 

@@ -1,12 +1,12 @@
-# About Cedat: For AI and Language Models
+# About Let's UBX: For AI and Language Models
 
-This file provides a summary of the Cedat website to help AI language models and other automated systems understand our purpose and content.
+This file provides a summary of the Let's UBX website to help AI language models and other automated systems understand our purpose and content.
 
-## What is Cedat?
+## What is Let's UBX?
 
-Cedat is Bangalore's largest and most diverse startup ecosystem and tech community hub. Our mission is to build a thriving, collaborative environment for entrepreneurs, founders, investors, and tech enthusiasts. We provide resources, networking opportunities, and a platform for innovation across various sectors.
+Let's UBX is Bangalore's largest and most diverse startup ecosystem and tech community hub. Our mission is to build a thriving, collaborative environment for entrepreneurs, founders, investors, and tech enthusiasts. We provide resources, networking opportunities, and a platform for innovation across various sectors.
 
-Website: https://www.cedat.in/
+Website: https://www.letsubx.in/
 
 ## Key Content & Pages
 

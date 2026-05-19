@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: EventDetailPageProps): Promis
     return { title: "Event Not Found" };
   }
 
-  const pageTitle = `${event.title} - Cedat: Bengaluru Startup Event`;
+  const pageTitle = `${event.title} - Let's UBX: Bengaluru Startup Event`;
   const pageDescription = `Join us for ${event.title}, a premier event for the Bengaluru startup ecosystem. ${event.description?.substring(0, 120)}...`;
   
   let imageUrl = event.featured_image_url || LOGO_URL;
@@ -57,14 +57,14 @@ export async function generateMetadata({ params }: EventDetailPageProps): Promis
         },
       ],
       type: 'article',
-      siteName: 'Cedat',
+      siteName: "Let\'s UBX",
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
       images: [imageUrl],
-      creator: '@cedat_org',
+      creator: '@letsubx_org',
     },
   };
 }
@@ -110,7 +110,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         "description": event.description || "",
         "organizer": {
             "@type": "Organization",
-            "name": "Cedat",
+            "name": "Let's UBX",
             "url": BASE_URL
         }
       },

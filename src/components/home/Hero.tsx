@@ -70,8 +70,7 @@ export function Hero({ initialImages }: { initialImages: HeroItem[] }) {
           transition={{ duration: 0.9, delay: 0.2 }}
           className="text-center pb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight text-white drop-shadow-[0_8px_30px_rgba(0,0,0,0.6)]"
         >
-          Dynamic Ecosystem of Nexus Communities
-
+          Let's Unite, Let's Build, Let's Explore
         </motion.h1>
 
       </div>

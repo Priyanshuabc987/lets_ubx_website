@@ -6,13 +6,13 @@ import { FixRegistrationForm } from '@/components/fix/FixRegistrationForm';
 import { BASE_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'FIX Registration - CEDAT',
-  description: 'Apply for Founders & Investors Xplore (FIX) by CEDAT and track your application status.',
+  title: "FIX Registration - Let's UBX",
+  description: "Apply for Founders & Investors Xplore (FIX) by Let's UBX and track your application status.",
   openGraph: {
-    title: 'FIX Registration - CEDAT',
-    description: 'Apply for Founders & Investors Xplore (FIX) by CEDAT and track your application status.',
+    title: "FIX Registration - Let's UBX",
+    description: "Apply for Founders & Investors Xplore (FIX) by Let's UBX and track your application status.",
     url: `${BASE_URL}/fix/register`,
-    siteName: 'CEDAT',
+    siteName: "Let\'s UBX",
     type: 'website',
   },
 };

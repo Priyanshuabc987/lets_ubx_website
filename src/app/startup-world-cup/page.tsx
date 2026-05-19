@@ -4,13 +4,13 @@ import { BASE_URL, LOGO_URL } from '@/lib/constants';
 import { StartupWorldCupClient } from './StartupWorldCupClient';
 
 export const metadata: Metadata = {
-  title: "Startup World Cup Bengaluru - Pitch Competition | Cedat",
-  description: "Apply for the Startup World Cup Bengaluru regional, hosted by Cedat. Win $1M in investment, connect with global investors, and showcase your startup on a world stage. Your journey from Bengaluru to global recognition starts here.",
+  title: "Startup World Cup Bengaluru - Pitch Competition | Let's UBX",
+  description: "Apply for the Startup World Cup Bengaluru regional, hosted by Let's UBX. Win $1M in investment, connect with global investors, and showcase your startup on a world stage. Your journey from Bengaluru to global recognition starts here.",
   openGraph: {
-    title: "Startup World Cup Bengaluru - Pitch Competition | Cedat",
-    description: "Apply for the Startup World Cup Bengaluru regional, hosted by Cedat. Win $1M in investment, connect with global investors, and showcase your startup on a world stage.",
+    title: "Startup World Cup Bengaluru - Pitch Competition | Let's UBX",
+    description: "Apply for the Startup World Cup Bengaluru regional, hosted by Let's UBX. Win $1M in investment, connect with global investors, and showcase your startup on a world stage.",
     url: `${BASE_URL}/startup-world-cup`,
-    siteName: 'Cedat',
+    siteName: "Let\'s UBX",
     images: [
       {
         url: LOGO_URL,
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Startup World Cup Bengaluru - Pitch Competition | Cedat",
-    description: "Apply for the Startup World Cup Bengaluru regional, hosted by Cedat.",
+    title: "Startup World Cup Bengaluru - Pitch Competition | Let's UBX",
+    description: "Apply for the Startup World Cup Bengaluru regional, hosted by Let's UBX.",
     images: [LOGO_URL],
-    creator: '@cedat_org',
+    creator: '@letsubx_org',
   },
 };
 

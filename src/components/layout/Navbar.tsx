@@ -53,7 +53,7 @@ export function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-24 h-16 sm:w-32 sm:h-20 overflow-hidden rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
-            <img src="/logo/cedat-logo.png" alt="CEDAT" className="w-full h-full object-contain" />
+            <img src="/logo/cedat-logo.png" alt="Let's UBX" className="w-full h-full object-contain" />
           </div>
         </Link>
 

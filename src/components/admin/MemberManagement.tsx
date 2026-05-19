@@ -84,7 +84,7 @@ export function MemberManagement() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'cedat_members.csv';
+      a.download = 'letsubx_members.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -128,7 +128,7 @@ export function MemberManagement() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Member Management</h2>
-          <p className="text-muted-foreground">View and manage CEDAT community members</p>
+          <p className="text-muted-foreground">View and manage Let's UBX community members</p>
         </div>
 
         <Button onClick={handleExportCsv}>
@@ -229,7 +229,7 @@ export function MemberManagement() {
       <Card>
         <CardHeader>
           <CardTitle>
-            CEDAT Members ({membersData?.total ?? 0})
+            Let's UBX Members ({membersData?.total ?? 0})
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -7,13 +7,13 @@ import { BASE_URL } from '@/lib/constants';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'FIX Application Status - CEDAT',
+  title: "FIX Application Status - Let's UBX",
   description: 'Check the status of your Founders & Investors Xplore (FIX) application.',
   openGraph: {
-    title: 'FIX Application Status - CEDAT',
+    title: "FIX Application Status - Let's UBX",
     description: 'Check the status of your Founders & Investors Xplore (FIX) application.',
     url: `${BASE_URL}/fix/status`,
-    siteName: 'CEDAT',
+    siteName: "Let\'s UBX",
     type: 'website',
   },
 };

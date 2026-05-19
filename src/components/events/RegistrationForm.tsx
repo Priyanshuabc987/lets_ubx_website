@@ -390,7 +390,7 @@ export function RegistrationForm({
         </Button>
 
         {/* <p className="border-t border-border/40 pt-4 text-center text-xs leading-relaxed text-muted-foreground">
-          By registering, you agree to receive event-related communications from CEDAT.
+          By registering, you agree to receive event-related communications from Let's UBX.
         </p> */}
       </CardContent>
     </Card>

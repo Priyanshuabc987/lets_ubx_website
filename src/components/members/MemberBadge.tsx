@@ -9,7 +9,7 @@ interface MemberBadgeProps {
 
 export function MemberBadge({ type = 'member', className }: MemberBadgeProps) {
 	const labelMap: Record<BadgeType, string> = {
-		member: 'CEDAT Community Member',
+		member: "Let\'s UBX Community Member",
 		participant: 'Event Participant',
 		speaker: 'Speaker / Partner',
 		partner: 'Institutional Partner',

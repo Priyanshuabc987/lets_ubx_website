@@ -8,29 +8,29 @@ import { Metadata } from 'next';
 import { BASE_URL, LOGO_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: "Startup Events in Bengaluru - Cedat",
-  description: "Browse upcoming startup meetups, workshops, and networking events in Bengaluru. Join the Cedat community and connect with fellow innovators.",
+  title: "Startup Events in Bengaluru - Let's UBX",
+  description: "Browse upcoming startup meetups, workshops, and networking events in Bengaluru. Join the Let's UBX community and connect with fellow innovators.",
   openGraph: {
-    title: "Startup Events in Bengaluru - Cedat",
-    description: "Browse upcoming startup meetups, workshops, and networking events in Bengaluru. Join the Cedat community and connect with fellow innovators.",
+    title: "Startup Events in Bengaluru - Let's UBX",
+    description: "Browse upcoming startup meetups, workshops, and networking events in Bengaluru. Join the Let's UBX community and connect with fellow innovators.",
     url: `${BASE_URL}/events`,
-    siteName: 'Cedat',
+    siteName: "Let\'s UBX",
     images: [
       {
         url: LOGO_URL,
         width: 1200,
         height: 630,
-        alt: 'Cedat Events',
+        alt: "Let\'s UBX Events",
       },
     ],
     type: 'website',
   },
    twitter: {
       card: 'summary_large_image',
-      title: "Startup Events in Bengaluru - Cedat",
-      description: "Browse upcoming startup meetups, workshops, and networking events in Bengaluru. Join the Cedat community and connect with fellow innovators.",
+      title: "Startup Events in Bengaluru - Let's UBX",
+      description: "Browse upcoming startup meetups, workshops, and networking events in Bengaluru. Join the Let's UBX community and connect with fellow innovators.",
       images: [LOGO_URL],
-      creator: '@cedat_org',
+      creator: '@letsubx_org',
     },
 };
 

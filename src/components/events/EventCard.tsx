@@ -54,7 +54,7 @@ export function EventCard({ event }: EventCardProps) {
       const entryType = isPaidEvent ? 'Paid Entry' : 'Free Entry';
 
       const shareText = encodeURIComponent(
-        `Check out this event on Cedat:\n\n*${event.title}*\n${entryType}\n\n🕒 Time: ${startTimeFormatted} - ${endTimeFormatted}\n📅 Date: ${fullDate}\n📍 Location: ${eventLocation}\n\nFind out more and register:\n${eventLink}`
+        `Check out this event on Let's UBX:\n\n*${event.title}*\n${entryType}\n\n🕒 Time: ${startTimeFormatted} - ${endTimeFormatted}\n📅 Date: ${fullDate}\n📍 Location: ${eventLocation}\n\nFind out more and register:\n${eventLink}`
       );
       setShareUrl(`https://api.whatsapp.com/send?text=${shareText}`);
     }

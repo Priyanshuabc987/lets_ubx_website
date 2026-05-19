@@ -111,7 +111,7 @@ export function StartupWorldCupClient() {
               </div>
               <img
                 src="/startupworldcup/swccedat.png"
-                alt="CEDAT"
+                alt="Let's UBX"
                 className="h-28 sm:h-36 w-auto object-contain shrink-0"
               />
             </div>
@@ -136,7 +136,7 @@ export function StartupWorldCupClient() {
               Bengaluru Regional
             </h2>
             <p className="text-xl font-bold text-primary max-w-2xl mx-auto">
-              Hosted by CEDAT
+              Hosted by Let's UBX
             </p>
             <img
               src="/startupworldcup/SWC1.png"
@@ -168,7 +168,7 @@ export function StartupWorldCupClient() {
                   </div>
                   <div className="hidden sm:block w-px h-12 bg-gray-300"></div>
                   <div className="flex items-center gap-4">
-                    <img src="/startupworldcup/swccedat.png" alt="CEDAT" className="h-16 w-auto object-contain" />
+                    <img src="/startupworldcup/swccedat.png" alt="Let's UBX" className="h-16 w-auto object-contain" />
                     <span className="text-lg text-gray-700 font-semibold">Host</span>
                   </div>
                 </div>
@@ -307,7 +307,7 @@ export function StartupWorldCupClient() {
                 <span className="font-semibold text-primary">Startup World Cup</span> is a global conference and competition that brings together the top startups, VCs, entrepreneurs and world-class tech CEOs.
               </p>
               <p>
-                <span className="font-semibold text-primary">CEDAT</span> is proud to host the Bengaluru Regional, connecting India's thriving startup ecosystem with the world's largest startup competition.
+                <span className="font-semibold text-primary">Let's UBX</span> is proud to host the Bengaluru Regional, connecting India's thriving startup ecosystem with the world's largest startup competition.
               </p>
             </div>
           </div>

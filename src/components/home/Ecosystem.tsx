@@ -25,7 +25,7 @@ const communities = [
   { name: "Sustainability & SDGs", icon: Sprout, color: "from-emerald-100 to-green-100" },
   { name: "Social Impact & NGOs", icon: UsersRound, color: "from-yellow-100 to-amber-100" },
   { name: "Education & Employment", icon: BriefcaseBusiness, color: "from-orange-100 to-red-100" },
-  { name: "Nexus of CEDAT (NOC)", icon: Network, color: "from-slate-100 to-gray-100" },
+  { name: "Nexus of Let's UBX (NOC)", icon: Network, color: "from-slate-100 to-gray-100" },
 ];
 
 const cardVariants = {
@@ -53,7 +53,7 @@ export function Ecosystem() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground">
-            About CEDAT Ecosystem
+            About Let's UBX Ecosystem
           </h2>
         </motion.div>
 

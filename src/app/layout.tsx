@@ -14,33 +14,33 @@ import { GoogleAnalyticsTracker } from "@/components/analytics/GoogleAnalyticsTr
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "Cedat: Bengaluru's Largest Startup Ecosystem of Communities",
-  description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. We are community builders across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech, Social Impact, and more. Join us to connect, learn, and grow your startup.",
+  title: "Let's UBX: Bengaluru's Largest Startup Ecosystem of Communities",
+  description: "Welcome to Let's UBX, Bengaluru's largest and most diverse startup ecosystem. We are community builders across all sectors, offering regular meetups, events, funding opportunities, and resources for founders in Hardware, Healthcare, Tech, Social Impact, and more. Join us to connect, learn, and grow your startup.",
   keywords: "meetups, events, stratups event, events in banglore, upcoming event in banglore, startup , startup in banglore, startups meetups in bengaluru, startup events in Bengaluru, startup community of Bengaluru, startup ecosystem of bengaluru, entrepreneur network Bengaluru, startup events Bengaluru, tech meetups Bengaluru, founder events, startup funding Bengaluru, seed funding, angel investors Bengaluru, startup ideas, how to start a startup, hardware startups, healthcare startups, edtech, foodtech, social impact startups, fashion startups, import export business, sustainability, NGOs, Bengaluru, Karnataka",
   icons: {
     icon: LOGO_URL,
   },
   openGraph: {
-    title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
-    description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
+    title: "Let's UBX: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
+    description: "Welcome to Let's UBX, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
     url: BASE_URL,
-    siteName: 'Cedat',
+    siteName: "Let\'s UBX",
     images: [
       {
         url: LOGO_URL,
         width: 1200,
         height: 630,
-        alt: 'Cedat Community',
+        alt: "Let\'s UBX Community",
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Cedat: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
-    description: "Welcome to Cedat, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
+    title: "Let's UBX: Bengaluru's Largest Startup Ecosystem & Tech Community Hub",
+    description: "Welcome to Let's UBX, Bengaluru's largest and most diverse startup ecosystem. Join us to connect, learn, and grow your startup.",
     images: [LOGO_URL],
-    creator: '@cedat_org',
+    creator: '@letsubx_org',
   },
 };
 
@@ -56,19 +56,19 @@ export default async function RootLayout({
     "@graph": [
       {
         "@type": "Organization",
-        "name": "Cedat",
+        "name": "Let's UBX",
         "url": BASE_URL,
         "logo": LOGO_URL,
-        "description": "Cedat is Bengaluru's largest and most diverse startup ecosystem, providing resources, events, and a community for entrepreneurs across all sectors.",
+        "description": "Let's UBX is Bengaluru's largest and most diverse startup ecosystem, providing resources, events, and a community for entrepreneurs across all sectors.",
         "sameAs": [
-          "https://www.linkedin.com/company/cedat/",
-          "https://twitter.com/cedat_org",
-          "https://www.instagram.com/cedat.in"
+          "https://www.linkedin.com/company/letsubx/",
+          "https://twitter.com/letsubx_org",
+          "https://www.instagram.com/letsubx.in"
         ]
       },
       {
         "@type": "LocalBusiness",
-        "name": "Cedat",
+        "name": "Let's UBX",
         "description": "The central hub for Bengaluru's startup ecosystem, offering events, meetups, and community support across various tech and business sectors.",
         "address": {
             "@type": "PostalAddress",
@@ -97,7 +97,7 @@ export default async function RootLayout({
           { "@type": "Organization", "name": "Sustainability & SDGs" },
           { "@type": "Organization", "name": "Social Impact & NGOs" },
           { "@type": "Organization", "name": "Education & Employment" },
-          { "@type": "Organization", "name": "Nexus of CEDAT (NOC)" }
+          { "@type": "Organization", "name": "Nexus of Let's UBX (NOC)" }
         ]
       }
     ]

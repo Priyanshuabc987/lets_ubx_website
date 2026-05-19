@@ -89,7 +89,7 @@ export function FixPageClient({
                 <p className="text-xs text-center text-muted-foreground pt-3">
                   {hasExternalRegistrationLink
                     ? 'Registration is required to pitch at FIX.'
-                    : 'You will be redirected to the CEDAT FIX registration page.'}
+                    : "You will be redirected to the Let's UBX FIX registration page."}
                 </p>
               </div>
             </div>

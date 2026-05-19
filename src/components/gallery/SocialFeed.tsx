@@ -81,7 +81,7 @@ function SocialRow({
                     width="110%"
                     frameBorder="0"
                     allowFullScreen
-                    title={`LinkedIn video by CEDAT: ${post.id}`}
+                    title={`LinkedIn video by Let's UBX: ${post.id}`}
                     className="w-full border-none"
                   />
                 </div>

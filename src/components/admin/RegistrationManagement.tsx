@@ -74,7 +74,7 @@ export function RegistrationManagement() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'cedat_registrations.csv';
+      a.download = 'letsubx_registrations.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

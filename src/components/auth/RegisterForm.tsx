@@ -102,10 +102,10 @@ export function RegisterForm() {
       <Card className="w-full max-w-2xl">
         <CardHeader className="space-y-1 p-4 sm:p-6">
           <CardTitle className="text-xl sm:text-2xl font-display font-bold text-center break-words">
-            Join CEDAT Community
+            Join Let's UBX Community
           </CardTitle>
           <CardDescription className="text-center text-sm sm:text-base">
-            Become a free CEDAT member
+            Become a free Let's UBX member
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
@@ -210,7 +210,7 @@ export function RegisterForm() {
             )}
 
             <Button type="submit" className="w-full min-h-[44px]" disabled={isRegisterLoading} size="lg">
-              {isRegisterLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Become a CEDAT Member'}
+              {isRegisterLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Become a Let's UBX Member"}
             </Button>
           </form>
 

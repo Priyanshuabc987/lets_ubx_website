@@ -5,13 +5,13 @@ import { FixPageClient } from '@/components/fix/FixPageClient';
 import { getFixSettings } from '@/lib/data/fix';
 
 export const metadata: Metadata = {
-    title: "Founders & Investors Xplore (FIX) - CEDAT",
+    title: "Founders & Investors Xplore (FIX) - Let's UBX",
     description: "An exclusive event that brings together founders, investors, mentors, and startup ecosystem leaders.",
     openGraph: {
-      title: "Founders & Investors Xplore (FIX) - CEDAT",
+      title: "Founders & Investors Xplore (FIX) - Let's UBX",
       description: "An exclusive event that brings together founders, investors, mentors, and startup ecosystem leaders.",
       url: `${BASE_URL}/fix`,
-      siteName: 'CEDAT',
+      siteName: "Let\'s UBX",
       images: [
         {
           url: `${BASE_URL}/fix/DSC01989.jpg.jpeg`,
@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     },
     twitter: {
       card: 'summary_large_image',
-      title: "Founders & Investors Xplore (FIX) - CEDAT",
+      title: "Founders & Investors Xplore (FIX) - Let's UBX",
       description: "An exclusive event for founders and investors.",
       images: [`${BASE_URL}/fix/fix.jpeg`],
-      creator: '@cedat_org',
+      creator: '@letsubx_org',
     },
 };
 

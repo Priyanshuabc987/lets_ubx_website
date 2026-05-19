@@ -292,7 +292,7 @@
 //         <h4 className="font-medium text-blue-900 mb-2">Public Profile Note</h4>
 //         <p className="text-sm text-blue-800">
 //           Your name, company, designation, community role, functional role, and LinkedIn profile will be visible on your public profile page.
-//           Private information like phone number and company details will only be visible to you and CEDAT administrators.
+//           Private information like phone number and company details will only be visible to you and Let's UBX administrators.
 //         </p>
 //       </div>
 

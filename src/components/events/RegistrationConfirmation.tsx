@@ -159,7 +159,7 @@ export function RegistrationConfirmation({
 
               <div className="text-center space-y-3 sm:space-y-4 mb-4 sm:mb-6 md:mb-8">
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold leading-tight break-words px-2">
-                  {isPending ? "Your registration is pending approval" : "You're Officially Part of This CEDAT Event"}
+                  {isPending ? "Your registration is pending approval" : "You're Officially Part of This Let's UBX Event"}
                 </h1>
                 <p className="text-sm sm:text-base text-muted-foreground px-2">
                   {isPending ? (
@@ -283,7 +283,7 @@ export function RegistrationConfirmation({
                     onClick={() => {
                       const link = document.createElement('a');
                       link.href = getImageUrl(registrationData.qr_code_image_url!);
-                      link.download = `cedat-qr-${event.title.replace(/\s+/g, '-').toLowerCase()}.png`;
+                      link.download = `letsubx-qr-${event.title.replace(/\s+/g, '-').toLowerCase()}.png`;
                       link.click();
                     }}
                   >
